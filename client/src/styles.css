@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+@theme {
+  --color-ivory: #faf7f1;
+  --color-cacao: #38251e;
+  --color-copper: #875334;
+  --color-line: #ded6cd;
+}
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #38251e;
+  background: #faf7f1;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+:focus-visible {
+  outline: 3px solid #875334;
+  outline-offset: 3px;
+}

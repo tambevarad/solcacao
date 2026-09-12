@@ -1,0 +1,22 @@
+name: CI
+on:
+  pull_request:
+    branches: [development, main]
+  push:
+    branches: [development, main]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+# Phase 3: Student 1 adds a MongoDB service and integration test job.
+# Phase 4: Student 2 adds real-mode browser tests; no mock substitution in that job.

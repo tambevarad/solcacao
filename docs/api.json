@@ -1,0 +1,195 @@
+{
+  "contractVersion": 1,
+  "successEnvelope": {
+    "data": "Typed response"
+  },
+  "errorEnvelope": {
+    "error": {
+      "code": "UPPER_SNAKE_CASE",
+      "message": "Safe summary",
+      "fieldErrors": "optional flat field -> message map"
+    }
+  },
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "access": "public",
+      "owner": 1,
+      "request": "none",
+      "response": "Health",
+      "successStatus": 200,
+      "rules": "Infrastructure only"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/register",
+      "access": "public",
+      "owner": 1,
+      "request": "RegisterInput",
+      "response": "AuthSession",
+      "successStatus": 201,
+      "rules": "Normalize email, bcrypt, retail/b2b only"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "access": "public",
+      "owner": 1,
+      "request": "LoginInput",
+      "response": "AuthSession",
+      "successStatus": 200,
+      "rules": "Generic invalid-credentials error"
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "access": "user",
+      "owner": 1,
+      "request": "none",
+      "response": "User",
+      "successStatus": 200,
+      "rules": "Resolve active subject; no password hash"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/users/me",
+      "access": "user",
+      "owner": 1,
+      "request": "ProfileUpdate",
+      "response": "User",
+      "successStatus": 200,
+      "rules": "Cannot change role/email through profile"
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/me/addresses",
+      "access": "user",
+      "owner": 1,
+      "request": "none",
+      "response": "Address[]",
+      "successStatus": 200,
+      "rules": "Only own addresses"
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/me/addresses",
+      "access": "user",
+      "owner": 1,
+      "request": "Address",
+      "response": "Address",
+      "successStatus": 200,
+      "rules": "Upsert own address by optional id; new id if absent"
+    },
+    {
+      "method": "GET",
+      "path": "/api/i18n/:locale",
+      "access": "public",
+      "owner": 2,
+      "request": "path locale=en|es",
+      "response": "Dictionary",
+      "successStatus": 200,
+      "rules": "Flat namespaced dictionary; unsupported locale -> 400"
+    },
+    {
+      "method": "GET",
+      "path": "/api/products",
+      "access": "public",
+      "owner": 3,
+      "request": "ProductQuery in URL",
+      "response": "ProductPage",
+      "successStatus": 200,
+      "rules": "Pagination/filter/sort per contracts"
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/:slug",
+      "access": "public",
+      "owner": 3,
+      "request": "path slug",
+      "response": "Product",
+      "successStatus": 200,
+      "rules": "Active product by canonical slug"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cart",
+      "access": "user",
+      "owner": 3,
+      "request": "none",
+      "response": "Cart",
+      "successStatus": 200,
+      "rules": "Empty revision 0 if no saved cart"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cart/persist",
+      "access": "user",
+      "owner": 3,
+      "request": "PersistCartInput",
+      "response": "Cart",
+      "successStatus": 200,
+      "rules": "Compare revision; mismatch -> 409"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cart/merge",
+      "access": "user",
+      "owner": 3,
+      "request": "MergeCartInput",
+      "response": "Cart",
+      "successStatus": 200,
+      "rules": "Atomic additive merge; unique mergeId per user"
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "access": "optional-user",
+      "owner": 3,
+      "request": "CheckoutInput",
+      "response": "OrderReceipt",
+      "successStatus": 201,
+      "rules": "Simulated only; derive prices from database; requestId idempotency"
+    },
+    {
+      "method": "POST",
+      "path": "/api/b2b/quote",
+      "access": "b2b",
+      "owner": 4,
+      "request": "multipart fields metadata=JSON.stringify(QuoteInput), designFile=PDF",
+      "response": "QuoteReceipt",
+      "successStatus": 201,
+      "rules": "Private required PDF <=5MiB; same requestId returns original receipt"
+    },
+    {
+      "method": "GET",
+      "path": "/api/b2b/quotes/:id",
+      "access": "b2b",
+      "owner": 4,
+      "request": "path id",
+      "response": "QuoteReceipt",
+      "successStatus": 200,
+      "rules": "Own request only; other owner -> 404"
+    },
+    {
+      "method": "GET",
+      "path": "/api/b2b/quotes/:id/file",
+      "access": "b2b",
+      "owner": 4,
+      "request": "path id",
+      "response": "PDF binary attachment",
+      "successStatus": 200,
+      "rules": "Own file only; never expose disk path"
+    },
+    {
+      "method": "POST",
+      "path": "/api/inquiries",
+      "access": "public",
+      "owner": 5,
+      "request": "InquiryInput",
+      "response": "InquiryReceipt",
+      "successStatus": 201,
+      "rules": "Persist before notifying; same requestId returns original receipt"
+    }
+  ]
+}

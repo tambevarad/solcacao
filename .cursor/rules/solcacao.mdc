@@ -1,0 +1,5 @@
+---
+description: SolCacao shared project workflow
+alwaysApply: true
+---
+Read root AGENTS.md and context.md, then the requested team/member-N/context.md and phase file. Follow ownership and contract boundaries. Stop after the requested phase; do not commit unless authorized.

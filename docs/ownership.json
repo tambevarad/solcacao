@@ -1,0 +1,73 @@
+{
+  "1": [
+    "client/src/features/auth/",
+    "server/src/features/auth/",
+    "team/member-1/",
+    "tests/member-1/",
+    "server/src/shared/",
+    "server/src/app.ts",
+    "server/src/index.ts",
+    "tests/health.test.ts"
+  ],
+  "2": [
+    "client/src/features/shell/",
+    "server/src/features/shell/",
+    "team/member-2/",
+    "tests/member-2/",
+    "client/src/shared/",
+    "client/src/api/",
+    "client/src/main.tsx",
+    "client/src/routes.tsx",
+    "client/src/styles.css",
+    "client/index.html",
+    "contracts/",
+    "docs/",
+    "scripts/",
+    ".github/",
+    ".githooks/",
+    "team/roster.json",
+    "team/README.md",
+    "context.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".cursor/",
+    "README.md",
+    "package.json",
+    "package-lock.json",
+    "tsconfig.client.json",
+    "tsconfig.server.json",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    ".env.example",
+    ".gitignore",
+    ".nvmrc",
+    ".editorconfig",
+    ".prettierrc.json",
+    ".prettierignore",
+    "tests/contracts.test.ts",
+    "tests/e2e/",
+    "tests/tooling.test.ts",
+    "TEAM-QUICKSTART.md",
+    ".gitattributes"
+  ],
+  "3": [
+    "client/src/features/catalog/",
+    "server/src/features/catalog/",
+    "team/member-3/",
+    "tests/member-3/"
+  ],
+  "4": [
+    "client/src/features/b2b/",
+    "server/src/features/b2b/",
+    "team/member-4/",
+    "tests/member-4/"
+  ],
+  "5": [
+    "client/src/features/support/",
+    "server/src/features/support/",
+    "team/member-5/",
+    "tests/member-5/"
+  ]
+}

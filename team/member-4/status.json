@@ -1,0 +1,23 @@
+{
+  "member": 4,
+  "phases": {
+    "2": {
+      "state": "not_started",
+      "commit": null,
+      "checks": [],
+      "blockers": []
+    },
+    "3": {
+      "state": "not_started",
+      "commit": null,
+      "checks": [],
+      "blockers": []
+    },
+    "4": {
+      "state": "not_started",
+      "commit": null,
+      "checks": [],
+      "blockers": []
+    }
+  }
+}
