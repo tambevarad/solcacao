@@ -9,7 +9,9 @@ This records checks on the initial scaffold, not implementation of Phases2–4.
 - Fifteen phase playbooks and five member contexts are present.
 - Browser smoke test is provided but could not run: Playwright Chromium executable was absent and browser download failed with502/timeout in this environment. This is a recorded limitation, not a passing browser test.
 - No MongoDB/SMTP integration tests run: those features are intentionally not implemented in this template.
-- Git workflow and compiled startup verification are being finalized before packaging.
+- Compiled server startup and HTTP health check passed.
+- Ownership checker accepted an owned edit and rejected another member’s edit in an isolated Git fixture. Local pre-commit hook rejected main and accepted a feature branch.
+- Local Git is initialized with bootstrap history; main, development and five starter feature branches are included. Remote protection is not configured.
 - GitHub connection was confirmed by the user, but this session exposed no GitHub repository actions or GitHub skill. No remote repository has been created or pushed. Use docs/github-setup.md to publish this initialized repository, or resume when repository actions are available.
 
 Source versions: blueprint and phase screenshot supplied in this conversation; source transcriptions in docs/sources. Design observations from Fran's inspected September12,2026. Official framework references consulted for setup: https://vite.dev/ , https://tailwindcss.com/ , https://expressjs.com/ . Installed package metadata and build results determine the pinned runtime requirements.

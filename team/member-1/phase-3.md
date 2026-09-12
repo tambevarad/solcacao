@@ -26,7 +26,7 @@ Read your context.md and current status/evidence first. If previous phase is not
 
 7. Implement auth/http.ts against exact endpoint paths. All client requests flow through HttpClient. Keep UI components mode-agnostic. Verify direct API calls and HTTP adapter tests without switching everyone to a live backend.
 
-8. Add isolated Mongo integration setup and a CI Mongo service with TEST_MONGODB_URI; tests must refuse a production URI. Seed only test accounts; cleanup only test-owned records/database. Update server start/deployment instructions and handoff prerequisites.
+8. Add isolated Mongo integration setup in your owned test directory and provide Student 2 the exact CI Mongo-service patch using TEST_MONGODB_URI; Student 2 owns .github changes. Tests must refuse a production URI. Seed only test accounts; cleanup only test-owned records/database. Update server start/deployment instructions and handoff prerequisites.
 
 ## Acceptance scenarios
 

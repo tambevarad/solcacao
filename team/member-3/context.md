@@ -37,3 +37,7 @@ For later phases replace both occurrences of Phase 2/phase-2 with the requested 
 Run `npm run check`, `npm run build`, targeted tests and the phase manual scenarios. Run `npm run check:ownership -- --member 3 --base development` before review. Unapproved shared-file changes require an owner handoff; the checker is a local aid and does not replace peer review. If a dependency prevents a full scenario, mark it blocked and identify the exact export/PR needed.
 
 Update phase evidence and handoff with actual commands/results and changed paths. Set phase state to ready_for_review only when own checks pass. A reviewer changes it to integrated after merge and global verification. Proposed commit subject: `feat(catalog): complete phase N scope`. Do not claim all phases complete after a template build.
+
+## Shared documentation and infrastructure handoffs
+
+When a phase step asks you to update README, deployment/API/schema docs, asset register, CI or another shared file outside your ownership, write the exact proposed text/patch in your own handoff.md. Student2 integrates shared documentation/build/CI changes; Student1 integrates shared server changes. The request to document your work does not grant permission to edit another owner's files. Your own feature README, tests and evidence remain directly editable.
