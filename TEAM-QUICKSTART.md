@@ -1,34 +1,32 @@
-# Team quick start
+# Start here
 
-## Before anyone implements features
+Read docs/roadmap.md: Phase1 is real setup/schema/routing/translation work. Phase2 includes frontend AND REST coding. Phase3 binds real APIs. Phase4 polishes/deploys/presents. The screenshot’s academic checkpoints are separately retained.
 
-Assign the five roles in team/roster.json. Read docs/decisions.md together, especially simulated checkout, six-piece sampler inquiries and PDF-only branding uploads. If the instructor requires different behavior, make one shared contract PR before feature work.
+## Coordinator once
 
-Use the same Node version from .nvmrc and npm ci from the same lockfile. Copy .env.example to .env; Phase 2 uses mock mode and does not need MongoDB. Every teammate has their own clone and feature branch. Never have two agents edit the same checkout simultaneously.
+Publish and peer-review the audit branch into development using docs/github-setup.md. Assign exactly five members in roster.json; configure both protected branches. Review defaults in decisions.md and the draft Phase1 artifacts. Obtain a real MarvelApp/MockFlow prototype project for the academic requirement. No host credentials, prototype URL or reviewer identity is invented by this template.
 
-## For each phase
+## Each student before work
 
-1. Pull the latest development branch and create/switch to your named feature branch.
-2. Open your agent (Gemini, Claude, Cursor, GPT or Copilot) in repository root.
-3. Paste: **Read AGENTS.md, context.md and team/member-N/context.md. Implement only Student N Phase P according to its phase-P.md. Run its checks and update evidence. Stop before commit/push/merge.** Replace N and P.
-4. Review what the agent changed and its test results. Ask it to fix concrete failures in the same phase; do not advance prematurely.
-5. Commit your owned changes, push your feature branch and open a PR to development. A teammate reviews code and visual evidence.
-6. After all five areas are integrated, the coordinator runs the phase demo checklist. Submit the approved commit/tag. Begin the next phase from updated development.
+Install Git, Node24.19.0 and an agent-enabled editor. Use a separate clone per student. Install/start Docker for Phase2 Mongo/mail tests or configure approved equivalents. Open the reviewed repository folder, then run:
 
-## Order that avoids missing dependencies
+```sh
+npm run setup -- --member 3
+```
 
-| Phase         | Integration order                                                                   |
-| ------------- | ----------------------------------------------------------------------------------- |
-| 2 frontend    | 2 shell -> 1 auth -> 3 catalog/cart -> 4 homepage/B2B and 5 support/sampler         |
-| 3 backend     | 1 foundation/auth -> 2 localization and 3 catalog -> 5 notifications -> 4 B2B/files |
-| 4 integration | All owners run shared journeys; 2 coordinates release and presentation              |
+Replace3 with your assigned member number. Setup checks a clean checkout, syncs development, creates/switches your dedicated branch, creates local .env securely if absent, installs exact dependencies and enables local hooks. It stops on conflicts; it never force-resets or edits primary branches. For Phase2 onward run npm run services, then npm run dev as instructed by the phase.
 
-Independent feature work may overlap using the fixed contracts. The order above is when shared implementations become available for final integration. A blocked peer dependency is reported, not silently reimplemented.
+## One instruction per phase to your open coding agent
 
-## What agents must not decide independently
+```text
+Run npm run agent -- --member 3 --phase 1. Read .agent/task.md and every
+reference it names, then implement only that member and phase. Follow all
+contracts and ownership rules, run checks and update evidence/handoff.
+Stop before committing, pushing, merging, deploying or advancing phases.
+```
 
-Field names, API routes, account roles, money units, global styles, provider signatures, package versions, cart merge rules, wizard field names, file limits or sampler behavior. These are fixed in shared docs and contracts. Necessary changes go through the designated owner and a reviewed PR.
+Replace member/phase. The task-packet command works identically for all agents that can execute repository commands. It is not a vendor-specific AI launcher. For restricted agents attach the reference files and use the PDF prompt.
 
-## What the template already does
+## After each phase
 
-Installs, typechecks, builds, shows labeled route placeholders and exposes API health. It does not yet browse real products, authenticate customers, send requests/mail or process orders. Those features are the students' phase work.
+Review the diff and actual checks. Commit owned files, push dedicated branch and open PR to development. Get visual review, passing unit tests and one peer approval. Coordinator integrates all members, records weekly evidence, and submits only completed checkpoint deliverables. Previous integrated status is required before the next implementation phase. Docs/student-playbook.pdf contains every student’s four exact prompts and setup/review steps.

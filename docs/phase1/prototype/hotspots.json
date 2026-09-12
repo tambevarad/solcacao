@@ -1,0 +1,218 @@
+{
+  "status": "Manual assembly map for required external prototype",
+  "canvas": {
+    "width": 1200,
+    "height": 800
+  },
+  "screens": [
+    {
+      "id": "01-home",
+      "file": "frames/01-home.svg",
+      "owner": 4
+    },
+    {
+      "id": "02-catalog",
+      "file": "frames/02-catalog.svg",
+      "owner": 3
+    },
+    {
+      "id": "03-product",
+      "file": "frames/03-product.svg",
+      "owner": 3
+    },
+    {
+      "id": "04-cart",
+      "file": "frames/04-cart.svg",
+      "owner": 3
+    },
+    {
+      "id": "05-auth",
+      "file": "frames/05-auth.svg",
+      "owner": 1
+    },
+    {
+      "id": "06-account",
+      "file": "frames/06-account.svg",
+      "owner": 1
+    },
+    {
+      "id": "07-wholesale",
+      "file": "frames/07-wholesale.svg",
+      "owner": 4
+    },
+    {
+      "id": "08-wizard-cacao",
+      "file": "frames/08-wizard-cacao.svg",
+      "owner": 4
+    },
+    {
+      "id": "09-wizard-branding",
+      "file": "frames/09-wizard-branding.svg",
+      "owner": 4
+    },
+    {
+      "id": "10-wizard-packaging",
+      "file": "frames/10-wizard-packaging.svg",
+      "owner": 4
+    },
+    {
+      "id": "11-wizard-review",
+      "file": "frames/11-wizard-review.svg",
+      "owner": 4
+    },
+    {
+      "id": "12-confirmation",
+      "file": "frames/12-confirmation.svg",
+      "owner": 4
+    },
+    {
+      "id": "13-sampler",
+      "file": "frames/13-sampler.svg",
+      "owner": 5
+    },
+    {
+      "id": "14-contact",
+      "file": "frames/14-contact.svg",
+      "owner": 5
+    },
+    {
+      "id": "15-checkout",
+      "file": "frames/15-checkout.svg",
+      "owner": 3
+    },
+    {
+      "id": "16-story-care",
+      "file": "frames/16-story-care.svg",
+      "owner": 5
+    }
+  ],
+  "links": [
+    {
+      "from": "01-home",
+      "to": "02-catalog",
+      "control": "Shop",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "01-home",
+      "to": "07-wholesale",
+      "control": "Wholesale",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "01-home",
+      "to": "13-sampler",
+      "control": "Sampler",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "02-catalog",
+      "to": "03-product",
+      "control": "Product tile",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "03-product",
+      "to": "04-cart",
+      "control": "Add to cart",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "04-cart",
+      "to": "15-checkout",
+      "control": "Checkout",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "04-cart",
+      "to": "05-auth",
+      "control": "Sign in to merge",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "05-auth",
+      "to": "06-account",
+      "control": "Retail sign in",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "05-auth",
+      "to": "08-wizard-cacao",
+      "control": "Business return to wizard",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "07-wholesale",
+      "to": "05-auth",
+      "control": "Start as guest",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "07-wholesale",
+      "to": "08-wizard-cacao",
+      "control": "Start as business",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "08-wizard-cacao",
+      "to": "09-wizard-branding",
+      "control": "Next",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "09-wizard-branding",
+      "to": "10-wizard-packaging",
+      "control": "Next",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "10-wizard-packaging",
+      "to": "11-wizard-review",
+      "control": "Next",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "11-wizard-review",
+      "to": "12-confirmation",
+      "control": "Submit",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "09-wizard-branding",
+      "to": "08-wizard-cacao",
+      "control": "Back",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "10-wizard-packaging",
+      "to": "09-wizard-branding",
+      "control": "Back",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "11-wizard-review",
+      "to": "10-wizard-packaging",
+      "control": "Back",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "13-sampler",
+      "to": "14-contact",
+      "control": "Continue with six selections",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "15-checkout",
+      "to": "12-confirmation",
+      "control": "Submit simulated order",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    },
+    {
+      "from": "16-story-care",
+      "to": "14-contact",
+      "control": "Contact",
+      "instruction": "Draw hotspot over the labeled control after refining the frame; verify destination in preview."
+    }
+  ],
+  "localeInstruction": "Duplicate English frames for Spanish and connect EN/ES to equivalent screen; retain same selected values in scenario notes."
+}

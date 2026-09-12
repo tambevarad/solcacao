@@ -1,16 +1,14 @@
-# Student 2 Phase 2
+# Student 2 Phase 2 — Core Development
 
-## Outcome
-
-Complete your responsive React interaction flow using the typed mock API; no live backend required.
+Blueprint execution window: Weeks 3–4. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Existing route/provider/API scaffolding compiles. Other owners will progressively supply their feature pages and dictionaries.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
+
+### Frontend track
 
 1. Implement shared Button/Field/Select and accessible dialog/drawer primitives under shared with standard HTML props. Export a documented stable surface and examples. Avoid framework replacement or utility abstraction churn.
 
@@ -28,6 +26,20 @@ Read your context.md and current status/evidence first. If previous phase is not
 
 8. Run desktop/mobile accessibility checks on shell, publish shared component API and merge foundation PR early so peers can adopt it. Then integrate peer pages by PR without redesigning their internals.
 
+### Backend track
+
+1. Implement GET /api/i18n/:locale returning combined dictionaries with exact envelope. Validate locale and ensure generated deployment contains the JSON files or compiled dictionary module. Add a build step or explicit JSON imports that work from dist, not source-only path guesses.
+
+2. Implement public static asset routing templates for approved brand/product files. Keep Student 4 private uploads completely separate. Coordinate the Express app mount with Student 1; do not take over server bootstrap ownership.
+
+3. Implement shell/http.ts dictionary via common client. Test both languages and malformed locale. Do not switch the app-wide mode until Phase 3 readiness.
+
+4. Expand docs/api.json/README setup with the implemented dictionary/asset behavior if no contract change; for signature changes follow review procedure. Keep all five adapter paths/imports stable.
+
+5. Review integration CI with Student 1: typecheck and build remain global; Mongo API tests run separately from mock UI. Ensure package-lock changes are intentional and explain each dependency addition.
+
+6. Run whole-project build with current peer branches merged through PR. Record unresolved feature blockers instead of hiding them behind dummy dictionary/API values.
+
 ## Acceptance scenarios
 
 - [ ] Navigation and search produce canonical localized URLs; browser back works.
@@ -35,19 +47,23 @@ Read your context.md and current status/evidence first. If previous phase is not
 - [ ] Navbar count reads same cart state as drawer.
 - [ ] 375/768/1440 widths have no overflow; keyboard drawer focus trapped and restored.
 - [ ] Duplicate/missing translation keys fail tests; unsupported prefix not silently accepted.
+- [ ] Both dictionaries load from running compiled backend after a clean build.
+- [ ] Invalid locale returns 400; frontend handles request failure.
+- [ ] Private upload path cannot be reached through public static route.
+- [ ] Mock and HTTP dictionary DTOs have identical key/value shapes.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-2`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 2 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-2-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 2 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-2-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Navigate all pages, resize, operate mobile drawer/search/cart entry, switch EN/ES, demonstrate unknown route and keyboard access.
 
-## Stop boundary
+## Scaffold test transition
 
-Do not implement Mongoose models, production JWT/SMTP/file storage or live backend routes in this phase. All mock behavior must be disclosed.
+When Student 4 publishes the homepage, replace the placeholder HomePage browser assertion in tests/e2e with the real homepage landmark and navigation checks. Do not retain placeholder expectations or delete behavior coverage to make CI green.

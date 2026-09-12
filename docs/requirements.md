@@ -1,47 +1,51 @@
 # Requirement traceability
 
-Owners coordinate shared rows; every member remains responsible for its own code quality, localization, tests, PRs and presentation. Scope defaults are labeled in decisions.md. Source section numbers refer to the supplied SolCacao blueprint; latest phase order comes from the screenshot.
+Read docs/roadmap.md for the two-source crosswalk. Each student owns frontend and backend for their assigned area. Coordinator rows require all five contributions. Scope defaults remain labeled in decisions.md.
 
-| ID       | Owner | Requirement                            | Phase2                            | Phase3                              | Phase4                        |
-| -------- | ----- | -------------------------------------- | --------------------------------- | ----------------------------------- | ----------------------------- |
-| AUTH-01  | 1     | Retail and business registration/login | Forms/mock account flows          | Users/partners,bcrypt,JWT           | Real UI login and role checks |
-| AUTH-02  | 1     | Profile management                     | Profile form                      | Own-user PATCH                      | Persisted updates             |
-| AUTH-03  | 1     | Addresses                              | Address UI                        | Own-address upsert/list             | Ownership isolation           |
-| AUTH-04  | 1     | Auth modals and route guards           | Reusable dialogs/guards           | Middleware ports                    | Shell/wizard wiring           |
-| AUTH-05  | 1     | Account type separation                | Business fields/cues              | Role enforcement                    | Retail/b2b negative paths     |
-| SEC-01   | 1     | Request/auth security                  | Client validation                 | Server validation/errors/rate limit | Security review               |
-| SEC-02   | 1     | Central database foundation            | No DB                             | Connection/indexes/test DB          | Startup/secret readiness      |
-| SEC-03   | 1     | No credential leakage                  | Memory-only fake session          | Hashed password/memory token        | Expiry/logout verification    |
-| SHELL-01 | 2     | Sticky header/footer/routing           | Responsive shell                  | Public asset routing                | Deep-link deployment          |
-| SHELL-02 | 2     | Mobile slide-out nav                   | Accessible drawer                 | No extra endpoint                   | Keyboard/mobile audit         |
-| SHELL-03 | 2     | Global search and cart count           | Public hooks wiring               | Reuse catalog                       | Live state consistency        |
-| SHELL-04 | 2     | EN/ES toggle and dictionaries          | Combined feature JSON             | GET dictionary                      | No missing keys/state loss    |
-| SHELL-05 | 2     | Shared components                      | Primitives/tokens                 | No extra endpoint                   | Consistent page UX            |
-| UX-01    | 2     | Premium responsive visual design       | Design system adoption by all     | Asset configuration                 | Contrast/performance audit    |
-| CAT-01   | 3     | Catalog grid and product details       | Mock products/pages               | Product+Inventory models            | Live products                 |
-| CAT-02   | 3     | Origin/cacao/price filters and sliders | URL controlled filters            | Validated DB query                  | Correct combined filters      |
-| CAT-03   | 3     | Search/pagination/sorting              | Mock exact semantics              | GET products                        | Stable results/back nav       |
-| CAT-04   | 3     | Localized product information          | EN/ES fixtures                    | Nested localized fields             | Live text selection           |
-| CAT-05   | 3     | Inventory behavior                     | Stock-aware UI                    | Inventory DTO/service               | Unavailable/stock changes     |
-| CART-01  | 3     | Slide-out shopping cart                | Reducer/provider/drawer           | No separate drawer API              | Navbar/drawer consistency     |
-| CART-02  | 3     | Guest cart and checkout                | LocalStorage/cart/checkout UI     | Optional-auth orders                | Simulated guest receipt       |
-| CART-03  | 3     | Saved cart and login merge             | Mock merge/revision               | Atomic persist/merge                | Retry/logout/race tests       |
-| CART-04  | 3     | Quantity/remove/subtotal               | Client actions                    | Authoritative validation            | No stale overwrite            |
-| ORDER-01 | 3     | Simulated checkout default             | No-payment UI                     | Order snapshot/idempotency          | Persisted accurate total      |
-| HOME-01  | 4     | Homepage hero slides/seasonal showcase | Homepage via catalog API          | Reuse catalog                       | Live assets/products          |
-| B2B-01   | 4     | Wholesale services page                | Molds/packaging/white-label slots | No separate endpoint                | Business entry                |
-| B2B-02   | 4     | Four-step wizard                       | State machine/forms               | Quote schema                        | Real multipart journey        |
-| B2B-03   | 4     | Brand/technical PDF upload             | File input/preview info           | Private storage/validation          | Durability/cleanup            |
-| B2B-04   | 4     | Persist quote request                  | Mock receipt                      | POST B2B quote                      | Idempotent saved request      |
-| B2B-05   | 4     | Partner authorization/private file     | Auth public guards                | Role+ownership download             | Nonowner rejected             |
-| SUP-01   | 5     | Contact and feedback                   | Validated forms                   | Inquiry persistence                 | Real submission               |
-| SUP-02   | 5     | Sampler builder                        | Six-piece selection               | Product revalidation                | Saved inquiry/mail            |
-| SUP-03   | 5     | Information/static pages               | Story/care templates              | Public content assets               | Approved content review       |
-| SUP-04   | 5     | WhatsApp redirects                     | Configured link                   | No message-sending API              | Correct encoded link          |
-| SUP-05   | 5     | SMTP notification bridge               | Mock receipt                      | Nodemailer+notifyQuote              | Truthful saved/mail status    |
-| OPS-01   | 2     | Git branches/PR review                 | All members use workflow          | Continuous integration              | History/review evidence       |
-| OPS-02   | 2     | Testing/quality                        | Unit/interaction tests            | Real API/DB tests                   | Cross-feature/browser tests   |
-| OPS-03   | 2     | Live deployment                        | Not required yet                  | Compiled backend readiness          | Live host verified            |
-| OPS-04   | 2     | README/API/schema/presentation         | Phase evidence                    | API/schema updates                  | Full docs and20–30min demo    |
-
-Blueprint source mapping: architecture §2; D2C/B2B §3; five roles §4; API baseline §5; branches/reviews §6; launch/docs §7; evaluation §8. Phase1 academic deliverables deliberately excluded.
+| ID           | Owner | Requirement                                        | Phase1                 | Phase2                                                  | Phase3                        | Phase4                                 |
+| ------------ | ----- | -------------------------------------------------- | ---------------------- | ------------------------------------------------------- | ----------------------------- | -------------------------------------- |
+| P1-DEMO      | 2     | MS Teams Phase1 demo                               | Prepare and review     | Retain/update baseline                                  | Check consistency             | Include documentation                  |
+| P1-PROTOTYPE | 2     | MarvelApp or MockFlow interactive prototype        | Prepare and review     | Retain/update baseline                                  | Check consistency             | Include documentation                  |
+| P1-OVERVIEW  | 2     | Three-page project overview with all contributions | Prepare and review     | Retain/update baseline                                  | Check consistency             | Include documentation                  |
+| P1-I18N      | 2     | Localized key-value outline                        | Prepare and review     | Retain/update baseline                                  | Check consistency             | Include documentation                  |
+| P1-SCHEMA    | 1     | Database modeling and ERD                          | Prepare and review     | Retain/update baseline                                  | Check consistency             | Include documentation                  |
+| P1-REPO      | 2     | Repository/Tailwind/routing setup                  | Prepare and review     | Retain/update baseline                                  | Check consistency             | Include documentation                  |
+| AUTH-01      | 1     | Retail and business registration/login             | Owned schema / UI plan | Forms/mock account flows; Users/partners,bcrypt,JWT     | Real UI login and role checks | Audit, optimize, document, demonstrate |
+| AUTH-02      | 1     | Profile management                                 | Owned schema / UI plan | Profile form; Own-user PATCH                            | Persisted updates             | Audit, optimize, document, demonstrate |
+| AUTH-03      | 1     | Addresses                                          | Owned schema / UI plan | Address UI; Own-address upsert/list                     | Ownership isolation           | Audit, optimize, document, demonstrate |
+| AUTH-04      | 1     | Auth modals and route guards                       | Owned schema / UI plan | Reusable dialogs/guards; Middleware ports               | Shell/wizard wiring           | Audit, optimize, document, demonstrate |
+| AUTH-05      | 1     | Account type separation                            | Owned schema / UI plan | Business fields/cues; Role enforcement                  | Retail/b2b negative paths     | Audit, optimize, document, demonstrate |
+| SEC-01       | 1     | Request/auth security                              | Owned schema / UI plan | Client validation; Server validation/errors/rate limit  | Security review               | Audit, optimize, document, demonstrate |
+| SEC-02       | 1     | Central database foundation                        | Owned schema / UI plan | No DB; Connection/indexes/test DB                       | Startup/secret readiness      | Audit, optimize, document, demonstrate |
+| SEC-03       | 1     | No credential leakage                              | Owned schema / UI plan | Memory-only fake session; Hashed password/memory token  | Expiry/logout verification    | Audit, optimize, document, demonstrate |
+| SHELL-01     | 2     | Sticky header/footer/routing                       | Owned schema / UI plan | Responsive shell; Public asset routing                  | Deep-link deployment          | Audit, optimize, document, demonstrate |
+| SHELL-02     | 2     | Mobile slide-out nav                               | Owned schema / UI plan | Accessible drawer; No extra endpoint                    | Keyboard/mobile audit         | Audit, optimize, document, demonstrate |
+| SHELL-03     | 2     | Global search and cart count                       | Owned schema / UI plan | Public hooks wiring; Reuse catalog                      | Live state consistency        | Audit, optimize, document, demonstrate |
+| SHELL-04     | 2     | EN/ES toggle and dictionaries                      | Owned schema / UI plan | Combined feature JSON; GET dictionary                   | No missing keys/state loss    | Audit, optimize, document, demonstrate |
+| SHELL-05     | 2     | Shared components                                  | Owned schema / UI plan | Primitives/tokens; No extra endpoint                    | Consistent page UX            | Audit, optimize, document, demonstrate |
+| UX-01        | 2     | Premium responsive visual design                   | Owned schema / UI plan | Design system adoption by all; Asset configuration      | Contrast/performance audit    | Audit, optimize, document, demonstrate |
+| CAT-01       | 3     | Catalog grid and product details                   | Owned schema / UI plan | Mock products/pages; Product+Inventory models           | Live products                 | Audit, optimize, document, demonstrate |
+| CAT-02       | 3     | Origin/cacao/price filters and sliders             | Owned schema / UI plan | URL controlled filters; Validated DB query              | Correct combined filters      | Audit, optimize, document, demonstrate |
+| CAT-03       | 3     | Search/pagination/sorting                          | Owned schema / UI plan | Mock exact semantics; GET products                      | Stable results/back nav       | Audit, optimize, document, demonstrate |
+| CAT-04       | 3     | Localized product information                      | Owned schema / UI plan | EN/ES fixtures; Nested localized fields                 | Live text selection           | Audit, optimize, document, demonstrate |
+| CAT-05       | 3     | Inventory behavior                                 | Owned schema / UI plan | Stock-aware UI; Inventory DTO/service                   | Unavailable/stock changes     | Audit, optimize, document, demonstrate |
+| CART-01      | 3     | Slide-out shopping cart                            | Owned schema / UI plan | Reducer/provider/drawer; No separate drawer API         | Navbar/drawer consistency     | Audit, optimize, document, demonstrate |
+| CART-02      | 3     | Guest cart and checkout                            | Owned schema / UI plan | LocalStorage/cart/checkout UI; Optional-auth orders     | Simulated guest receipt       | Audit, optimize, document, demonstrate |
+| CART-03      | 3     | Saved cart and login merge                         | Owned schema / UI plan | Mock merge/revision; Atomic persist/merge               | Retry/logout/race tests       | Audit, optimize, document, demonstrate |
+| CART-04      | 3     | Quantity/remove/subtotal                           | Owned schema / UI plan | Client actions; Authoritative validation                | No stale overwrite            | Audit, optimize, document, demonstrate |
+| ORDER-01     | 3     | Simulated checkout default                         | Owned schema / UI plan | No-payment UI; Order snapshot/idempotency               | Persisted accurate total      | Audit, optimize, document, demonstrate |
+| HOME-01      | 4     | Homepage hero slides/seasonal showcase             | Owned schema / UI plan | Homepage via catalog API; Reuse catalog                 | Live assets/products          | Audit, optimize, document, demonstrate |
+| B2B-01       | 4     | Wholesale services page                            | Owned schema / UI plan | Molds/packaging/white-label slots; No separate endpoint | Business entry                | Audit, optimize, document, demonstrate |
+| B2B-02       | 4     | Four-step wizard                                   | Owned schema / UI plan | State machine/forms; Quote schema                       | Real multipart journey        | Audit, optimize, document, demonstrate |
+| B2B-03       | 4     | Brand/technical PDF upload                         | Owned schema / UI plan | File input/preview info; Private storage/validation     | Durability/cleanup            | Audit, optimize, document, demonstrate |
+| B2B-04       | 4     | Persist quote request                              | Owned schema / UI plan | Mock receipt; POST B2B quote                            | Idempotent saved request      | Audit, optimize, document, demonstrate |
+| B2B-05       | 4     | Partner authorization/private file                 | Owned schema / UI plan | Auth public guards; Role+ownership download             | Nonowner rejected             | Audit, optimize, document, demonstrate |
+| SUP-01       | 5     | Contact and feedback                               | Owned schema / UI plan | Validated forms; Inquiry persistence                    | Real submission               | Audit, optimize, document, demonstrate |
+| SUP-02       | 5     | Sampler builder                                    | Owned schema / UI plan | Six-piece selection; Product revalidation               | Saved inquiry/mail            | Audit, optimize, document, demonstrate |
+| SUP-03       | 5     | Information/static pages                           | Owned schema / UI plan | Story/care templates; Public content assets             | Approved content review       | Audit, optimize, document, demonstrate |
+| SUP-04       | 5     | WhatsApp redirects                                 | Owned schema / UI plan | Configured link; No message-sending API                 | Correct encoded link          | Audit, optimize, document, demonstrate |
+| SUP-05       | 5     | SMTP notification bridge                           | Owned schema / UI plan | Mock receipt; Nodemailer+notifyQuote                    | Truthful saved/mail status    | Audit, optimize, document, demonstrate |
+| OPS-01       | 2     | Git branches/PR review                             | Owned schema / UI plan | All members use workflow; Continuous integration        | History/review evidence       | Audit, optimize, document, demonstrate |
+| OPS-02       | 2     | Testing/quality                                    | Owned schema / UI plan | Unit/interaction tests; Real API/DB tests               | Cross-feature/browser tests   | Audit, optimize, document, demonstrate |
+| OPS-03       | 2     | Live deployment                                    | Owned schema / UI plan | Not required yet; Compiled backend readiness            | Live host verified            | Audit, optimize, document, demonstrate |
+| OPS-04       | 2     | README/API/schema/presentation                     | Owned schema / UI plan | Phase evidence; API/schema updates                      | Full docs and20–30min demo    | Audit, optimize, document, demonstrate |

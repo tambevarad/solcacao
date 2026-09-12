@@ -1,23 +1,57 @@
-import { readFileSync } from 'node:fs';
-const args = process.argv.slice(2);
-const value = (key) => args[args.indexOf(key) + 1];
+import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+const args = process.argv.slice(2),
+  value = (k) => args[args.indexOf(k) + 1];
 const member = value('--member'),
-  phase = value('--phase');
+  phase = value('--phase'),
+  generate = args.includes('--packet');
 if (
   !args.includes('--member') ||
   !args.includes('--phase') ||
   !['1', '2', '3', '4', '5'].includes(member) ||
-  !['2', '3', '4'].includes(phase)
+  !['1', '2', '3', '4'].includes(phase)
 ) {
-  console.error('Usage: npm run phase -- --member 1..5 --phase 2|3|4');
+  console.error('Usage: npm run agent -- --member 1..5 --phase 1|2|3|4');
   process.exit(1);
 }
-const status = JSON.parse(readFileSync(`team/member-${member}/status.json`, 'utf8'));
+const read = (p) => readFileSync(p, 'utf8');
+const status = JSON.parse(read(`team/member-${member}/status.json`));
 const previous = status.phases[String(Number(phase) - 1)];
+const roster = JSON.parse(read('team/roster.json'))[member];
+let branch = 'unknown';
+try {
+  branch = execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
+} catch {}
+const blockers = [];
 if (previous && previous.state !== 'integrated')
-  console.log(
-    `PREREQUISITE: previous phase is ${previous.state}; implementation must not silently skip its review/integration.`,
+  blockers.push(
+    `Previous execution phase is ${previous.state}; complete its reviewed integration first.`,
   );
-console.log(
-  `Read AGENTS.md, context.md, docs/contracts.md, docs/api.json, docs/decisions.md, team/member-${member}/context.md and team/member-${member}/phase-${phase}.md. Implement only Student ${member} Phase ${phase}. Preserve contracts and other owners' files. Run checks and update phase evidence/handoff/status truthfully. Stop before commit/push/merge and the next phase. This command prints a brief; it does not run an AI agent. Current status: ${status.phases[phase].state}.`,
-);
+if (branch !== roster.branch)
+  blockers.push(
+    `Expected dedicated branch ${roster.branch}, found ${branch}. Run setup after template review; do not implement on a primary or another member's branch.`,
+  );
+const files = [
+  'AGENTS.md',
+  'context.md',
+  'docs/roadmap.md',
+  'docs/contracts.md',
+  'docs/api.json',
+  'docs/decisions.md',
+  'docs/design.md',
+  'docs/design/frans-reference.md',
+  `team/member-${member}/context.md`,
+  `team/member-${member}/phase-${phase}.md`,
+  `team/member-${member}/handoff.md`,
+];
+if (phase === '1') files.push('docs/phase1/README.md', 'docs/phase1/prototype/README.md');
+let packet = `# Student ${member} Phase ${phase} task packet\n\nImplement only Student ${member} Phase ${phase}. Follow blueprint weeks/roadmap. Read all references below and current code, do not blindly overwrite existing work. Stop after requested phase with actual checks/evidence and proposed commit; no automatic commit, push, merge, deploy or next phase.\n\nExpected branch: ${roster.branch}. Current branch: ${branch}.\n\n${blockers.length ? 'BLOCKED FOR IMPLEMENTATION:\n' + blockers.map((x) => '- ' + x).join('\n') : 'Entry checks passed; confirm peer dependencies from phase playbook.'}\n\n`;
+for (const p of files) packet += `\n---\n\n## Reference ${p}\n\n${read(p)}\n`;
+if (generate) {
+  mkdirSync('.agent', { recursive: true });
+  writeFileSync('.agent/task.md', packet);
+  console.log(
+    `Task packet generated at .agent/task.md. Read it before edits. ${blockers.length ? 'Implementation blocked: ' + blockers.join(' ') : 'Ready to inspect owned implementation.'}`,
+  );
+  if (blockers.length) process.exitCode = 2;
+} else console.log(packet);

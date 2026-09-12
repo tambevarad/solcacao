@@ -1,16 +1,14 @@
-# Student 1 Phase 2
+# Student 1 Phase 2 — Core Development
 
-## Outcome
-
-Complete your responsive React interaction flow using the typed mock API; no live backend required.
+Blueprint execution window: Weeks 3–4. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Mock-mode frontend; root token and provider interfaces exist. Do not depend on a running API or MongoDB.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
+
+### Frontend track
 
 1. Inspect auth DTOs and useAuth signatures. Replace auth/mock.ts stubs with a deterministic in-memory registration/login service. Keep synthetic account credentials in memory only, never localStorage. Model duplicate email, bad credentials and a returned role. Use clearly fake tokens that can never authenticate to the backend.
 
@@ -26,6 +24,24 @@ Read your context.md and current status/evidence first. If previous phase is not
 
 7. Exercise logout and page reload to demonstrate memory-only auth. Do not claim sessions persist after refresh. Record deliberate mock behavior and public exports for Students 2, 3 and 4.
 
+### Backend track
+
+1. Implement environment validation and connectDb/disconnectDb in server/shared. Require Mongo URI and a non-placeholder strong JWT secret in HTTP backend mode. Startup must fail clearly if DB is unavailable; health must not claim DB readiness before connection. Keep template/mock frontend independently runnable.
+
+2. Complete and verify the Phase1 User, CorporatePartner and Address schemas with indexes from data-model.md. Normalize unique email; hash password with bcrypt cost 12. Serialize User without hash/private flags. B2B registration must create partner consistently; clean up on failure or document replica-set transaction setup.
+
+3. Implement register/login routes using shared validation and consistent errors/statuses. JWT HS256 issuer/audience/sub/role/expiry per contract. Prevent account enumeration on failed login; map unique-email race to EMAIL_EXISTS. No arbitrary spread of user request into a model.
+
+4. Implement requireAuth, optionalAuth and requireRole ports and Express req.user typing. Verify token then load current user/role. optionalAuth permits no token but rejects a supplied invalid token. Missing auth ->401; retail accessing b2b ->403. Export to peers; do not insert their route logic yourself.
+
+5. Implement me, profile update and own-address routes. A provided address id belonging to another user yields 404. Ignore no unknown privileged fields: reject attempts to change role/passwordHash/userId via profile/address input.
+
+6. Add typed shared error and validation helpers, consistent JSON parser failures and auth rate limits. Preserve already mounted routers. Replace the template GET /products 404 assertion in tests/health.test.ts when Student 3 publishes the real route; assert real health readiness and error handling instead. Never log tokens, passwords, SMTP credentials or whole request bodies.
+
+7. Implement auth/http.ts against exact endpoint paths. All client requests flow through HttpClient. Keep UI components mode-agnostic. Verify direct API calls and HTTP adapter tests without switching everyone to a live backend.
+
+8. Add isolated Mongo integration setup in your owned test directory and provide Student 2 the exact CI Mongo-service patch using TEST_MONGODB_URI; Student 2 owns .github changes. Tests must refuse a production URI. Seed only test accounts; cleanup only test-owned records/database. Update server start/deployment instructions and handoff prerequisites.
+
 ## Acceptance scenarios
 
 - [ ] Retail registration -> account; business registration -> company validation -> business account.
@@ -33,19 +49,20 @@ Read your context.md and current status/evidence first. If previous phase is not
 - [ ] Required fields, invalid email and 12–72-byte password limits agree with shared schema.
 - [ ] Keyboard can enter/submit/close auth modal; focus returns to opener.
 - [ ] A fake external returnTo is rejected; existing contracts still typecheck.
+- [ ] Register/login round trip with bcrypt verification and no plaintext password/hash leakage.
+- [ ] Expired, modified, wrong-audience and missing JWT rejected; wrong role ->403.
+- [ ] Two users cannot read/write each other’s addresses.
+- [ ] Concurrent same-email registration yields one account and one conflict, not two users.
+- [ ] Invalid/malformed body returns standard envelope; database failure is reported truthfully.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-1`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 1 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-2-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 1 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-2-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Show retail and business registration, failed login, successful login, profile/address editing, then logout. Identify mock mode explicitly.
-
-## Stop boundary
-
-Do not implement Mongoose models, production JWT/SMTP/file storage or live backend routes in this phase. All mock behavior must be disclosed.

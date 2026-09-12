@@ -1,7 +1,7 @@
 ## Scope
 
 Member: <!-- 1–5 -->
-Phase: <!-- 2, 3 or 4 -->
+Phase: <!-- 1, 2, 3 or 4 -->
 Requirement IDs:
 
 ## Behavior and evidence

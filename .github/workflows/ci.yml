@@ -18,5 +18,5 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
-# Phase 3: Student 1 adds a MongoDB service and integration test job.
-# Phase 4: Student 2 adds real-mode browser tests; no mock substitution in that job.
+# Phase 2: Student 1 adds a MongoDB service and integration test job.
+# Phase 3: Student 2 adds real-mode browser tests; no mock substitution in that job.

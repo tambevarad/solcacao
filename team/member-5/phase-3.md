@@ -1,53 +1,43 @@
-# Student 5 Phase 3
+# Student 5 Phase 3 — Integration & API Bind
 
-## Outcome
-
-Complete your validated Express/Mongoose subsystem and matching HTTP adapter with real persistence tests.
+Blueprint execution window: Weeks 5–6. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Student1 DB foundation ready; Student3 getActiveProductsByIds ready for full sampler integration. Notification port must be provided before Student4 completes integration.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
 
-1. Implement Inquiry model with unique requestId/hash, category, contact/message, optional sampler snapshots and truthful notificationStatus. Persist before attempting SMTP. Same requestId/body yields original receipt, differing body409.
+1. Connect all support forms and sampler through HTTP mode. Verify real Product IDs reach inquiry and snapshot descriptions match server catalog, not user-tampered browser state.
 
-2. Implement POST /inquiries using shared inquiry schema plus server-side unique sampler IDs and active-product lookup through catalog service port. Reject nonexistent/inactive items and invalid six-piece total. Never trust client-provided product descriptions or prices.
+2. With Student4 test successful/failed quote notification and duplicates. Correct business copy so received request is distinguished from email delivery and no price/fulfillment promise is made.
 
-3. Implement Nodemailer transport factory reading environment, with injected test transport. In development use Mailpit or equivalent local sink. Email recipients/from are configured server-side, user email only validated replyTo; sanitize/escape HTML and prevent header injection.
+3. Check public forms with network timeouts,429,invalid fields, duplicate submit and failed SMTP. Preserve edits; same logical retry uses same id. Message length/error translation identical across client and backend.
 
-4. Export notifyQuote with exact contract. Build mail from saved request identifiers and required public business fields only; do not attach branding files. Return sent/failed without throwing on SMTP outage. Log only sanitized diagnostics; no full contact body/token.
+4. Finish supplied story/care content and asset register; check all support links and configured WhatsApp number. Leave missing actual business contact values documented and unexposed rather than guessing.
 
-5. Implement inquiry notification similarly; persisted inquiry remains status received if mail fails. Do not mark sent before transport acknowledgement. No repeated automatic retries sending duplicates on same requestId; document manual operational retry as outside current UI.
+5. Audit accessibility on form labels, validation summary, sampler selection controls, keyboard focus, EN/ES wrapping and mobile tap targets.
 
-6. Add rate limits and body size validation for public inquiries. Feedback shares same route. Register only your router; coordinate shared app changes through Student1.
+6. Document SMTP setup and safe test sink, notification failure semantics and sampler default. Prepare 4-minute support/sampler/notification demo and sanitized evidence.
 
-7. Implement support/http.ts exact endpoint and error mappings. Test adapter round trip and successful save despite failed notification; keep frontend mock mode until phase4.
-
-8. Write isolated Mongo + SMTP sink integration tests, fixture content only. Update environment/deployment mail section and provide Student4 a passing notifyQuote test/handoff.
+Integration emphasis: complete React-to-Express binding now (Weeks5–6), not in Phase4. Audit database-trigger needs: record that no triggers are specified, verify equivalent service/atomic-write logic, and do not invent triggers. Perform security code sweeps and verify every ES/EN translation map. Any launch/presentation preparation mentioned above may be drafted now; deployment/final sign-off remains Phase4.
 
 ## Acceptance scenarios
 
-- [ ] Support/feedback records saved and mail captured locally, never sent to real team.
-- [ ] Malformed injection strings escaped; arbitrary recipient fields rejected.
-- [ ] Missing/inactive sampler product rejected even if browser accepted it.
-- [ ] SMTP outage returns received receipt with failed status and keeps DB record.
-- [ ] Idempotent retry creates one inquiry and one notification attempt.
+- [ ] Live six-piece sampler saves one inquiry and locally captured mail with correct products.
+- [ ] Retry after network loss does not duplicate inquiry/mail.
+- [ ] SMTP unavailable never loses submitted inquiry; UI reports saved state truthfully.
+- [ ] No private values in WhatsApp URL, client bundle or logs.
+- [ ] Real API binding, security sweep, trigger audit and ES/EN audit complete.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-5`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 5 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-3-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 5 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-3-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Submit contact/feedback/sampler APIs, inspect records and local mail, then stop SMTP and show saved-with-notification-failure behavior.
-
-## Stop boundary
-
-Do not redesign completed UI, change DTOs unilaterally or claim final integration/deployment. Supply working API evidence and adapter.

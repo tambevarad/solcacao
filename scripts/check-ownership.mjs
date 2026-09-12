@@ -25,10 +25,16 @@ try {
   console.error('Could not compare Git base. Initialize/clone repository and confirm base exists.');
   process.exit(1);
 }
-const rules = JSON.parse(readFileSync('docs/ownership.json', 'utf8'))[member];
-const denied = [...files].filter(
-  (f) => !rules.some((p) => (p.endsWith('/') ? f.startsWith(p) : f === p)),
-);
+const ownership = JSON.parse(readFileSync('docs/ownership.json', 'utf8'));
+const denied = [...files].filter((f) => {
+  const matches = Object.entries(ownership).flatMap(([owner, paths]) =>
+    paths
+      .filter((p) => (p.endsWith('/') ? f.startsWith(p) : f === p))
+      .map((p) => ({ owner, length: p.length })),
+  );
+  const max = Math.max(0, ...matches.map((x) => x.length));
+  return !matches.some((x) => x.owner === member && x.length === max);
+});
 if (denied.length) {
   console.error(
     'Outside your ownership; hand off to owner or separate approved shared PR:\n' +

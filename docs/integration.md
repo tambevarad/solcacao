@@ -1,39 +1,11 @@
-# Integration sequence and acceptance
+# Integration order
 
-## Phase 2 merge order
+Phase1: Student2 repository/Tailwind/routing shell; Student1 central schema/ERD; all owners model their entities and translation outlines; Student2 assembles all overview/prototype contributions. MS Teams demo requires the real external prototype URL, not just local frames.
 
-1. Student 2 publishes shared shell/primitives/localization wiring early. Existing page stubs remain until owned replacements merge.
-2. Student 1 implements auth provider/forms and the already wired guard exports. No extra route edit is needed for account/wizard protection.
-3. Student 3 publishes catalog fixture service, cart provider and retail pages. Header/homepage/sampler use documented public seams.
-4. Students 4 and 5 complete homepage/wizard/support/sampler using the already merged interfaces.
-5. Coordinator checks every route in mock mode and EN/ES, mobile and keyboard paths. No backend claim required at this stage.
+Phase2 frontend track:2 shell/public components ->1 auth ->3 catalog/cart ->4 home/B2B and5 support/sampler. Backend track in the SAME phase:1 DB/auth/error ports ->2 dictionaries/static assets and3 catalog/cart ->5 inquiries/notification bridge ->4 B2B/files. Independent work may overlap against fixed stubs; final checks wait for named ports. No agent reimplements a peer’s dependency.
 
-Work can overlap on feature branches using the fixed stubs. These are merge dependencies, not instructions for one teammate to implement another's feature. Fetch/merge development into feature branches before final review. During conflict resolution, preserve both owners' valid work and run affected checks; do not blindly select ours/theirs.
+Phase3: switch real HTTP mode and run guest filter/cart/login-merge/logout/checkout; business wizard/upload/quote/notification; sampler/contact/feedback; ES/EN state retention; access-control failures; idempotent retries; SMTP outage after persistence; DB-trigger/service-logic audit. Record actual data/response/file/mail evidence. Never call a mocked success real integration.
 
-## Phase 3 merge order
+Phase4: verify deployed deep links, real Mongo, durable private uploads, configured mail; compress assets, lazy-load, optimize measured queries; audit keyboard/mobile/ES–EN/console; finish clean-clone README and20–30minute demo.
 
-1. Student 1 shared db/auth/errors infrastructure and real auth routes.
-2. Student 2 localization endpoint/public assets and Student 3 catalog/cart/orders.
-3. Student 5 inquiry/notification bridge (sampler depends on Student 3 catalog port).
-4. Student 4 quote/file handling (depends on Student 1 auth and Student 5 notification port).
-5. All HTTP adapters tested against running backend; compiled app starts with actual Mongo. UI-wide switch is Phase 4.
-
-## Phase 4 acceptance scenarios
-
-| Scenario                                                      | Participants | Required evidence                                             |
-| ------------------------------------------------------------- | ------------ | ------------------------------------------------------------- |
-| Browse/filter -> product -> guest cart -> reload              | 2,3          | URL state and restored guest quantities                       |
-| Guest cart -> login -> saved merge -> retry -> logout         | 1,2,3        | One additive merge, unchanged retry, no private cart leakage  |
-| Business login -> wizard -> language switch -> PDF -> receipt | 1,2,4,5      | Database request, correct private file, truthful notification |
-| Retail token POST quote; second business GET another's file   | 1,4          | 403 for wrong role,404 for nonowner                           |
-| Sampler six pieces -> inquiry -> mail                         | 2,3,5        | Same catalog IDs, one DB record and local mail                |
-| SMTP outage after quote/contact save                          | 4,5          | Saved request remains, failed notification reported           |
-| Guest checkout -> altered client price -> retry               | 1,3          | DB-derived total, one simulated order, no stock deduction     |
-| API offline in HTTP mode                                      | All          | Recoverable error; no mock success                            |
-| Deployment refresh/restart                                    | 1,2,4        | Deep links work, DB/file data survive, no public uploads      |
-
-Use synthetic accounts/data and an isolated test database. Do not use actual customer email addresses or logos in committed test evidence. Tests should inspect saved state and authorization outcomes, not only UI success text.
-
-## Phase approval
-
-Each owner sets ready_for_review with evidence; a peer reviews the diff, runs relevant tests and checks visual evidence. Coordinator marks integrated only after PR merge and full phase smoke checks. One phase has five separate ownership handoffs and one shared acceptance review. No automated status file is proof of human approval.
+Every week has one team integration record in docs/weekly. All primary-branch changes use reviewed PRs. Each PR requires visual review, passing unit tests, at least1 peer approval. Each owner supplies evidence; coordinator cannot mark untested peer work complete. HTTP failures must remain visible, not trigger mock fallback.

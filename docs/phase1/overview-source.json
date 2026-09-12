@@ -1,0 +1,65 @@
+[
+  {
+    "title": "SolCacao Project Overview",
+    "sections": [
+      [
+        "Purpose and users",
+        "SolCacao is a planned bilingual web application for a premium artisanal chocolate brand. It serves individual shoppers and business customers through distinct journeys in one coherent store. Retail customers browse single-origin bars, truffles and seasonal products. Business customers explore custom molds, personalized packaging and white-label services before requesting a manufacturing quote."
+      ],
+      [
+        "Retail experience",
+        "The retail catalog supports search, origin and cacao-percentage filters, price filtering, pagination and sorting. Product views present localized information and imagery. A side-drawer cart supports quantity changes and removal. Guests can build a cart and use checkout; registered users can save carts and merge guest selections after login. Checkout is currently scoped as a clearly labeled simulation with a persisted order receipt and no payment or fulfillment; this default must be confirmed with the team/instructor."
+      ],
+      [
+        "Business and personalization",
+        "The four-step business wizard covers cacao and quantity, a branding/design upload, packaging and contact details, then review and quote submission. Partner authorization and private file access protect requests. Contact, feedback, a customizable sampler inquiry, informational pages and WhatsApp redirection support customer communication. Notifications route validated inquiries through a server-side SMTP bridge."
+      ],
+      [
+        "Language and visual approach",
+        "English and Spanish apply to navigation, product information, forms, errors and confirmation states. Language switching preserves useful in-progress state. The proposed presentation uses warm ivory, cacao tones, generous spacing, original product photography and clear packaging choices. Fran\u2019s Chocolates is a design reference for restrained layouts and gift presentation; SolCacao retains its own identity and approved content."
+      ]
+    ]
+  },
+  {
+    "title": "Architecture and Data Design",
+    "sections": [
+      [
+        "Technology",
+        "The application uses React18+ with Hooks and Context, Tailwind CSS and Lucide React. A separate Node.js/Express backend communicates through stateless REST JSON APIs, with multipart forms for uploads. MongoDB and Mongoose store application data. JWT bearer authentication and bcrypt password hashing support identity and role-based access. The repository adds TypeScript contracts and pinned dependencies to reduce integration mismatches among five developers."
+      ],
+      [
+        "Data relationships",
+        "Users may own addresses and a saved cart; business users have a corporate-partner profile. Products have inventory records and localized fields. Cart items reference products, while simulated order items preserve price/name snapshots. B2B requests belong to authenticated business users and retain private file metadata. Inquiries may include sampler selections and notification state. The accompanying ERD and data dictionary define cardinalities, ownership rules, validation and indexes."
+      ],
+      [
+        "Integration boundaries",
+        "Each student owns both the UI and server components of their subsystem. Shared DTOs and provider interfaces are fixed before feature coding. The product-list endpoint returns a JSON list with pagination headers; cart persistence accepts a JSON array, matching the blueprint. Internal adapters preserve convenient typed models without changing the wire contract. Mock services support frontend development, while real HTTP binding is completed in the third execution phase."
+      ],
+      [
+        "Correctness and security",
+        "The server validates request fields, role/access ownership, product references, quantities and uploaded files. Prices are derived from stored product data. Cart revision checks and idempotency keys reduce accidental overwrites or duplicate submissions. Passwords/tokens are not stored in browser localStorage. Files remain private; saved requests are retained even when notification delivery fails. Test data is fictional and never represents verified business or food information."
+      ]
+    ]
+  },
+  {
+    "title": "Team Delivery and Validation",
+    "sections": [
+      [
+        "Five responsibilities",
+        "Student1 owns authentication, security and identity/database coordination. Student2 owns the application shell, navigation, localization and public static assets. Student3 owns catalog, search, inventory, cart and the scoped retail checkout. Student4 owns homepage, B2B services, four-step customization and file-backed requests. Student5 owns contact/feedback/sampler/static views, inquiry validation and the SMTP notification bridge. All contribute tests, translations, reviews and presentations."
+      ],
+      [
+        "Eight-week execution",
+        "Weeks1-2 establish repository, Tailwind, schemas, routing and translation outlines. Weeks3-4 implement each student\u2019s React components and REST endpoints, validate data and synchronize state. Weeks5-6 connect the UI to real APIs, audit database logic, review security and verify both languages. Weeks7-8 compress assets, optimize queries, lazy-load images, deploy, document setup and rehearse presentations. The academic Phase1 also includes an ERD, schema, this three-page overview, a MarvelApp/MockFlow interactive prototype and an MS Teams demo."
+      ],
+      [
+        "Version control and review",
+        "The shared repository has protected main and development branches. Students work on dedicated name-prefixed branches created from development. Direct primary-branch commits are forbidden. Every merge PR requires visual review, passing unit tests and at least one peer approval. Weekly integration records document progress and blockers. Stable releases reach main through reviewed PRs. The template\u2019s audit revision remains unmerged until a real reviewer approves it."
+      ],
+      [
+        "Acceptance and current status",
+        "Acceptance covers functional retail/business flows, responsive and accessible EN/ES interfaces, actual API/database persistence, private file behavior, truthful notifications, clean code, collaboration history, deployment and documentation. Final presentation lasts20-30minutes and includes all five members. This is a planning draft; hosted prototype, real team identifiers, production assets and external deployment access remain to be supplied/verified. The prototype kit and detailed per-student phase prompts support that work without claiming it is already complete."
+      ]
+    ]
+  }
+]
