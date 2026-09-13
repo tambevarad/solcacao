@@ -1,6 +1,6 @@
 # Planned database model
 
-This is a design contract for Phase 3, not implemented Mongoose schemas. Each owner implements its models under its feature directory. Use timestamps, explicit collections, strict schemas and serializers that remove private fields.
+This is the Phase 1 schema design contract. Model definitions are created in Phase 1 and completed with real service behavior in Phase 2. Each owner implements its models under its feature directory. Use timestamps, explicit collections, strict schemas and serializers that remove private fields.
 
 | Collection        | Owner | Fields and indexes                                                                                                                                                           |
 | ----------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -1,48 +1,39 @@
-# Student 1 Phase 4
+# Student 1 Phase 4 — Audit, Polish & Launch
 
-## Outcome
-
-Prove your feature works in the integrated HTTP application and supply final deployment/demo evidence.
+Blueprint execution window: Weeks 7–8. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Own Phase 3 integrated; peers’ HTTP routes available. Coordinate with Student 3 on cart transitions and Student 4 on role guards.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
 
-1. Test login/register through the real UI with VITE_API_MODE=http. Verify token becomes available before the cart merge call; no duplicate requests from StrictMode create duplicate accounts or carts.
+1. Re-run the complete real-HTTP journey for your subsystem from Phase3; fix remaining owned defects without changing public contracts independently.
 
-2. Integrate account/addresses and error translation. Verify reload prompts login according to the memory-token design, logout clears local identity, and an in-flight request cannot restore a logged-out user.
+2. Compress your approved images/assets, lazy-load noncritical imagery, and measure loading behavior. Keep meaningful alt text and reduced-motion support. Review shared query performance and fix your indexes only after measuring.
 
-3. Exercise guest/retail/business entry to quote wizard together with Student 4; verify the backend still blocks unauthorized direct POST/file retrieval even when UI guards are bypassed.
+3. Finish mobile/desktop, keyboard/focus, EN/ES, loading/error and no-console-error checks. All features still use React Hooks/Context, responsive Tailwind and shared Lucide icons.
 
-4. Review JWT expiry UX, safe returnTo, CORS allowlist, login throttling, environment handling, body limits, logs and error responses. Review rather than rewrite other owners’ implementation; send concrete fixes to their handoffs.
+4. Support cloud deployment for your owned subsystem; verify persistent data, safe configuration and live behavior with Student2.
 
-5. Run real Mongo integration tests in clean environment, document setup and fail states, and provide a deployment environment checklist with secret names only.
+5. Complete your feature README, API/schema notes, actual test evidence, known limitations and presentation contribution. Follow docs/submissions.md and docs/deployment.md. Never invent a live URL or passing integration.
 
-6. Prepare 4-minute presentation segment showing architecture/auth, successful flow and one access-control negative test. Record exact evidence and remaining risks; update own phase status only.
+6. Rehearse your allocated segment in the combined20–30minute face-to-face demonstration. Participate in weekly integration and a peer’s PR review. Stop with a reviewable owned commit proposal; release through PRs only.
 
 ## Acceptance scenarios
 
-- [ ] Real login -> persisted cart merge -> logout does not expose saved cart as guest.
-- [ ] A stale auth response after logout/account switch is ignored.
-- [ ] Expired session gives a recoverable login path; no infinite retries.
-- [ ] Authorization tests pass against deployed/configured server, not just mocked middleware.
+- [ ] Owned live-cloud flow verified.
+- [ ] Asset/query optimization evidence and comprehensive docs supplied.
+- [ ] Team presentation rehearsal and peer review completed.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-1`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 1 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-4-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 1 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-4-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Show real registration/login, stored identity, protected access, one denied request and secret-safe configuration.
-
-## Stop boundary
-
-Do not add unrequested product scope or silently replace real integrations with fixtures. Final release requires all owners and coordinator checks.

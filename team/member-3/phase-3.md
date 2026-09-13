@@ -1,53 +1,43 @@
-# Student 3 Phase 3
+# Student 3 Phase 3 — Integration & API Bind
 
-## Outcome
-
-Complete your validated Express/Mongoose subsystem and matching HTTP adapter with real persistence tests.
+Blueprint execution window: Weeks 5–6. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Phase 2 catalog reviewed. Student 1 shared db/auth middleware must be merged before protected endpoint tests; use published interfaces, not local duplicate middleware.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
 
-1. Implement Product, Inventory, Cart and Order schemas/indexes and DTO serializers. Product stock joins Inventory.availableUnits; monetary fields integers. Create one explicit idempotent fixture seed command, no production auto-seed/drop.
+1. Run catalog/product/cart/checkout through HTTP adapters against seeded Mongo. Remove Phase 2 direct fixture leakage and check no fallback exists. Confirm loading/error states for network failures.
 
-2. Implement GET products and slug route. Parse query primitives explicitly, escape literal search, whitelist sort and filters; validate bounds and cap page size. Query total and items consistently. Test localized names and tie-breaker order.
+2. With Student 1 verify guest login merge, retry on lost response, role change/account switch, logout and revision conflict. Keep failed guest merge data until confirmed server success.
 
-3. Export getActiveProductsByIds port returning DTOs to Student 5. Keep Mongoose internals private. Document missing IDs excluded and inventory stock included.
+3. With Students 4/5 verify homepage featured products and sampler both use your public API, same IDs/prices/images, and active/stock semantics. Resolve integration via contracts, not duplicate fixture copies.
 
-4. Implement GET cart and POST persist with authenticated user ownership and atomic expectedRevision condition. Validate distinct IDs/count/quantities against active product stock; map concurrent conflict to409. No body userId accepted.
+4. Implement real browser scenarios for filters->cart->login->merge->checkout including EN/ES switch, mobile drawer and stale-stock checkout. Test quantity totals and persisted DB records, not just success toast.
 
-5. Implement atomic merge with bounded stored mergeIds in same cart document, additive capped quantities and revision increment. Test retry after lost response and concurrent duplicate requests. Initial-cart creation race must be handled with unique userId; never read-modify-save without conflict protection.
+5. Optimize measured filter queries/indexes and image loading; preserve sort correctness. Confirm production seed is opt-in and no reset endpoint exists.
 
-6. Implement POST orders with optionalAuth, shared checkout validation, authoritative price/product snapshots and unique requestId/body hash. Same request returns same receipt; different payload conflicts. Validate stock without decrement because orders are simulated.
+6. Document cart algorithm, simulated-order limitations, API examples and demo reset procedure. Prepare a 5-minute retail demo with one merge/stock edge case.
 
-7. Implement all catalog/http.ts methods with exact routes and query encoding; test optional undefined values not becoming string undefined. Update error UI mappings only in your feature.
-
-8. Add real isolated Mongo tests for filters, ownership, atomic merges/revisions, stock validation and duplicate checkout. Preserve mocked frontend mode for Phase 2 while proving HTTP adapter separately.
+Integration emphasis: complete React-to-Express binding now (Weeks5–6), not in Phase4. Audit database-trigger needs: record that no triggers are specified, verify equivalent service/atomic-write logic, and do not invent triggers. Perform security code sweeps and verify every ES/EN translation map. Any launch/presentation preparation mentioned above may be drafted now; deployment/final sign-off remains Phase4.
 
 ## Acceptance scenarios
 
-- [ ] Raw Mongo operators in URL/body cannot change query/ownership.
-- [ ] Two competing persist requests cannot both overwrite same revision.
-- [ ] Two same-mergeId requests add guest contents once; initial cart race handled.
-- [ ] One user cannot target another cart; no untrusted price accepted.
-- [ ] Orders persist exact authoritative totals and retries create one order.
+- [ ] Real saved cart persists across logout/login and separate page load after reauthentication.
+- [ ] UI subtotal and server order total agree with DB prices, not modified browser values.
+- [ ] Changing language does not lose cart/filter/product selection.
+- [ ] Simulated order is labeled correctly and inventory remains unchanged.
+- [ ] Real API binding, security sweep, trigger audit and ES/EN audit complete.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-3`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 3 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-3-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 3 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-3-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Show product queries and pagination, authenticated saved cart, duplicate merge proof, and one simulated Order document with correct totals.
-
-## Stop boundary
-
-Do not redesign completed UI, change DTOs unilaterally or claim final integration/deployment. Supply working API evidence and adapter.

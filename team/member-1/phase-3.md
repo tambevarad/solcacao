@@ -1,55 +1,43 @@
-# Student 1 Phase 3
+# Student 1 Phase 3 — Integration & API Bind
 
-## Outcome
-
-Complete your validated Express/Mongoose subsystem and matching HTTP adapter with real persistence tests.
+Blueprint execution window: Weeks 5–6. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Phase 2 auth reviewed. Student 1 starts the backend foundation first; publish shared middleware/db signatures before Students 3–5 integrate their routers.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
 
-1. Implement environment validation and connectDb/disconnectDb in server/shared. Require Mongo URI and a non-placeholder strong JWT secret in HTTP backend mode. Startup must fail clearly if DB is unavailable; health must not claim DB readiness before connection. Keep template/mock frontend independently runnable.
+1. Test login/register through the real UI with VITE_API_MODE=http. Verify token becomes available before the cart merge call; no duplicate requests from StrictMode create duplicate accounts or carts.
 
-2. Implement User, CorporatePartner and Address schemas with indexes from data-model.md. Normalize unique email; hash password with bcrypt cost 12. Serialize User without hash/private flags. B2B registration must create partner consistently; clean up on failure or document replica-set transaction setup.
+2. Integrate account/addresses and error translation. Verify reload prompts login according to the memory-token design, logout clears local identity, and an in-flight request cannot restore a logged-out user.
 
-3. Implement register/login routes using shared validation and consistent errors/statuses. JWT HS256 issuer/audience/sub/role/expiry per contract. Prevent account enumeration on failed login; map unique-email race to EMAIL_EXISTS. No arbitrary spread of user request into a model.
+3. Exercise guest/retail/business entry to quote wizard together with Student 4; verify the backend still blocks unauthorized direct POST/file retrieval even when UI guards are bypassed.
 
-4. Implement requireAuth, optionalAuth and requireRole ports and Express req.user typing. Verify token then load current user/role. optionalAuth permits no token but rejects a supplied invalid token. Missing auth ->401; retail accessing b2b ->403. Export to peers; do not insert their route logic yourself.
+4. Review JWT expiry UX, safe returnTo, CORS allowlist, login throttling, environment handling, body limits, logs and error responses. Review rather than rewrite other owners’ implementation; send concrete fixes to their handoffs.
 
-5. Implement me, profile update and own-address routes. A provided address id belonging to another user yields 404. Ignore no unknown privileged fields: reject attempts to change role/passwordHash/userId via profile/address input.
+5. Run real Mongo integration tests in clean environment, document setup and fail states, and provide a deployment environment checklist with secret names only.
 
-6. Add typed shared error and validation helpers, consistent JSON parser failures and auth rate limits. Preserve already mounted routers. Never log tokens, passwords, SMTP credentials or whole request bodies.
+6. Prepare 4-minute presentation segment showing architecture/auth, successful flow and one access-control negative test. Record exact evidence and remaining risks; update own phase status only.
 
-7. Implement auth/http.ts against exact endpoint paths. All client requests flow through HttpClient. Keep UI components mode-agnostic. Verify direct API calls and HTTP adapter tests without switching everyone to a live backend.
-
-8. Add isolated Mongo integration setup in your owned test directory and provide Student 2 the exact CI Mongo-service patch using TEST_MONGODB_URI; Student 2 owns .github changes. Tests must refuse a production URI. Seed only test accounts; cleanup only test-owned records/database. Update server start/deployment instructions and handoff prerequisites.
+Integration emphasis: complete React-to-Express binding now (Weeks5–6), not in Phase4. Audit database-trigger needs: record that no triggers are specified, verify equivalent service/atomic-write logic, and do not invent triggers. Perform security code sweeps and verify every ES/EN translation map. Any launch/presentation preparation mentioned above may be drafted now; deployment/final sign-off remains Phase4.
 
 ## Acceptance scenarios
 
-- [ ] Register/login round trip with bcrypt verification and no plaintext password/hash leakage.
-- [ ] Expired, modified, wrong-audience and missing JWT rejected; wrong role ->403.
-- [ ] Two users cannot read/write each other’s addresses.
-- [ ] Concurrent same-email registration yields one account and one conflict, not two users.
-- [ ] Invalid/malformed body returns standard envelope; database failure is reported truthfully.
+- [ ] Real login -> persisted cart merge -> logout does not expose saved cart as guest.
+- [ ] A stale auth response after logout/account switch is ignored.
+- [ ] Expired session gives a recoverable login path; no infinite retries.
+- [ ] Authorization tests pass against real configured server, not just mocked middleware.
+- [ ] Real API binding, security sweep, trigger audit and ES/EN audit complete.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-1`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 1 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-3-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 1 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-3-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Use REST requests to create both roles, log in, fetch me, update profile/address, and demonstrate 401/403/ownership rejection. Show saved records with hashes redacted.
-
-## Stop boundary
-
-Do not redesign completed UI, change DTOs unilaterally or claim final integration/deployment. Supply working API evidence and adapter.
-
-Template test transition: update tests/health.test.ts when real routes land. Replace the template-only products404 assertion with health/readiness/error assertions; do not keep asserting a required feature is missing.

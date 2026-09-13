@@ -1,6 +1,12 @@
 {
   "member": 5,
   "phases": {
+    "1": {
+      "state": "not_started",
+      "commit": null,
+      "checks": [],
+      "blockers": []
+    },
     "2": {
       "state": "not_started",
       "commit": null,

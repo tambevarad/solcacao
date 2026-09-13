@@ -4,7 +4,7 @@ Source: user-uploaded Screenshot 2026-09-12 at 10.45.34 AM.png, CSE 5335 Fall 20
 
 ## Phase 1 Planning and Design 15%
 
-Entity Relationship Diagram (ERD); database schema design; 3-page project overview; interactive prototype using MarvelApp or MockFlow. Demo required via MS Teams. Outside this repository implementation request.
+Entity Relationship Diagram (ERD); database schema design; 3-page project overview; interactive prototype using MarvelApp or MockFlow. Demo required via MS Teams. Included in the revised repository planning workflow.
 
 ## Phase 2 Front-end Development 15%
 

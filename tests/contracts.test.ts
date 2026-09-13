@@ -40,3 +40,38 @@ describe('shared boundary rules', () => {
     expect(inquirySchema.safeParse({ ...input, samplerItems: [] }).success).toBe(false);
   });
 });
+
+import { afterEach, vi } from 'vitest';
+import { createHttpClient } from '../client/src/api/http.js';
+afterEach(() => vi.unstubAllGlobals());
+it('preserves the blueprint raw product list and pagination headers', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(
+      new Response(JSON.stringify([{ id: 'sample' }]), {
+        headers: { 'X-Total-Count': '27', 'Content-Type': 'application/json' },
+      }),
+    ),
+  );
+  const result = await createHttpClient(() => null).requestRaw<Array<{ id: string }>>('/products');
+  expect(result.body).toEqual([{ id: 'sample' }]);
+  expect(result.headers.get('X-Total-Count')).toBe('27');
+});
+it('sends raw cart arrays with revision and bearer headers without wrapping', async () => {
+  const fetchMock = vi
+    .fn()
+    .mockResolvedValue(new Response(JSON.stringify({ data: { revision: 2 } })));
+  vi.stubGlobal('fetch', fetchMock);
+  const items = [{ productId: '000000000000000000000001', quantity: 2 }];
+  expect(
+    await createHttpClient(() => 'test-token').request('/cart/persist', {
+      method: 'POST',
+      body: items,
+      headers: { 'If-Match': '1' },
+    }),
+  ).toEqual({ revision: 2 });
+  const options = fetchMock.mock.calls[0][1];
+  expect(JSON.parse(options.body)).toEqual(items);
+  expect(options.headers.get('If-Match')).toBe('1');
+  expect(options.headers.get('Authorization')).toBe('Bearer test-token');
+});

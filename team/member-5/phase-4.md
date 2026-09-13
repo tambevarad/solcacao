@@ -1,48 +1,39 @@
-# Student 5 Phase 4
+# Student 5 Phase 4 — Audit, Polish & Launch
 
-## Outcome
-
-Prove your feature works in the integrated HTTP application and supply final deployment/demo evidence.
+Blueprint execution window: Weeks 7–8. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Live auth/catalog/support/B2B APIs available; configured SMTP sink or authorized production transport ready.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
 
-1. Connect all support forms and sampler through HTTP mode. Verify real Product IDs reach inquiry and snapshot descriptions match server catalog, not user-tampered browser state.
+1. Re-run the complete real-HTTP journey for your subsystem from Phase3; fix remaining owned defects without changing public contracts independently.
 
-2. With Student4 test successful/failed quote notification and duplicates. Correct business copy so received request is distinguished from email delivery and no price/fulfillment promise is made.
+2. Compress your approved images/assets, lazy-load noncritical imagery, and measure loading behavior. Keep meaningful alt text and reduced-motion support. Send query/performance issues to the owning backend member.
 
-3. Check public forms with network timeouts,429,invalid fields, duplicate submit and failed SMTP. Preserve edits; same logical retry uses same id. Message length/error translation identical across client and backend.
+3. Finish mobile/desktop, keyboard/focus, EN/ES, loading/error and no-console-error checks. All features still use React Hooks/Context, responsive Tailwind and shared Lucide icons.
 
-4. Finish supplied story/care content and asset register; check all support links and configured WhatsApp number. Leave missing actual business contact values documented and unexposed rather than guessing.
+4. Support cloud deployment for your owned subsystem; verify persistent data, safe configuration and live behavior with Student2.
 
-5. Audit accessibility on form labels, validation summary, sampler selection controls, keyboard focus, EN/ES wrapping and mobile tap targets.
+5. Complete your feature README, API/schema notes, actual test evidence, known limitations and presentation contribution. Follow docs/submissions.md and docs/deployment.md. Never invent a live URL or passing integration.
 
-6. Document SMTP setup and safe test sink, notification failure semantics and sampler default. Prepare 4-minute support/sampler/notification demo and sanitized evidence.
+6. Rehearse your allocated segment in the combined20–30minute face-to-face demonstration. Participate in weekly integration and a peer’s PR review. Stop with a reviewable owned commit proposal; release through PRs only.
 
 ## Acceptance scenarios
 
-- [ ] Live six-piece sampler saves one inquiry and locally captured mail with correct products.
-- [ ] Retry after network loss does not duplicate inquiry/mail.
-- [ ] SMTP unavailable never loses submitted inquiry; UI reports saved state truthfully.
-- [ ] No private values in WhatsApp URL, client bundle or logs.
+- [ ] Owned live-cloud flow verified.
+- [ ] Asset/query optimization evidence and comprehensive docs supplied.
+- [ ] Team presentation rehearsal and peer review completed.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-5`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 5 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-4-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 5 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-4-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Show sampler and contact submission with DB/mail evidence and one graceful failure case.
-
-## Stop boundary
-
-Do not add unrequested product scope or silently replace real integrations with fixtures. Final release requires all owners and coordinator checks.

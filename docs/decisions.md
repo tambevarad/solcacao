@@ -4,7 +4,7 @@ These are explicit implementation defaults adopted to prevent five agents making
 
 | ID  | Decision                                                                     | Basis and consequence                                                                                                                          |
 | --- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| D01 | Use screenshot phases 2/3/4                                                  | Latest user instruction; overrides old week labels, not feature requirements                                                                   |
+| D01 | Preserve both source schedules                                               | Blueprint execution phases1–4 plus academic checkpoint crosswalk in roadmap.md                                                                 |
 | D02 | React with TypeScript, Vite, Tailwind, Express, MongoDB/Mongoose             | Required stack plus compile-time contracts to reduce model mismatch; exact installed versions locked                                           |
 | D03 | Retail checkout is simulated, no money collected                             | Blueprint says guest checkout but defines no gateway; persist a simulated receipt/order; do not reserve/deduct stock or claim fulfillment      |
 | D04 | Quantity checked against available inventory at checkout                     | Validate feasibility; simultaneous simulated orders may overlap because no fulfillment is performed                                            |
@@ -24,3 +24,5 @@ These are explicit implementation defaults adopted to prevent five agents making
 ## Change proposal template
 
 Decision/contract ID; problem; proposed exact new value/signature; owners affected; UI/mock/API/model/test changes; migration/backwards compatibility; reviewer decision; linked PR; date. Store a proposal in your own handoff. Student 2 updates this canonical log only after review.
+
+D17: Wire compatibility restored: raw Product[] list with pagination headers; raw CartLine[] persist body with If-Match revision. D18: Dedicated name-prefixed branches are reused across phases; no mandatory per-phase branch naming. D19: Phase1 plans, ERD/overview drafts and prototype assets are included; a real MarvelApp/MockFlow URL remains a required external deliverable.

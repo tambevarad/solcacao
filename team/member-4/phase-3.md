@@ -1,53 +1,43 @@
-# Student 4 Phase 3
+# Student 4 Phase 3 — Integration & API Bind
 
-## Outcome
-
-Complete your validated Express/Mongoose subsystem and matching HTTP adapter with real persistence tests.
+Blueprint execution window: Weeks 5–6. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
-Student 1 auth/database ports ready. Student 5 notifyQuote port may land later; inject a test notification dependency and record blocked real bridge integration.
-
-Read your context.md and current status/evidence first. If previous phase is not integrated, explain the dependency; do not silently skip it. Root context.md and docs/contracts.md remain binding.
+Your prior phase must be integrated and current development synchronized. Use published peer ports; report unavailable dependencies without taking over their code.
 
 ## Ordered implementation steps
 
-1. Implement B2BRequest model with own-user index, idempotency key/hash and private file metadata. Never store File objects or public disk URLs.
+1. Run full quote journey in HTTP mode with real business login and local SMTP sink. Confirm saved fields/file match review screen, receipt truthful, auth token actually sent.
 
-2. Implement POST /b2b/quote with requireAuth+requireRole before multer. Accept metadata JSON string and designFile only. Validate quantity/enums/company/email/locale/requestId using shared quote schema; reject malformed JSON and unexpected fields.
+2. With Student 5 test notification sent/failed outcomes; saved quote remains discoverable by owner. With Student 1 test expiry while wizard draft exists: login recovery preserves safe draft and requires file reselection if route remount loses File.
 
-3. Implement private local storage with generated filenames, .pdf/MIME/signature verification and 5MiB limit. Delete partial/temp files on validation, DB, duplicate submission and middleware errors. Directory is not served statically.
+3. Exercise back/edit/language toggle/mobile/keyboard behavior with real network delays and upload failures. Final submission creates a new requestId only after meaningful edits/new request; retries retain prior id.
 
-4. Persist request before calling notifyQuote from Student 5. SMTP failure returns saved request receipt with failed status, not a generic failure that encourages duplicate manufacturing requests. Do not send file contents or invent recipient routes.
+4. Verify the configured private upload directory survives restart and is inaccessible via static path. Download through authenticated endpoint works with correct disposition; no public S3 URLs introduced without reviewed change.
 
-5. Handle duplicate requestId atomically with unique index; identical canonical metadata+digest yields original receipt without duplicate file/email; differing body returns409. Clean new temporary file in either duplicate path.
+5. Finish homepage image optimization/alt text/content slots with supplied assets and register sources. Confirm featured products are live catalog results and empty-state handling works.
 
-6. Implement own quote receipt and PDF attachment GET routes. Use JWT subject ownership filter; another business gets404. Reject guessed/malformed IDs; set attachment filename safely, nosniff and application/pdf.
+6. Prepare 5-minute homepage/B2B segment showing end-to-end request and private file/notification evidence without personal data.
 
-7. Implement b2b/http.ts FormData exactly: metadata JSON and designFile File. No manually supplied multipart Content-Type. Verify DTO receipt and upload error mapping.
-
-8. Write tests with synthetic minimal PDFs and temp storage, fake SMTP for unit tests, real Mongo for persistence. Cover cleanup and ownership; never use real corporate confidential files in fixtures.
+Integration emphasis: complete React-to-Express binding now (Weeks5–6), not in Phase4. Audit database-trigger needs: record that no triggers are specified, verify equivalent service/atomic-write logic, and do not invent triggers. Perform security code sweeps and verify every ES/EN translation map. Any launch/presentation preparation mentioned above may be drafted now; deployment/final sign-off remains Phase4.
 
 ## Acceptance scenarios
 
-- [ ] Missing/retail token rejected before storing a file.
-- [ ] PDF MIME spoof/signature mismatch/oversized upload rejected and temp files removed.
-- [ ] Two identical concurrent submissions produce one request/file/notification attempt.
-- [ ] Other B2B user cannot retrieve receipt or file.
-- [ ] SMTP failure preserves saved request; response accurately reports failure.
+- [ ] Business quote saved from live UI, correct PDF stored, email outcome reflected.
+- [ ] Restart retains upload; direct public file URL fails.
+- [ ] Lost response retry does not duplicate request or email.
+- [ ] All four steps usable at375px and by keyboard in both languages.
+- [ ] Real API binding, security sweep, trigger audit and ES/EN audit complete.
 
-## Verification and handoff
+## Required verification
 
-1. Run `npm run typecheck`, targeted tests under `tests/member-4`, `npm run check`, and `npm run build`.
-2. Run `npm run check:ownership -- --member 4 --base development` and resolve accidental edits. Shared approved changes still require the owner's PR.
-3. Run manual desktop/mobile, EN/ES and keyboard checks relevant to the steps above. Backend phase also requires real isolated Mongo API checks; mocks alone do not count.
-4. Record commands, exact pass/fail counts, manual observations, dependency blockers, public API compatibility and proposed commit in `phase-3-evidence.md`. Screenshots must use synthetic data, no secrets.
-5. Update status.json and handoff.md. Never mark a skipped test passed. Stop before commit/push/merge unless explicitly requested. Do not begin the next phase.
+Run npm run check and npm run build, plus owned behavior/schema tests and visual review. Phase2 includes real backend validation tests as well as mock frontend interactions. Phase3 requires real Mongo/API tests; mocks do not count. Phase4 requires actual launch evidence. Run npm run check:ownership -- --member 4 --base development. Shared docs/config outside ownership go as exact handoff proposals to the owner.
 
-## Demo walkthrough
+## Handoff and stop
+
+Update phase-3-evidence.md, handoff.md and status.json using real results. Set ready_for_review only when owned checks pass; only a reviewer records integrated after the actual PR merge. A blocked check remains blocked. Every PR needs visual review, passing unit tests and at least one peer approval. Stop before commit/push/merge/deploy unless the teammate explicitly asks. Never implement the next phase automatically.
+
+## Demo
 
 Submit multipart request, show DB record and private file, demonstrate invalid upload and forbidden file access.
-
-## Stop boundary
-
-Do not redesign completed UI, change DTOs unilaterally or claim final integration/deployment. Supply working API evidence and adapter.

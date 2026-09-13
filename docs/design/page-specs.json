@@ -1,0 +1,103 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "owner": 4,
+      "sections": [
+        "hero slides",
+        "featured catalog items",
+        "seasonal collections",
+        "wholesale feature",
+        "sampler link"
+      ],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "catalog",
+      "owner": 3,
+      "sections": ["filters/search/sort", "responsive grid", "pagination"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "product",
+      "owner": 3,
+      "sections": ["gallery", "name/origin/cacao/price", "quantity/add", "detail accordions"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "cart",
+      "owner": 3,
+      "sections": ["line items", "quantities/remove", "subtotal", "checkout"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "auth",
+      "owner": 1,
+      "sections": [
+        "retail/business selector",
+        "login/register fields",
+        "error summary",
+        "safe return"
+      ],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "account",
+      "owner": 1,
+      "sections": ["profile", "role cue", "addresses"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "wholesale",
+      "owner": 4,
+      "sections": ["custom molds", "packaging", "white-label services", "start wizard"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "wizard",
+      "owner": 4,
+      "sections": ["cacao/quantity", "branding upload", "packaging/contact", "review/submit"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "sampler",
+      "owner": 5,
+      "sections": ["catalog choices", "six-piece count", "contact fields", "inquiry submit"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "contact",
+      "owner": 5,
+      "sections": ["category", "name/email/message", "feedback", "receipt"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    },
+    {
+      "id": "story-care",
+      "owner": 5,
+      "sections": ["supplied content slots", "readable static layout"],
+      "mobile": "Single column; controls >=44px; filters/drawers keyboard accessible",
+      "states": ["loading", "empty", "error", "success"],
+      "locales": ["en", "es"]
+    }
+  ]
+}

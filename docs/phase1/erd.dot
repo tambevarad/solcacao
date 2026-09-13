@@ -1,0 +1,29 @@
+digraph ERD {
+  graph [rankdir=TB,bgcolor="white",pad=0.3,nodesep=0.45,ranksep=0.65];
+  node [shape=box,style="rounded,filled",fillcolor="#F5F5F5",color="#555555",fontname="Arial",fontsize=12,margin="0.18,0.12"];
+  edge [color="#777777",fontname="Arial",fontsize=10];
+  Users [label="Users\nid / email / role"];
+  Partners [label="Corporate Partners\nuserId / companyName"];
+  Addresses [label="Addresses\nuserId / postal fields"];
+  Carts [label="Carts\nuserId / revision"];
+  Quotes [label="B2B Requests\nuserId / private file key"];
+  Products [label="Products\nslug / localized text / price"];
+  Inventory [label="Inventory\nproductId / available units"];
+  Orders [label="Orders\noptional userId / receipt"];
+  Inquiries [label="Inquiries\ncontact / category / status"];
+  CartItems [label="Cart items (embedded)\nproductId / quantity"];
+  OrderItems [label="Order items (embedded)\nproduct / price snapshots"];
+  SamplerItems [label="Sampler items (embedded)\nproduct / quantity snapshots"];
+  Users -> Partners [label="1 : 0..1"];
+  Users -> Addresses [label="1 : 0..many"];
+  Users -> Carts [label="1 : 0..1"];
+  Users -> Quotes [label="1 : 0..many"];
+  Users -> Orders [label="0..1 user : many orders"];
+  Carts -> CartItems [label="embeds 0..many"];
+  Products -> CartItems [label="1 : 0..many"];
+  Products -> Inventory [label="1 : 1"];
+  Orders -> OrderItems [label="embeds 1..many"];
+  Products -> OrderItems [label="1 : 0..many"];
+  Inquiries -> SamplerItems [label="embeds 0..many"];
+  Products -> SamplerItems [label="1 : 0..many"];
+}
