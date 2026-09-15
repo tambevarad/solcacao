@@ -4,6 +4,7 @@ erDiagram
   USERS ||--o| CARTS : owns
   USERS o|--o{ ORDERS : places
   USERS ||--o{ B2B_REQUESTS : submits
+  USERS o|--o{ INQUIRIES : submits
   PRODUCTS ||--|| INVENTORY : has
   CARTS ||--o{ CART_ITEMS : embeds
   PRODUCTS ||--o{ CART_ITEMS : references
