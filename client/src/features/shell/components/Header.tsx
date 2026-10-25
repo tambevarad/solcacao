@@ -28,12 +28,15 @@ export function Header() {
   const searchTrigger = useRef<HTMLButtonElement>(null);
   const page = stripLocale(location.pathname) + location.search;
 
-  // Close transient UI when the page changes; a language switch keeps it open.
-  useEffect(() => {
+  // Close transient UI when the page changes; a language switch keeps it open. Adjusted during
+  // render (not in an effect) so a mount-time reset can never override an early click.
+  const [lastPage, setLastPage] = useState(page);
+  if (page !== lastPage) {
+    setLastPage(page);
     setMenuOpen(false);
     setSearchOpen(false);
     setCartPending(false);
-  }, [page]);
+  }
 
   useEffect(() => {
     if (!cartPending) return;
@@ -170,10 +173,12 @@ function CollectionsMenu({ group }: { group: NavGroup }) {
   const button = useRef<HTMLButtonElement>(null);
   const listId = useId();
   const location = useLocation();
-
-  useEffect(() => {
+  const page = location.pathname + location.search;
+  const [lastPage, setLastPage] = useState(page);
+  if (page !== lastPage) {
+    setLastPage(page);
     setOpen(false);
-  }, [location.pathname, location.search]);
+  }
 
   useEffect(() => {
     if (!open) return;

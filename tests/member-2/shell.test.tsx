@@ -46,8 +46,9 @@ describe('routing shell', () => {
   it('renders the layout, html lang and route title at /en', async () => {
     renderApp('/en');
     expect(await screen.findByRole('heading', { name: 'HomePage' })).toBeInTheDocument();
+    // Title and lang are applied in effects, which may run just after the first paint.
+    await waitFor(() => expect(document.title).toBe('Artisanal chocolate · SolCacao'));
     expect(document.documentElement.lang).toBe('en');
-    expect(document.title).toBe('Artisanal chocolate · SolCacao');
     expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Skip to main content' })).toHaveAttribute(
       'href',
@@ -66,7 +67,7 @@ describe('routing shell', () => {
     expect(
       await screen.findByRole('heading', { name: 'Página no encontrada' }),
     ).toBeInTheDocument();
-    expect(document.title).toBe('Página no encontrada · SolCacao');
+    await waitFor(() => expect(document.title).toBe('Página no encontrada · SolCacao'));
     expect(screen.getByRole('link', { name: 'Ir a la página de inicio' })).toHaveAttribute(
       'href',
       '/es',
@@ -113,7 +114,7 @@ describe('language switching', () => {
     expect(screen.getByLabelText('Draft')).toBe(input);
     expect(input).toHaveValue('keep me');
     expect(screen.getByTestId('route-state')).toHaveTextContent('{"receipt":"r-1"}');
-    expect(document.documentElement.lang).toBe('es');
+    await waitFor(() => expect(document.documentElement.lang).toBe('es'));
   });
 
   it('setLocale from useLocale swaps only the prefix', async () => {
