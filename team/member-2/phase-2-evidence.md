@@ -23,7 +23,7 @@ State: ready_for_review (shell foundation PR from `varad-shell`). Peer-dependent
   - `docs/contracts.md` ("Shell public surface", key conventions), `docs/decisions.md` (D20), `docs/api.json` (i18n rules; contractVersion unchanged), `docs/integration.md` ("Phase 2 working guide").
   - `docs/design.md`, `docs/design/tokens.json`, `docs/deployment.md`, `TEAM-QUICKSTART.md`, `README.md`, `context.md`, `team/roster.json` (member 2).
 - **Tests and config:**
-  - `tests/member-2/*` (51 tests), `tests/e2e/shell.spec.ts` (7 tests).
+  - `tests/member-2/*` (52 tests), `tests/e2e/shell.spec.ts` (7 tests).
   - `vitest.config.ts` now includes `tests/**/*.test.tsx`.
   - `api/notImplemented.ts` (`NotImplementedError`).
 
@@ -33,7 +33,7 @@ macOS, Node 24.19.0, npm 11.17.0, 2026-10-25.
 
 | Command                                                                     | Result             | Relevant output or test count                                                                                                                                                  |
 | --------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `npm run check`                                                             | Pass               | Typecheck (client and server); 69 tests in 9 files (18 existing, 51 member-2); structure, translation parity and workflow valid                                                |
+| `npm run check`                                                             | Pass               | Typecheck (client and server); 70 tests in 10 files (18 existing, 52 member-2); structure, translation parity and workflow valid                                               |
 | `npm run build` (after `rm -rf dist`)                                       | Pass               | Vite bundle 283.5 kB JS / 21.1 kB CSS; server compiled; 10 locale JSON files emitted under `dist/server/client/src/features/*/locales/`                                        |
 | Compiled API probe: supertest against `dist/server/server/src/app.js`       | Pass               | `/api/i18n/en` 200 (83 keys), `/es` 200 (83 keys), `/fr` and `/EN` 400 `VALIDATION_ERROR`                                                                                      |
 | `npm run check:ownership -- --member 2 --base development`                  | Pass               | All changed files within Student 2 ownership                                                                                                                                   |
@@ -41,6 +41,10 @@ macOS, Node 24.19.0, npm 11.17.0, 2026-10-25.
 | `tsc --noEmit` over `tests/member-2` (temporary config, not committed)      | Pass               | Test files type-check                                                                                                                                                          |
 | `prettier --check` on changed files                                         | Pass               | All formatted                                                                                                                                                                  |
 | `npm run agent -- --member 2 --phase 2`                                     | Blocked (expected) | Branch matches roster; reports Phase 1 status `not_started`                                                                                                                    |
+
+## CI follow-up on PR #3
+
+The first GitHub Actions run failed one test, "links collections to canonical category query values". The header and Collections menu reset their open state in a mount-time effect, so a click that landed before passive effects flushed (slower CI runner) was overridden. Reproduced locally with a real-scheduler test: the old header fails, the fixed one passes. The reset now happens during render when the page changes. `tests/member-2/early-click.test.tsx` is the regression test. Title and `<html lang>` assertions now wait for their effects. Afterwards: 15 sequential full runs, plus 12 under parallel load, all passed; e2e 8/8.
 
 ## Manual demo observations
 

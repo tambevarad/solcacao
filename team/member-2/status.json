@@ -11,7 +11,7 @@
       "state": "ready_for_review",
       "commit": null,
       "checks": [
-        "npm run check: pass (69 tests, 9 files)",
+        "npm run check: pass (70 tests, 10 files; 27 repeated full runs incl. 12 under parallel load, no failures)",
         "npm run build: pass (clean dist; compiled /api/i18n/en|es 200, invalid 400)",
         "npm run check:ownership -- --member 2 --base development: pass",
         "playwright e2e (installed Chrome 155): 8 passed"
