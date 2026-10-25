@@ -23,7 +23,7 @@ State: ready_for_review (shell foundation PR from `varad-shell`). Peer-dependent
   - `docs/contracts.md` ("Shell public surface", key conventions), `docs/decisions.md` (D20), `docs/api.json` (i18n rules; contractVersion unchanged), `docs/integration.md` ("Phase 2 working guide").
   - `docs/design.md`, `docs/design/tokens.json`, `docs/deployment.md`, `TEAM-QUICKSTART.md`, `README.md`, `context.md`, `team/roster.json` (member 2).
 - **Tests and config:**
-  - `tests/member-2/*` (52 tests), `tests/e2e/shell.spec.ts` (7 tests).
+  - `tests/member-2/*` (64 tests), `tests/e2e/shell.spec.ts` (7 tests).
   - `vitest.config.ts` now includes `tests/**/*.test.tsx`.
   - `api/notImplemented.ts` (`NotImplementedError`).
 
@@ -31,20 +31,32 @@ State: ready_for_review (shell foundation PR from `varad-shell`). Peer-dependent
 
 macOS, Node 24.19.0, npm 11.17.0, 2026-10-25.
 
-| Command                                                                     | Result             | Relevant output or test count                                                                                                                                                  |
-| --------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `npm run check`                                                             | Pass               | Typecheck (client and server); 71 tests in 10 files (19 shared/tooling, 52 member-2); structure, translation parity and workflow valid                                               |
-| `npm run build` (after `rm -rf dist`)                                       | Pass               | Vite bundle 283.5 kB JS / 21.1 kB CSS; server compiled; 10 locale JSON files emitted under `dist/server/client/src/features/*/locales/`                                        |
-| Compiled API probe: supertest against `dist/server/server/src/app.js`       | Pass               | `/api/i18n/en` 200 (83 keys), `/es` 200 (83 keys), `/fr` and `/EN` 400 `VALIDATION_ERROR`                                                                                      |
-| `npm run check:ownership -- --member 2 --base development`                  | Pass               | All changed files within Student 2 ownership                                                                                                                                   |
-| `npx playwright test` (installed Google Chrome 155 via a local-only config) | Pass               | 8 tests: scaffold, overflow at 375/768/1440 across 7 EN/ES routes, keyboard drawer trap, language switch with reload and back, search URL, not-found. No React Router warnings |
-| `tsc --noEmit` over `tests/member-2` (temporary config, not committed)      | Pass               | Test files type-check                                                                                                                                                          |
-| `prettier --check` on changed files                                         | Pass               | All formatted                                                                                                                                                                  |
-| `npm run agent -- --member 2 --phase 2`                                     | Blocked (expected) | Branch matches roster; reports Phase 1 status `not_started`                                                                                                                    |
+| Command                                                                     | Result              | Relevant output or test count                                                                                                                                                                   |
+| --------------------------------------------------------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run check`                                                             | Pass                | Typecheck (client and server); 73 tests in 11 files (64 in tests/member-2, 9 in other files: 8 from the template plus 1 tooling test for D21); structure, translation parity and workflow valid |
+| `npm run build` (after `rm -rf dist`)                                       | Pass                | Vite bundle 283.5 kB JS / 21.1 kB CSS; server compiled; 10 locale JSON files emitted under `dist/server/client/src/features/*/locales/`                                                         |
+| Compiled API probe: supertest against `dist/server/server/src/app.js`       | Pass                | `/api/i18n/en` 200 (83 keys), `/es` 200 (83 keys), `/fr` and `/EN` 400 `VALIDATION_ERROR`                                                                                                       |
+| `npm run check:ownership -- --member 2 --base development`                  | Pass                | All changed files within Student 2 ownership                                                                                                                                                    |
+| `npx playwright test` (installed Google Chrome 155 via a local-only config) | Pass                | 8 tests: scaffold, overflow at 375/768/1440 across 7 EN/ES routes, keyboard drawer trap, language switch with reload and back, search URL, not-found. No React Router warnings                  |
+| `tsc --noEmit` over `tests/member-2` (temporary config, not committed)      | Pass                | Test files type-check                                                                                                                                                                           |
+| `prettier --check` on changed files                                         | Pass                | All formatted                                                                                                                                                                                   |
+| `npm run agent -- --member 2 --phase 2`                                     | Entry checks passed | Branch matches roster (`varad-shell`); Phase 1 `not_started` shown as a D21 note, not a blocker                                                                                                 |
 
 ## CI follow-up on PR #3
 
 The first GitHub Actions run failed one test, "links collections to canonical category query values". The header and Collections menu reset their open state in a mount-time effect, so a click that landed before passive effects flushed (slower CI runner) was overridden. Reproduced locally with a real-scheduler test: the old header fails, the fixed one passes. The reset now happens during render when the page changes. `tests/member-2/early-click.test.tsx` is the regression test. Title and `<html lang>` assertions now wait for their effects. Afterwards: 15 sequential full runs, plus 12 under parallel load, all passed; e2e 8/8.
+
+## Review round 1 (Krish Ruparel, changes requested on 85dcc09)
+
+All seven points were addressed:
+
+1. D21 is now stated explicitly in the PR as part of what this approval covers.
+2. Cart and catalog wording is now descriptive rather than an obligation.
+3. The PR now says the schema edit removes the submission-evidence section; that guidance moved to docs/phase1/README.md.
+4. Desktop Sign out was added, with tests.
+5. Test counts are corrected: 64 in tests/member-2 plus 9 elsewhere.
+6. The stale packet and roster notes are updated.
+7. The language links' accessible names now start with the visible "EN"/"ES" (WCAG 2.5.3).
 
 ## Manual demo observations
 

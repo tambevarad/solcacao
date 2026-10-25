@@ -77,10 +77,10 @@ Page and route rules:
 - `client/src/routes.tsx` wraps every routed page in `PageFrame`. It applies the localized default title and description (`shell.meta.<routeId>.*`) and contains render errors so the header, navigation and footer keep working.
 - Layout already renders the skip link, sticky header, `<main id="main">` and footer. Pages render content only: one `<h1>`, no `<main>`, header or footer of their own.
 - Owners keep their page file paths and default exports so routes.tsx keeps resolving. New routes or route paths go through Student 2.
-- Shell integration points owned by others:
-  - The header reads `useCart().count` and `open`, and calls `setOpen(true)`. `CartDrawer` (Student 3) renders the shared `<Drawer side="right">` from `open`/`setOpen`.
-  - Header and drawer account links read `useAuth().user`; Sign out calls `logout()` (Student 1).
-  - Global search navigates to `/:locale/catalog?search=<trimmed term>`. Collections link to `/:locale/catalog?category=bar|truffle|seasonal`. The catalog page must read those ProductQuery keys from the URL.
+- How the shell uses other features' existing ports. These describe the shell's side only and add no new obligations; owners keep their own implementation choices:
+  - The header reads `useCart().count` and `open`, and calls `setOpen(true)`, all from the existing `CartState` interface. docs/design.md already asks for one shared right-hand cart drawer. The shared `<Drawer side="right">` is available for it, and Student 3 decides whether to use it.
+  - Header and drawer account links read `useAuth().user`. Sign out (desktop header and mobile drawer) calls `logout()`. Both are existing `AuthState` members (Student 1).
+  - Global search links to `/:locale/catalog?search=<trimmed term>` and Collections link to `/:locale/catalog?category=bar|truffle|seasonal`. These are the existing ProductQuery keys; design.md already keeps catalog filters in the URL.
 
 ## Cross-feature imports
 

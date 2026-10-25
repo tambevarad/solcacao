@@ -26,7 +26,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
 - **Student 3:**
   - Implement `CartProvider`, `useCart` and `CartDrawer` behind the existing `CartState` interface.
   - The header already reads `count` and `open` and calls `setOpen(true)`. While the stub throws `NotImplementedError`, it shows a labeled pending notice, which disappears automatically once `setOpen` works.
-  - Build `CartDrawer` with `<Drawer side="right">`.
+  - Optional: build `CartDrawer` with the shared `<Drawer side="right">` (docs/design.md asks for one shared right-hand drawer). Student 3 decides.
   - `CatalogPage` must read `search`, `category` and the other ProductQuery keys from the URL; the shell links to `?search=` and `?category=bar|truffle|seasonal`.
 - **Student 1:**
   - Implement `useAuth`. The header picks `/login` or `/account` from `user`; the drawer's Sign out calls `logout()`.
@@ -63,7 +63,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
   - account and sign-out with a real user (Student 1);
   - EN/ES state retention on the real product page and wizard (Students 3 and 4). Proven so far with stand-in stateful pages.
 - The asset router is not mounted (see proposal 1).
-- `team/member-2/status.json` Phase 1 still says `not_started`, although PR #1 and PR #2 merged. The coordinator should record Phase 1 truthfully; the academic prototype is still pending per docs/phase1/prototype/README.md. Until then, `npm run agent -- --member 2 --phase 2` reports that entry blocker.
+- `team/member-2/status.json` Phase 1 still says `not_started`, although PR #1 and PR #2 merged. The coordinator should record Phase 1 truthfully; the academic prototype is still pending per docs/phase1/prototype/README.md. Decision D21 lets Phase 2 proceed meanwhile; `npm run agent -- --member 2 --phase 2` now reports "Entry checks passed" plus a D21 note.
 - Next, after merge:
   - integrate peer PRs in the docs/integration.md order;
   - run the whole-project build with peers merged;

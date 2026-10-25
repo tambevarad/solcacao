@@ -78,8 +78,8 @@ While open, both components:
 - restore focus to the element that opened them.
 
 With nested modals, only the top one reacts. The parent owns the `open` state; `onClose` must set it
-to false. `closeLabel` overrides the default `shell.action.close`. Student 3's `CartDrawer` should use
-`<Drawer side="right">`. Auth modal wrappers from Student 1 should use `<Dialog>`.
+to false. `closeLabel` overrides the default `shell.action.close`. Student 3's `CartDrawer` can use
+`<Drawer side="right">` and Student 1's auth modal can use `<Dialog>`; each owner decides.
 
 ## Request states
 
