@@ -4,11 +4,16 @@
   --color-cacao: #38251e;
   --color-copper: #875334;
   --color-line: #ded6cd;
+  /* Validation and failure text; 6.9:1 on ivory. */
+  --color-error: #9b2c1f;
 }
 :root {
   font-family: Arial, Helvetica, sans-serif;
   color: #38251e;
   background: #faf7f1;
+  line-height: 1.5;
+  /* Keeps anchored content clear of the sticky header. */
+  scroll-padding-top: 8rem;
 }
 body {
   margin: 0;
@@ -22,4 +27,26 @@ textarea {
 :focus-visible {
   outline: 3px solid #875334;
   outline-offset: 3px;
+}
+/* Boot "Loading" text appears only if loading is slow, avoiding a flash on fast loads. */
+@keyframes shell-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.shell-delayed-fade-in {
+  animation: shell-fade-in 0.2s ease-in 0.4s both;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
