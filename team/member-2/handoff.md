@@ -32,7 +32,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
   - Implement `useAuth`. The header picks `/login` or `/account` from `user`; the drawer's Sign out calls `logout()`.
   - Optional: export an auth modal built on `<Dialog>`; the shell can then open it from the account entry.
   - Decide how `returnTo` travels (a `?returnTo=` query parameter is suggested). The shell header links to `/:locale/login` without it until then.
-- **Student 4:** when the real HomePage merges, Student 2 replaces the placeholder heading assertion in `tests/e2e/scaffold.spec.ts` (Phase 2 "Scaffold test transition").
+- **Student 4:** `tests/e2e/scaffold.spec.ts` now checks the home route for the shell landmarks and exactly one `<h1>`, not the placeholder text, so the real HomePage will not break it. After it merges, Student 2 adds homepage-specific landmark and navigation checks (Phase 2 "Scaffold test transition").
 - **All:** add your keys to your own `locales/en.json` and `locales/es.json`, replace your `<Placeholder>` in place, and request new routes or shared primitives from Student 2.
 
 ## Shared change proposals
