@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, Search, ShoppingBag, UserRound } from 'lucide-react';
+import { ChevronDown, LogOut, Menu, Search, ShoppingBag, UserRound } from 'lucide-react';
 import { useAuth } from '../../auth/public.js';
 import { useCart } from '../../catalog/public.js';
 import { NotImplementedError } from '../../../api/notImplemented.js';
@@ -19,7 +19,7 @@ const navLink =
 /** Sticky site header: menu, search, brand, language, account and the shared cart count. */
 export function Header() {
   const { t, locale } = useLocale();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const cart = useCart();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -98,6 +98,19 @@ export function Header() {
             <UserRound aria-hidden="true" className="size-5" />
             <span className="sr-only lg:not-sr-only">{t(account.labelKey)}</span>
           </Link>
+          {user && (
+            // Desktop only; on phones Sign out lives in the menu drawer.
+            <div className="hidden md:flex">
+              <button
+                type="button"
+                onClick={logout}
+                className={`${iconButton} gap-2 lg:w-auto lg:px-3`}
+              >
+                <LogOut aria-hidden="true" className="size-5" />
+                <span className="sr-only lg:not-sr-only">{t('shell.account.signOut')}</span>
+              </button>
+            </div>
+          )}
           <button
             type="button"
             onClick={openCart}

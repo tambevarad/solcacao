@@ -47,7 +47,7 @@ test('mobile drawer is keyboard operable and traps focus', async ({ page }) => {
 test('language switch keeps path and query, and deep links survive reload', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/en/catalog?category=truffle');
-  await page.getByRole('banner').getByRole('link', { name: 'Español' }).click();
+  await page.getByRole('banner').getByRole('link', { name: 'ES (Español)', exact: true }).click();
   await expect(page).toHaveURL('/es/catalog?category=truffle');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   await expect(page).toHaveTitle('Comprar chocolate · SolCacao');

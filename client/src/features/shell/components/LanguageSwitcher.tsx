@@ -33,11 +33,11 @@ export function LanguageSwitcher({ className }: { className?: string }) {
             state={location.state}
             hrefLang={option}
             lang={option}
-            aria-label={LOCALE_NAMES[option]}
             aria-current={option === locale ? 'true' : undefined}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded px-2 text-sm font-semibold uppercase hover:bg-line/60 aria-[current=true]:text-copper aria-[current=true]:underline aria-[current=true]:underline-offset-4"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded px-2 text-sm font-semibold hover:bg-line/60 aria-[current=true]:text-copper aria-[current=true]:underline aria-[current=true]:underline-offset-4"
           >
-            {option}
+            {/* Accessible name starts with the visible code (WCAG 2.5.3), e.g. "ES (Español)". */}
+            {option.toUpperCase()} <span className="sr-only">({LOCALE_NAMES[option]})</span>
           </Link>
         </Fragment>
       ))}

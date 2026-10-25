@@ -107,7 +107,7 @@ describe('language switching', () => {
     const input = await screen.findByLabelText('Draft');
     fireEvent.change(input, { target: { value: 'keep me' } });
 
-    fireEvent.click(screen.getAllByRole('link', { name: 'Español' })[0]);
+    fireEvent.click(screen.getAllByRole('link', { name: 'ES (Español)' })[0]);
 
     await waitFor(() => expect(location()).toBe('/es/products/fixture-bar-1?qty=2#details'));
     expect(await screen.findAllByRole('link', { name: 'Tienda' })).not.toHaveLength(0);
@@ -139,7 +139,7 @@ describe('language switching', () => {
     const input = await screen.findByLabelText('Draft');
     fireEvent.change(input, { target: { value: 'still here' } });
 
-    fireEvent.click(screen.getAllByRole('link', { name: 'Español' })[0]);
+    fireEvent.click(screen.getAllByRole('link', { name: 'ES (Español)' })[0]);
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('We could not load text for the selected language.');
     expect(location()).toBe('/es/products/x');
