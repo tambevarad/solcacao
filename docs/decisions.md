@@ -35,3 +35,9 @@ D20 (Phase 2 shell foundation, Student 2; reviewed through its PR): additive, ba
 - Every routed page is wrapped in `PageFrame` for default titles and error containment.
 - Dictionaries come from one module shared by the mock adapter and GET /api/i18n/:locale.
 - BrowserRouter opts into the React Router v7 `v7_startTransition` and `v7_relativeSplatPath` flags. This removes console warnings; the only splat route is not-found.
+
+D21 (2026-10-25, coordinator Varad Tambe): Phase 2 implementation is authorized for all five members now, owners as recorded in team/roster.json.
+
+- The shared Phase 1 setup was delivered through PRs #1 and #2. Each member's `team/member-N/status.json` Phase 1 entry stays as recorded until that member records their own Phase 1 contribution truthfully. Nothing is backfilled as integrated.
+- `npm run agent -- --member N --phase 2` therefore shows the "previous phase" condition as a note citing this decision, not as a blocker. Agents proceed on the member's dedicated branch and mention it in phase-2-evidence.md. Branch mismatches still block.
+- Academic Phase 1 items (hosted MarvelApp/MockFlow prototype, MS Teams demo) are tracked separately in docs/phase1/prototype/README.md and are not implied complete.

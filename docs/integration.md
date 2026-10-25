@@ -69,7 +69,7 @@ npm run dev                              # frontend + API (API on :4000; Vite pr
 npm run services                         # Docker Mongo + Mailpit for backend persistence tests
 ```
 
-Setup uses the branch recorded for you in `team/roster.json` (`studentN-<area>` until the coordinator records your name). Send Student 2 your name, GitHub handle and preferred `<name>-<area>` branch.
+Your task packet will note that your Phase 1 status is not recorded. Decision D21 in docs/decisions.md authorizes Phase 2 anyway: proceed, mention it in your evidence, and record your Phase 1 status truthfully. Setup uses the branch recorded for you in `team/roster.json` (`studentN-<area>` until the coordinator records your name). Send Student 2 your name, GitHub handle and preferred `<name>-<area>` branch.
 
 ### Before the shell PR merges
 
