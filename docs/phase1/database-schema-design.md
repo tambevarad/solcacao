@@ -217,7 +217,7 @@ Embedded cart, order, and sampler item arrays are intentional. Carts need atomic
 9. Keep password hashes, private file keys, request hashes, and internal notification details out of public serializers.
 10. Registration that creates both a user and partner profile must roll back on failure or use an approved transaction design.
 
-No database triggers are required by the current blueprint. Service validation and atomic writes are the selected consistency mechanisms.
+This design relies on service validation and atomic writes rather than database triggers.
 
 ## 5. Ownership and implementation plan
 
@@ -229,10 +229,4 @@ No database triggers are required by the current blueprint. Service validation a
 | Inquiries and sampler snapshots | Student 5 | Contact, feedback, sampler, and notification service |
 | Contracts, route assembly, and shared documentation | Student 2 | Integration coordination and shared shell |
 
-This document records the Phase 1 design. It does not claim that MongoDB models, persistence, SMTP, or real file storage are already implemented.
-
-## 6. Submission evidence
-
-Submit this document together with the ERD at `docs/phase1/erd.svg` and the source diagrams at `docs/phase1/erd.mmd` and `docs/phase1/erd.dot`. The ERD communicates the relationships; this document communicates fields, indexes, validation, ownership, and implementation boundaries.
-
-The external MarvelApp or MockFlow prototype and the MS Teams demo are separate Phase 1 requirements and are not replaced by this schema document.
+This document captures the Phase 1 schema contract. It does not claim that MongoDB persistence, SMTP, or real file storage are already implemented.

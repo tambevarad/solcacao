@@ -23,10 +23,18 @@ try {
   branch = execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
 } catch {}
 const blockers = [];
-if (previous && previous.state !== 'integrated')
-  blockers.push(
-    `Previous execution phase is ${previous.state}; complete its reviewed integration first.`,
-  );
+const notes = [];
+if (previous && previous.state !== 'integrated') {
+  // D21: the coordinator authorized every member to start Phase 2 before Phase 1 statuses were recorded.
+  if (phase === '2')
+    notes.push(
+      `Previous execution phase is ${previous.state}. Coordinator decision D21 (docs/decisions.md) authorizes Phase 2 implementation anyway: proceed, mention this in phase-2-evidence.md, and record your Phase 1 status truthfully.`,
+    );
+  else
+    blockers.push(
+      `Previous execution phase is ${previous.state}; complete its reviewed integration first.`,
+    );
+}
 if (branch !== roster.branch)
   blockers.push(
     `Expected dedicated branch ${roster.branch}, found ${branch}. Run setup after template review; do not implement on a primary or another member's branch.`,
@@ -45,7 +53,8 @@ const files = [
   `team/member-${member}/handoff.md`,
 ];
 if (phase === '1') files.push('docs/phase1/README.md', 'docs/phase1/prototype/README.md');
-let packet = `# Student ${member} Phase ${phase} task packet\n\nImplement only Student ${member} Phase ${phase}. Follow blueprint weeks/roadmap. Read all references below and current code, do not blindly overwrite existing work. Stop after requested phase with actual checks/evidence and proposed commit; no automatic commit, push, merge, deploy or next phase.\n\nExpected branch: ${roster.branch}. Current branch: ${branch}.\n\n${blockers.length ? 'BLOCKED FOR IMPLEMENTATION:\n' + blockers.map((x) => '- ' + x).join('\n') : 'Entry checks passed; confirm peer dependencies from phase playbook.'}\n\n`;
+if (phase === '2') files.push('docs/integration.md', 'client/src/shared/README.md');
+let packet = `# Student ${member} Phase ${phase} task packet\n\nImplement only Student ${member} Phase ${phase}. Follow blueprint weeks/roadmap. Read all references below and current code, do not blindly overwrite existing work. Stop after requested phase with actual checks/evidence and proposed commit; no automatic commit, push, merge, deploy or next phase.\n\nExpected branch: ${roster.branch}. Current branch: ${branch}.\n\n${blockers.length ? 'BLOCKED FOR IMPLEMENTATION:\n' + blockers.map((x) => '- ' + x).join('\n') : 'Entry checks passed; confirm peer dependencies from phase playbook.'}\n\n${notes.length ? 'NOTES:\n' + notes.map((x) => '- ' + x).join('\n') + '\n\n' : ''}`;
 for (const p of files) packet += `\n---\n\n## Reference ${p}\n\n${read(p)}\n`;
 if (generate) {
   mkdirSync('.agent', { recursive: true });

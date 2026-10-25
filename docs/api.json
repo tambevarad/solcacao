@@ -89,7 +89,7 @@
       "request": "path locale=en|es",
       "response": "Dictionary",
       "successStatus": 200,
-      "rules": "Flat namespaced dictionary; unsupported locale -> 400"
+      "rules": "Flat namespaced dictionary assembled from all five features' locales via client/src/features/shell/dictionaries.ts (same source as the mock adapter, compiled into dist/server); exact-match en|es only, otherwise 400 VALIDATION_ERROR with fieldErrors.locale; Cache-Control: no-cache with ETag"
     },
     {
       "method": "GET",

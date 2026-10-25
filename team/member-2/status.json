@@ -8,10 +8,21 @@
       "blockers": []
     },
     "2": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "npm run check: pass (73 tests, 11 files: 64 member-2 + 9 other; 27 repeated full runs incl. 12 under parallel load, no failures)",
+        "npm run build: pass (clean dist; compiled /api/i18n/en|es 200, invalid 400)",
+        "npm run check:ownership -- --member 2 --base development: pass",
+        "playwright e2e (installed Chrome 155): 8 passed"
+      ],
+      "blockers": [
+        "Cart count/drawer end-to-end awaits Student 3 CartProvider",
+        "Account/sign-out with real user awaits Student 1 AuthProvider",
+        "Public asset router mount awaits Student 1 app.ts (proposal in handoff.md)",
+        "Whole-project build with peer branches pending their PRs",
+        "Phase 1 status not yet recorded by coordinator"
+      ]
     },
     "3": {
       "state": "not_started",

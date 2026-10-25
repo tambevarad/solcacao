@@ -6,7 +6,7 @@ Fran's Chocolates was inspected September 12, 2026: https://frans.com/ , https:/
 
 ## Shared visual choices
 
-Use existing Tailwind tokens: ivory #FAF7F1, cacao #38251E, copper #875334, line #DED6CD. Optional muted gold is decorative only until contrast is checked. Use a clean sans-serif system font initially; no per-feature font imports. Normal body 16px, line-height around 1.5; headings fluid and restrained. Main content max-width 1200px, horizontal padding 16px mobile/24px tablet/32px desktop. Spacing scale 4/8/12/16/24/32/48/64. Buttons rectangular with subtle 2–4px rounding, min height 44px. No gradients, glass cards or dashboard styling in the shop.
+Use existing Tailwind tokens: ivory #FAF7F1, cacao #38251E, copper #875334, line #DED6CD, plus error #9B2C1F for validation/failure text only (6.9:1 on ivory). Optional muted gold is decorative only until contrast is checked. Use a clean sans-serif system font initially; no per-feature font imports. Normal body 16px, line-height around 1.5; headings fluid and restrained. Main content max-width 1200px, horizontal padding 16px mobile/24px tablet/32px desktop. Spacing scale 4/8/12/16/24/32/48/64. Buttons rectangular with subtle 2–4px rounding, min height 44px. No gradients, glass cards or dashboard styling in the shop.
 
 Student 2 owns shared Button, Field, Select, Dialog/Drawer, LoadingState, EmptyState and ErrorState exports under client/src/shared. Specify props using standard React HTML attributes. Members may implement local composition but request shared primitives rather than fork styles. Never wait to implement feature logic just because a cosmetic primitive is pending; use native elements and then adopt the shared primitive through its owner.
 

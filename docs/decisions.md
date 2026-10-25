@@ -26,3 +26,18 @@ These are explicit implementation defaults adopted to prevent five agents making
 Decision/contract ID; problem; proposed exact new value/signature; owners affected; UI/mock/API/model/test changes; migration/backwards compatibility; reviewer decision; linked PR; date. Store a proposal in your own handoff. Student 2 updates this canonical log only after review.
 
 D17: Wire compatibility restored: raw Product[] list with pagination headers; raw CartLine[] persist body with If-Match revision. D18: Dedicated name-prefixed branches are reused across phases; no mandatory per-phase branch naming. D19: Phase1 plans, ERD/overview drafts and prototype assets are included; a real MarvelApp/MockFlow URL remains a required external deliverable.
+
+D20 (Phase 2 shell foundation, Student 2; reviewed through its PR): additive, backward-compatible client surface with no DTO/HTTP change, so contractVersion stays 2.
+
+- `useLocale().t` gains an optional `values` argument for `{name}` interpolation. Existing one-argument calls are unchanged.
+- `localizePath` and `usePageMeta` are exported from shell/public.tsx.
+- Template stubs throw `NotImplementedError` (still an Error) so the shell can show labeled pending states.
+- Every routed page is wrapped in `PageFrame` for default titles and error containment.
+- Dictionaries come from one module shared by the mock adapter and GET /api/i18n/:locale.
+- BrowserRouter opts into the React Router v7 `v7_startTransition` and `v7_relativeSplatPath` flags. This removes console warnings; the only splat route is not-found.
+
+D21 (2026-10-25, coordinator Varad Tambe): Phase 2 implementation is authorized for all five members now, owners as recorded in team/roster.json.
+
+- The shared Phase 1 setup was delivered through PRs #1 and #2. Each member's `team/member-N/status.json` Phase 1 entry stays as recorded until that member records their own Phase 1 contribution truthfully. Nothing is backfilled as integrated.
+- `npm run agent -- --member N --phase 2` therefore shows the "previous phase" condition as a note citing this decision, not as a blocker. Agents proceed on the member's dedicated branch and mention it in phase-2-evidence.md. Branch mismatches still block.
+- Academic Phase 1 items (hosted MarvelApp/MockFlow prototype, MS Teams demo) are tracked separately in docs/phase1/prototype/README.md and are not implied complete.

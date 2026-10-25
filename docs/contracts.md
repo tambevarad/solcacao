@@ -50,9 +50,41 @@ Use one /inquiries endpoint and category field. Validation in shared schema: nam
 
 Every feature owns locales/en.json and es.json with flat keys prefixed auth., shell., catalog., b2b., support. Student 2 combines them in mock and backend dictionaries; duplicate or missing counterpart keys fail tests. GET /i18n/:locale returns the flat dictionary in data. Product text stays in Product.name/description/etc, not UI dictionaries. setLocale updates URL prefix while preserving path/query and mounted form/cart state. Set html lang. Supported route prefixes en/es only; unknown prefix renders not-found. / redirects to /en. Canonical slug never translated. Existing routes in client/src/routes.tsx are the source of truth. No separate router per member.
 
+Key conventions:
+
+- **Shape:** `<feature>.<area>.<item>`, with camelCase segments, for example `catalog.filters.cacaoRange` or `b2b.wizard.step2Title`.
+- **Format:** one flat JSON object per file; string values only; the same keys in en.json and es.json.
+- **Variables:** written `{name}` and filled with `t(key, { name })`.
+- **No string building:** do not concatenate translated fragments or put markup in values.
+- **Shared keys:** generic shell keys (`shell.action.*`, `shell.state.*`) may be reused by any feature. Ask Student 2 for new shared keys instead of copying them into your namespace.
+- **Development checks:** a missing key renders as `⟦key⟧` and logs a warning. `npm run check` and `tests/member-2` fail on duplicate, unprefixed or unmatched keys.
+
+## Shell public surface (Phase 2, Student 2)
+
+These are the only shell imports other features should use. Signatures are stable; changes follow the proposal procedure above.
+
+- `features/shell/public.tsx`:
+  - `useLocale(): { locale: Locale; setLocale(locale: Locale): void; t(key: string, values?: Record<string, string | number>): string }`
+  - `LocaleProvider`, already mounted in main.tsx. Do not mount a second one.
+  - `localizePath(locale, path)`, for example `localizePath(locale, '/products/' + slug)` gives `/es/products/<slug>`. Build internal links with it.
+  - `SUPPORTED_LOCALES`, `isLocale(value)`.
+  - `usePageMeta({ title, description? })` overrides the route's default document title and description with already-translated text (for example a product name). Title renders as `<title> · SolCacao`.
+- `client/src/shared/index.ts`: `Button`, `buttonStyles`, `Field`, `TextArea`, `Select`, `Dialog`, `Drawer`, `LoadingState`, `EmptyState`, `ErrorState`, `Placeholder`. Usage: client/src/shared/README.md.
+- `api/notImplemented.ts`: `NotImplementedError`, thrown by template stubs so a consumer can show a labeled pending state.
+
+Page and route rules:
+
+- `client/src/routes.tsx` wraps every routed page in `PageFrame`. It applies the localized default title and description (`shell.meta.<routeId>.*`) and contains render errors so the header, navigation and footer keep working.
+- Layout already renders the skip link, sticky header, `<main id="main">` and footer. Pages render content only: one `<h1>`, no `<main>`, header or footer of their own.
+- Owners keep their page file paths and default exports so routes.tsx keeps resolving. New routes or route paths go through Student 2.
+- How the shell uses other features' existing ports. These describe the shell's side only and add no new obligations; owners keep their own implementation choices:
+  - The header reads `useCart().count` and `open`, and calls `setOpen(true)`, all from the existing `CartState` interface. docs/design.md already asks for one shared right-hand cart drawer. The shared `<Drawer side="right">` is available for it, and Student 3 decides whether to use it.
+  - Header and drawer account links read `useAuth().user`. Sign out (desktop header and mobile drawer) calls `logout()`. Both are existing `AuthState` members (Student 1).
+  - Global search links to `/:locale/catalog?search=<trimmed term>` and Collections link to `/:locale/catalog?category=bar|truffle|seasonal`. These are the existing ProductQuery keys; design.md already keeps catalog filters in the URL.
+
 ## Cross-feature imports
 
-Client permitted ports: auth/public.tsx useAuth/AuthProvider; catalog/public.tsx useCart/CartProvider/CartDrawer; shell/public.tsx useLocale/LocaleProvider; api/index.ts api/sessionToken; shared presentational primitives. Homepage gets products through api.catalog.list. Sampler gets products through api.catalog.list/get. Do not import another feature's internal state/reducer/pages.
+Client permitted ports: auth/public.tsx useAuth/AuthProvider; catalog/public.tsx useCart/CartProvider/CartDrawer; shell/public.tsx useLocale/LocaleProvider/localizePath/usePageMeta (see "Shell public surface"); api/index.ts api/sessionToken; shared presentational primitives from client/src/shared/index.ts. Homepage gets products through api.catalog.list. Sampler gets products through api.catalog.list/get. Do not import another feature's internal state/reducer/pages.
 
 Server ports to implement in Phase 2:
 

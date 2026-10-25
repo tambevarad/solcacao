@@ -1,6 +1,6 @@
 # SolCacao five-student implementation template
 
-A requirements-audited React/Express/MongoDB starting repository with original UI reference assets and twenty phase playbooks. It contains architecture and placeholders, not a completed chocolate store. Begin with TEAM-QUICKSTART.md and docs/student-playbook.pdf.
+A requirements-audited React/Express/MongoDB starting repository with original UI reference assets and twenty phase playbooks. It contains architecture and placeholders, not a completed chocolate store. Begin with TEAM-QUICKSTART.md.
 
 ## Required sequence
 
@@ -8,21 +8,13 @@ Follow the blueprint exactly: Phase1 Weeks1–2 Architecture & Setup; Phase2 Wee
 
 ## Setup and one agent instruction
 
-Coordinator first publishes/reviews this revision into development and configures main/development protection per docs/github-setup.md. Each student uses their own checkout and dedicated name-prefixed branch from roster.json.
+Follow TEAM-QUICKSTART.md. It covers the one-time installs and three copy-paste Claude Code prompts:
 
-```sh
-npm run setup -- --member 3
-```
+- review a PR;
+- do my phase (the agent clones the repo, runs `npm run setup -- --member N`, implements, checks, commits and opens the PR);
+- address review comments.
 
-Then tell your open coding agent:
-
-```text
-Run npm run agent -- --member 3 --phase 1. Read .agent/task.md and all its
-references. Implement only that member and phase; run checks and update
-handoff/evidence. Stop before commit/push/merge/deploy or another phase.
-```
-
-Change3 and1 for the student/phase. The CLI generates a full task packet; your chosen coding agent performs the work. Node24.19.0, Git and repository access are prerequisites. Docker is needed for the supplied local Mongo/SMTP sink; npm run services starts them. npm run dev starts web/API; npm run dev:client runs the mock frontend only. No real emails or payments are sent by setup.
+Node 24.19.0, Git, the GitHub CLI and repository access are prerequisites. Docker is needed for the local Mongo/SMTP sink (`npm run services`). `npm run dev` starts the web app and API; `npm run dev:client` runs the mock frontend only. Setup sends no real emails or payments.
 
 ## Documents and assets
 
@@ -43,4 +35,4 @@ npm ci, npm run check, npm run build. Browser tests require npx playwright insta
 
 ## Revision status
 
-Changes are on codex-requirements-audit, with previous main/development preserved pending a real reviewed PR. No GitHub remote/protection or hosted external prototype is claimed. Academic Phase1 draft artifacts require team completion/review and a real MarvelApp/MockFlow prototype. No prompts can guarantee error-free code or supply human approvals; the repository makes contracts, dependencies and checks explicit.
+The audited template is on GitHub and merged into development through PR #1 and PR #2; main has not received a release PR yet. Phase 2 starts from development; the shell foundation PR and the team working guide are described in docs/integration.md. Branch protection settings and a hosted external prototype are not claimed here. Academic Phase1 draft artifacts require team completion/review and a real MarvelApp/MockFlow prototype. No prompts can guarantee error-free code or supply human approvals; the repository makes contracts, dependencies and checks explicit.
