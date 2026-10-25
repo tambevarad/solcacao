@@ -43,4 +43,4 @@ npm ci, npm run check, npm run build. Browser tests require npx playwright insta
 
 ## Revision status
 
-Changes are on codex-requirements-audit, with previous main/development preserved pending a real reviewed PR. No GitHub remote/protection or hosted external prototype is claimed. Academic Phase1 draft artifacts require team completion/review and a real MarvelApp/MockFlow prototype. No prompts can guarantee error-free code or supply human approvals; the repository makes contracts, dependencies and checks explicit.
+The audited template is on GitHub and merged into development through PR #1 and PR #2; main has not received a release PR yet. Phase 2 starts from development; the shell foundation PR and the team working guide are described in docs/integration.md. Branch protection settings and a hosted external prototype are not claimed here. Academic Phase1 draft artifacts require team completion/review and a real MarvelApp/MockFlow prototype. No prompts can guarantee error-free code or supply human approvals; the repository makes contracts, dependencies and checks explicit.

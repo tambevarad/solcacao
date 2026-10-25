@@ -27,6 +27,10 @@ Stop before committing, pushing, merging, deploying or advancing phases.
 
 Replace member/phase. The task-packet command works identically for all agents that can execute repository commands. It is not a vendor-specific AI launcher. For restricted agents attach the reference files and use the PDF prompt.
 
+## Phase 2 coordination
+
+Before starting Phase 2, read the "Phase 2 working guide" in docs/integration.md. It covers what the shell foundation PR provides, who owns which files, what you can build before and after it merges, how to sync, and the checks to run before opening a PR.
+
 ## After each phase
 
 Review the diff and actual checks. Commit owned files, push dedicated branch and open PR to development. Get visual review, passing unit tests and one peer approval. Coordinator integrates all members, records weekly evidence, and submits only completed checkpoint deliverables. Previous integrated status is required before the next implementation phase. Docs/student-playbook.pdf contains every student’s four exact prompts and setup/review steps.

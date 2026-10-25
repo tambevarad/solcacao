@@ -57,4 +57,4 @@ No production content in this template. The included clearly labeled fictional f
 
 ## Revision status
 
-This corrected template is on codex-requirements-audit. No peer approval or remote merge is fabricated. Before student implementation, coordinator publishes it, obtains one real peer review and integrates it into development through PR. main remains stable and is updated only through release PR. See docs/github-setup.md.
+The audited template was published to GitHub and merged into development through PR #1 (codex-requirements-audit) and PR #2 (Phase 1 schema/ERD alignment). Students create their branches from development with npm run setup. The Phase 2 shell foundation (routing, layout, localization and shared primitives) is delivered through Student 2's varad-shell PR; see the Phase 2 working guide in docs/integration.md. main remains stable and is updated only through a release PR. No reviewer identity, branch protection or submission is recorded here unless it actually happened. See docs/github-setup.md.
