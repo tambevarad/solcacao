@@ -5,7 +5,8 @@ import { test, expect } from '@playwright/test';
 const pages = [
   '/en',
   '/es/catalog?category=truffle',
-  '/en/products/fixture-bar-1',
+  '/en/products/peru-85-dark-bar',
+  '/es/checkout',
   '/es/wholesale/request',
   '/en/contact',
   '/es/no-existe',

@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
 import type { ProductPage, User } from '../../contracts/index.js';
 import { makeFixtureProducts } from '../../contracts/fixtures.js';
+import { NotImplementedError } from '../../client/src/api/notImplemented.js';
 import { SLIDE_INTERVAL_MS } from '../../client/src/features/b2b/components/HeroCarousel.js';
 import type { ListProducts } from '../../client/src/features/b2b/components/FeaturedProducts.js';
 import HomePage from '../../client/src/features/b2b/pages/HomePage.js';
@@ -59,8 +60,12 @@ afterEach(() => {
 });
 
 describe('HomePage', () => {
-  it('renders one h1 and labels the featured area as pending while the catalog is a stub', async () => {
-    renderInLayout('/en', <HomePage />);
+  it('renders one h1 and labels the featured area as pending while the catalog is unavailable', async () => {
+    // The real catalog mock now returns products, so the pending state is driven explicitly.
+    const pendingCatalog = vi.fn<ListProducts>(async () => {
+      throw new NotImplementedError('catalog.list');
+    });
+    renderInLayout('/en', <HomePage listProducts={pendingCatalog} />);
     expect(
       await screen.findByText(
         'Featured chocolates will appear here once the catalog is connected.',
