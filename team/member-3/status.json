@@ -8,10 +8,27 @@
       "blockers": []
     },
     "2": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "npm run typecheck: pass",
+        "npx vitest run tests/member-3: 120 passed, 21 skipped (persistence.test.ts, no TEST_MONGODB_URI)",
+        "npm run check: fail - 4 teammate tests assert catalog/cart stubs (patch in handoff.md, verified) + 1 pre-existing member-4 timing failure; 321 passed, 31 skipped",
+        "npm run check:structure and check:workflow: pass (run separately)",
+        "npm run build: pass, warning: 513 kB chunk over 500 kB advisory",
+        "npm run check:ownership -- --member 3 --base development: pass (36 files)",
+        "npm run test:e2e: not run - Playwright Chromium download failed on this machine",
+        "e2e specs on installed Google Chrome (temporary uncommitted config): 10 passed, 1 failed (photos.spec timing; patch in handoff.md, verified 3/3)",
+        "Manual: 375/768/1440 px no overflow, EN/ES, keyboard drawer/checkout, guest reload, no console errors"
+      ],
+      "blockers": [
+        "Student 1/2/4: land the stale stub test patches (handoff proposal 1) so npm run check passes",
+        "Student 1: requireAuth/optionalAuth/connectDb for real cart routes and signed-in checkout; useAuth + auth mock for merge-on-login in the app",
+        "Student 1: CORS exposedHeaders for X-* pagination headers (proposal 2)",
+        "Student 2: tests/e2e/photos.spec.ts eager-image patch (proposal 4)",
+        "CI MongoDB service so tests/member-3/persistence.test.ts runs (not run locally: no Docker)",
+        "Phase 1 status not yet recorded by member 3 (D21)"
+      ]
     },
     "3": {
       "state": "not_started",
