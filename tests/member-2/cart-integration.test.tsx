@@ -2,7 +2,7 @@
 import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, screen } from '@testing-library/react';
+import { cleanup, fireEvent, screen, within } from '@testing-library/react';
 import { renderApp } from './harness.js';
 
 // Stand-in for Student 3's published useCart() port, so this checks the header against the
@@ -36,5 +36,6 @@ it('reads the count from useCart and opens the shared drawer through setOpen', a
   expect(screen.getByTestId('cart-count')).toHaveTextContent('3');
   fireEvent.click(button);
   expect(cart.setOpen).toHaveBeenCalledWith(true);
-  expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  // Scoped to the header: feature pages (e.g. the homepage) have their own status regions.
+  expect(within(screen.getByRole('banner')).getByRole('status')).toBeEmptyDOMElement();
 });
