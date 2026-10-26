@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SolCacao">
+  <rect width="64" height="64" rx="14" fill="#38251e"/>
+  <g transform="rotate(-35 32 32)">
+    <ellipse cx="32" cy="32" rx="13" ry="21" fill="#faf7f1"/>
+    <path d="M32 13.5c-5.5 7.5-5.5 29.5 0 37" fill="none" stroke="#875334" stroke-width="3.2" stroke-linecap="round"/>
+  </g>
+</svg>
