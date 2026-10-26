@@ -8,10 +8,25 @@
       "blockers": []
     },
     "2": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "npm run typecheck: pass",
+        "npx vitest run tests/member-4: 72 passed, 10 skipped without TEST_MONGODB_URI; 82 passed with Docker MongoDB 8.0",
+        "npm run check: fail - 4 tests in tests/member-2 assert the HomePage placeholder (patch proposed in handoff.md); 141 passed, 10 skipped",
+        "npm run check:structure and check:workflow: pass (run separately)",
+        "npm run build: pass, no warnings",
+        "npm run check:ownership -- --member 4 --base development: pass (39 files)",
+        "npm run test:e2e: 8 passed (Playwright Chromium 1243)"
+      ],
+      "blockers": [
+        "Student 2: tests/member-2 update needed before npm run check passes (handoff proposal 1)",
+        "Student 1: RequireRole UX and auth mock for the wizard; requireAuth/requireRole/connectDb for real routes",
+        "Student 5: notifyQuote bridge (receipts report failed until then)",
+        "Student 3: api.catalog.list for homepage featured products",
+        "CI MongoDB service so persistence tests run in CI",
+        "Phase 1 status not yet recorded by member 4 (D21)"
+      ]
     },
     "3": {
       "state": "not_started",
