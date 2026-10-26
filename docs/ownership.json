@@ -19,6 +19,7 @@
     "team/member-2/",
     "tests/member-2/",
     "client/src/shared/",
+    "client/public/images/",
     "client/src/api/",
     "client/src/main.tsx",
     "client/src/routes.tsx",

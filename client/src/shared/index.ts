@@ -17,3 +17,5 @@ export { Drawer, type DrawerProps } from './Drawer.js';
 export type { ModalProps } from './Modal.js';
 export { LoadingState, EmptyState, ErrorState } from './StatusStates.js';
 export { Placeholder } from './Placeholder.js';
+export { Photo } from './Photo.js';
+export { photos, type PhotoAsset, type PhotoName } from './photos.js';

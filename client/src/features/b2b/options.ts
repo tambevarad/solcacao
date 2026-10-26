@@ -1,4 +1,5 @@
 import type { CacaoProfile, Packaging } from '../../../../contracts/index.js';
+import { photos, type PhotoAsset } from '../../shared/photos.js';
 
 /**
  * Contract enum values in display order. Values are sent to the API untranslated; visible labels
@@ -6,6 +7,13 @@ import type { CacaoProfile, Packaging } from '../../../../contracts/index.js';
  */
 export const CACAO_PROFILES: readonly CacaoProfile[] = ['dark70', 'dark85', 'milk45'];
 export const PACKAGING_OPTIONS: readonly Packaging[] = ['sleeve', 'giftBox', 'bulk'];
+
+/** Example photo for each packaging option (shared library: client/src/shared/photos.ts). */
+export const PACKAGING_PHOTOS: Record<Packaging, PhotoAsset> = {
+  sleeve: photos.packagingSleeve,
+  giftBox: photos.packagingGiftBox,
+  bulk: photos.packagingBulk,
+};
 
 /** Decision D06 bounds, mirrored from quoteSchema so the UI can explain them before submission. */
 export const QUANTITY_MIN = 50;

@@ -2,16 +2,20 @@ import { useId } from 'react';
 import { Link } from 'react-router-dom';
 import type { ProductQuery } from '../../../../../contracts/index.js';
 import { api } from '../../../api/index.js';
-import { buttonStyles } from '../../../shared/index.js';
+import { buttonStyles, Photo, photos, type PhotoAsset } from '../../../shared/index.js';
 import { localizePath, useLocale } from '../../shell/public.js';
 import { FeaturedProducts, type ListProducts } from '../components/FeaturedProducts.js';
 import { HeroCarousel } from '../components/HeroCarousel.js';
-import { ImageSlot } from '../components/ImageSlot.js';
 
 const listFromApi: ListProducts = (query: ProductQuery) => api.catalog.list(query);
 
 /** Canonical ProductQuery categories, linked untranslated; artwork is Student 3's fixture art. */
 const COLLECTIONS = ['bar', 'truffle', 'seasonal'] as const;
+const COLLECTION_PHOTOS: Record<(typeof COLLECTIONS)[number], PhotoAsset> = {
+  bar: photos.collectionBars,
+  truffle: photos.collectionTruffles,
+  seasonal: photos.collectionSeasonal,
+};
 
 const sectionHeading = 'text-2xl font-semibold md:text-3xl';
 const textLink = 'font-medium text-copper underline-offset-4 hover:underline';
@@ -56,13 +60,10 @@ export default function HomePage({
                 to={localizePath(locale, `/catalog?category=${category}`)}
                 className="group block rounded border border-line bg-white/60 p-3 hover:border-copper"
               >
-                <img
-                  src={`/placeholders/${category}.svg`}
-                  alt=""
-                  width={400}
-                  height={300}
-                  loading="lazy"
-                  className="aspect-[4/3] w-full rounded object-cover"
+                <Photo
+                  image={COLLECTION_PHOTOS[category]}
+                  sizes="(min-width: 1200px) 370px, (min-width: 640px) 33vw, 100vw"
+                  decorative
                 />
                 <span className="mt-3 block text-lg font-semibold group-hover:underline">
                   {t(`b2b.home.collections.${category}.title`)}
@@ -80,7 +81,7 @@ export default function HomePage({
         aria-labelledby={`${ids}-business`}
         className="grid gap-8 rounded border border-line bg-white/60 p-6 md:grid-cols-2 md:items-center md:p-10"
       >
-        <ImageSlot description={t('b2b.home.businessImage')} />
+        <Photo image={photos.homeBusiness} sizes="(min-width: 768px) 50vw, 100vw" />
         <div>
           <p className="text-sm font-semibold tracking-widest text-copper uppercase">
             {t('b2b.home.businessEyebrow')}
@@ -97,7 +98,11 @@ export default function HomePage({
 
       <div className="grid gap-10 md:grid-cols-2">
         <section aria-labelledby={`${ids}-story`} className="flex flex-col gap-4">
-          <ImageSlot description={t('b2b.home.storyImage')} ratio="aspect-[3/2]" />
+          <Photo
+            image={photos.homeStory}
+            ratio="aspect-[3/2]"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
           <h2 id={`${ids}-story`} className={sectionHeading}>
             {t('b2b.home.storyTitle')}
           </h2>
@@ -107,7 +112,11 @@ export default function HomePage({
           </Link>
         </section>
         <section aria-labelledby={`${ids}-sampler`} className="flex flex-col gap-4">
-          <ImageSlot description={t('b2b.home.samplerImage')} ratio="aspect-[3/2]" />
+          <Photo
+            image={photos.homeSampler}
+            ratio="aspect-[3/2]"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
           <h2 id={`${ids}-sampler`} className={sectionHeading}>
             {t('b2b.home.samplerTitle')}
           </h2>

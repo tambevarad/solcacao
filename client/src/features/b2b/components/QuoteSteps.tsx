@@ -1,10 +1,10 @@
 import { Fragment, useState, type ChangeEvent, type Dispatch, type Ref } from 'react';
 import { FileText } from 'lucide-react';
 import type { Locale } from '../../../../../contracts/index.js';
-import { Button, Field, TextArea } from '../../../shared/index.js';
+import { Button, Field, TextArea, Photo } from '../../../shared/index.js';
 import { useLocale, type TranslationValues } from '../../shell/public.js';
 import { FILE_PROBLEM_KEYS, checkPdf, displayFileName, formatFileSize } from '../file.js';
-import { CACAO_PROFILES, NOTES_MAX, PACKAGING_OPTIONS } from '../options.js';
+import { CACAO_PROFILES, NOTES_MAX, PACKAGING_OPTIONS, PACKAGING_PHOTOS } from '../options.js';
 import {
   STEPS,
   STEP_FIELDS,
@@ -16,7 +16,6 @@ import {
   type WizardAction,
 } from '../wizard.js';
 import { ChoiceCards } from './ChoiceCards.js';
-import { ImageSlot } from './ImageSlot.js';
 
 /** Stable ids so the error summary can move focus to each control. */
 export const FIELD_IDS: Record<FieldName, string> = {
@@ -198,7 +197,12 @@ export function PackagingStep({ draft, errors, dispatch, values }: StepProps) {
           label: t(`b2b.packaging.${option}.name`),
           description: t(`b2b.packaging.${option}.description`),
           media: (
-            <ImageSlot description={t(`b2b.packaging.${option}.image`)} ratio="aspect-[3/2]" />
+            <Photo
+              image={PACKAGING_PHOTOS[option]}
+              ratio="aspect-[3/2]"
+              sizes="(min-width: 640px) 280px, 100vw"
+              decorative
+            />
           ),
         }))}
         value={draft.packaging}

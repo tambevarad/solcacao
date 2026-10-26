@@ -69,7 +69,7 @@ These are the only shell imports other features should use. Signatures are stabl
   - `localizePath(locale, path)`, for example `localizePath(locale, '/products/' + slug)` gives `/es/products/<slug>`. Build internal links with it.
   - `SUPPORTED_LOCALES`, `isLocale(value)`.
   - `usePageMeta({ title, description? })` overrides the route's default document title and description with already-translated text (for example a product name). Title renders as `<title> · SolCacao`.
-- `client/src/shared/index.ts`: `Button`, `buttonStyles`, `Field`, `TextArea`, `Select`, `Dialog`, `Drawer`, `LoadingState`, `EmptyState`, `ErrorState`, `Placeholder`. Usage: client/src/shared/README.md.
+- `client/src/shared/index.ts`: `Button`, `buttonStyles`, `Field`, `TextArea`, `Select`, `Dialog`, `Drawer`, `LoadingState`, `EmptyState`, `ErrorState`, `Placeholder`, `Photo` and `photos` (approved site photography; sources in docs/assets.md). Usage: client/src/shared/README.md.
 - `api/notImplemented.ts`: `NotImplementedError`, thrown by template stubs so a consumer can show a labeled pending state.
 
 Page and route rules:
