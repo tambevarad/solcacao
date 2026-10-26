@@ -133,7 +133,9 @@ type ProductImage = Product['images'][number];
  * `images: [productPhotos.darkBarCocoa, productPhotos.darkShards]`. Illustrative CC0 stock for the
  * fictional fixture products: never present them as photos of real SolCacao products, and replace
  * them when the team supplies its own product photography. Grouped by category: bars, truffles,
- * seasonal.
+ * seasonal. The wholesale packaging photos (gift box, foil bar) are deliberately excluded so a
+ * product never looks like a packaging option; some entries share a photo with a homepage slot
+ * (listed in docs/assets.md).
  */
 export const productPhotos = {
   darkBarCocoa: {
@@ -155,13 +157,6 @@ export const productPhotos = {
     alt: {
       en: 'Chocolate bars with chocolate shavings on a white background',
       es: 'Tabletas de chocolate con virutas de chocolate sobre fondo blanco',
-    },
-  },
-  barOnFoil: {
-    url: '/images/products/bar-on-foil.webp',
-    alt: {
-      en: 'Dark chocolate bar on its opened foil wrapper',
-      es: 'Tableta de chocolate oscuro sobre su envoltorio de aluminio abierto',
     },
   },
   darkShards: {
@@ -253,13 +248,6 @@ export const productPhotos = {
     alt: {
       en: 'Tall stack of chocolate bark with fruit and nut toppings',
       es: 'Pila alta de corteza de chocolate con fruta y frutos secos',
-    },
-  },
-  goldGiftBox: {
-    url: '/images/products/gold-gift-box.webp',
-    alt: {
-      en: 'Gold gift box tied with a gold ribbon',
-      es: 'Caja de regalo dorada atada con una cinta dorada',
     },
   },
   heartBox: {

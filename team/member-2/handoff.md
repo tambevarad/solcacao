@@ -13,7 +13,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
   - `usePageMeta({ title, description? })`.
 - **`client/src/shared/index.ts`:** Button, buttonStyles, Field, TextArea, Select, Dialog, Drawer, LoadingState, EmptyState, ErrorState, Placeholder.
 - **`api/notImplemented.ts`:** `NotImplementedError`, thrown by template stubs.
-- **Images (`client/src/shared/photos.ts`, `<Photo>`):** 20 CC0 site photos (homepage, wholesale page, wizard, Story/Care extras) and `productPhotos`, 21 square product photos in the `Product.images` shape. Also a favicon, an Apple touch icon and a social share image. Every source is in `docs/assets.md`.
+- **Images (`client/src/shared/photos.ts`, `<Photo>`):** 20 CC0 site photos (homepage, wholesale page, wizard, Story/Care extras) and `productPhotos`, 19 square product photos (wholesale packaging photos excluded) in the `Product.images` shape. Also a favicon, an Apple touch icon and a social share image. Every source is in `docs/assets.md`.
 - **Routing:**
   - `client/src/routes.tsx` wraps every page in `PageFrame`: route title/description from `shell.meta.<id>.*`, with an error boundary that resets on page change.
   - Route paths and the prewired `RequireAuth`/`RequireRole` wrappers are unchanged.
