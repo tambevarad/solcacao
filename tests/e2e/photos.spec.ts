@@ -3,6 +3,8 @@ import { test, expect } from '@playwright/test';
 // Every photo on the image-led pages must actually load (no broken paths after a rename or move).
 for (const path of ['/en', '/es/wholesale']) {
   test(`all photos load on ${path}`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(path);
     // Lazy images load as they near the viewport; scroll through the page to trigger them.
@@ -24,5 +26,12 @@ for (const path of ['/en', '/es/wholesale']) {
         ),
       )
       .toEqual([]);
+    // Also catches missing static files such as the favicon.
+    expect(errors).toEqual([]);
   });
 }
+
+test('favicon and touch icon are served', async ({ request }) => {
+  for (const path of ['/favicon.svg', '/apple-touch-icon.png', '/og-image.jpg'])
+    expect((await request.get(path)).status(), path).toBe(200);
+});

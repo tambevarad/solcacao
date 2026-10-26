@@ -106,7 +106,8 @@ import { Photo, photos } from '../../../shared/index.js';
 - **Above the fold:** use `priority` on the one image above the fold, usually a hero. Everything else lazy-loads.
 - **Decorative images:** use `decorative` when the image sits inside a labeled link or radio card. Otherwise its alt text repeats the label.
 - **Adding photos:** need a photo that isn't in the library? Ask Student 2 to add it, with its source and license; don't hotlink or drop files into a feature folder.
-- **Product photos:** these belong in the product data (`Product.images`), not in `photos`.
+- **Product photos:** these belong in the product data (`Product.images`), not in `photos`. For catalog fixtures, `productPhotos` provides 19 square photos already in that shape (6 bars, 7 truffles/pralines, 6 seasonal): `images: [productPhotos.darkBarCocoa, productPhotos.darkShards]`. They're illustrative stock for fictional products; see `docs/assets.md`.
+- **Icons:** the favicon, Apple touch icon and social share image live in `client/public/` and are registered in `docs/assets.md`.
 
 ## Placeholder
 

@@ -49,6 +49,13 @@ Everyone owns their own `locales/en.json` and `locales/es.json`, `team/member-N/
 
 Replace your page's `<Placeholder>` in place. Keep the file path and default export so `routes.tsx` keeps resolving. Render content only, with one `<h1>`; Layout already provides `<main>`, the header and the footer.
 
+### Images
+
+- **Site photos:** use `photos` with `<Photo>` from `client/src/shared/index.ts`. Story-page options include `storyCacaoPods`, `storyBeansNibs`, `storyPodsStudio` and `homeStory`; `productDarkShards` and the product pool suit Care content.
+- **Catalog fixtures (Reethika):** use `productPhotos`. Each entry is already `{ url, alt: { en, es } }`. The homepage featured products, the sampler and the cart drawer then show the same images through `api.catalog`.
+- **Aman:** no auth page needs a photo. Reuse a library photo if a decorative image is wanted.
+- **Adding images:** don't add images inside feature folders or hotlink them. Ask Student 2 to add one to the library, with its source and license in `docs/assets.md`.
+
 ### Shared files: agree before editing
 
 `npm run check:ownership` flags edits to files you don't own. These need the owner's agreement first:
