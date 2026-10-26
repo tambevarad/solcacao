@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
-import { buttonStyles } from '../../../shared/index.js';
+import { Photo, buttonStyles, photos } from '../../../shared/index.js';
 import { localizePath, useLocale } from '../../shell/public.js';
-import { ImageSlot } from './ImageSlot.js';
 
 /** Seasonal entry points. Category values are the canonical ProductQuery enum, never translated. */
 const SLIDES = [
-  { id: 'seasonal', to: '/catalog?category=seasonal' },
-  { id: 'truffles', to: '/catalog?category=truffle' },
-  { id: 'business', to: '/wholesale' },
+  { id: 'seasonal', to: '/catalog?category=seasonal', image: photos.heroSeasonal },
+  { id: 'truffles', to: '/catalog?category=truffle', image: photos.heroTruffles },
+  { id: 'business', to: '/wholesale', image: photos.heroBusiness },
 ] as const;
 
 export const SLIDE_INTERVAL_MS = 7000;
@@ -150,10 +149,12 @@ export function HeroCarousel() {
                   {t(`b2b.hero.${slide.id}.cta`)}
                 </Link>
               </div>
-              <ImageSlot
+              <Photo
+                image={slide.image}
                 className="order-1 md:order-2"
                 ratio="aspect-[16/10]"
-                description={t(`b2b.hero.${slide.id}.image`)}
+                sizes="(min-width: 1200px) 560px, (min-width: 768px) 50vw, 100vw"
+                priority={i === 0}
               />
             </div>
           );

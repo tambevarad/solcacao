@@ -67,7 +67,11 @@ describe('HomePage', () => {
       ),
     ).toBeInTheDocument();
     expect(within(screen.getByRole('main')).getAllByRole('heading', { level: 1 })).toHaveLength(1);
-    expect(screen.getAllByText('Image slot').length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole('img', {
+        name: 'Peppermint and nut chocolate bark stacked and tied with red-and-white twine',
+      }),
+    ).toBeInTheDocument();
   });
 
   it('shows featured products from api.catalog.list with localized price and links', async () => {

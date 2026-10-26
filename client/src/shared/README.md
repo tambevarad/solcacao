@@ -92,6 +92,22 @@ if (!items.length) return <EmptyState title={t('catalog.list.empty')} action={<B
 Keep loading, empty and error visually distinct. `ErrorState` is announced as an alert;
 `LoadingState` is a polite status.
 
+## Photos
+
+```tsx
+import { Photo, photos } from '../../../shared/index.js';
+
+<Photo image={photos.homeStory} ratio="aspect-[3/2]" sizes="(min-width: 768px) 50vw, 100vw" />
+<Photo image={photos.packagingGiftBox} ratio="aspect-square" decorative />
+```
+
+- **Where the photos are:** `photos` (in `photos.ts`) lists every approved site photo, with its responsive files, true size, focal point and EN/ES alt text. Sources and licenses are in `docs/assets.md`.
+- **Sizing:** set `sizes` to the slot's rendered width so phones download the 640 px file.
+- **Above the fold:** use `priority` on the one image above the fold, usually a hero. Everything else lazy-loads.
+- **Decorative images:** use `decorative` when the image sits inside a labeled link or radio card. Otherwise its alt text repeats the label.
+- **Adding photos:** need a photo that isn't in the library? Ask Student 2 to add it, with its source and license; don't hotlink or drop files into a feature folder.
+- **Product photos:** these belong in the product data (`Product.images`), not in `photos`.
+
 ## Placeholder
 
 `<Placeholder name="CatalogPage" owner={3} />` marks an unmerged page slot. Replace it with your real

@@ -2,12 +2,16 @@ import { useId } from 'react';
 import { Link } from 'react-router-dom';
 import type { User } from '../../../../../contracts/index.js';
 import { useAuth } from '../../auth/public.js';
-import { buttonStyles } from '../../../shared/index.js';
+import { buttonStyles, Photo, photos, type PhotoAsset } from '../../../shared/index.js';
 import { localizePath, useLocale } from '../../shell/public.js';
-import { ImageSlot } from '../components/ImageSlot.js';
-import { PACKAGING_OPTIONS, QUANTITY_MAX, QUANTITY_MIN } from '../options.js';
+import { PACKAGING_OPTIONS, PACKAGING_PHOTOS, QUANTITY_MAX, QUANTITY_MIN } from '../options.js';
 
 const SERVICES = ['molds', 'packaging', 'whiteLabel'] as const;
+const SERVICE_PHOTOS: Record<(typeof SERVICES)[number], PhotoAsset> = {
+  molds: photos.serviceMolds,
+  packaging: photos.servicePackaging,
+  whiteLabel: photos.serviceWhiteLabel,
+};
 const sectionHeading = 'text-2xl font-semibold md:text-3xl';
 
 /**
@@ -38,7 +42,11 @@ export default function WholesalePage() {
           </Link>
           <AccountNote user={user} />
         </div>
-        <ImageSlot description={t('b2b.wholesale.heroImage')} />
+        <Photo
+          image={photos.wholesaleHero}
+          sizes="(min-width: 1200px) 560px, (min-width: 768px) 50vw, 100vw"
+          priority
+        />
       </section>
 
       <section aria-labelledby={`${ids}-services`}>
@@ -48,7 +56,10 @@ export default function WholesalePage() {
         <ul className="grid gap-8 md:grid-cols-3">
           {SERVICES.map((service) => (
             <li key={service} className="flex flex-col gap-3">
-              <ImageSlot description={t(`b2b.wholesale.services.${service}.image`)} />
+              <Photo
+                image={SERVICE_PHOTOS[service]}
+                sizes="(min-width: 1200px) 370px, (min-width: 768px) 33vw, 100vw"
+              />
               <h3 className="text-xl font-semibold">
                 {t(`b2b.wholesale.services.${service}.title`)}
               </h3>
@@ -66,7 +77,11 @@ export default function WholesalePage() {
         <ul className="grid gap-8 sm:grid-cols-3">
           {PACKAGING_OPTIONS.map((option) => (
             <li key={option} className="flex flex-col gap-3">
-              <ImageSlot description={t(`b2b.packaging.${option}.image`)} ratio="aspect-square" />
+              <Photo
+                image={PACKAGING_PHOTOS[option]}
+                ratio="aspect-square"
+                sizes="(min-width: 1200px) 370px, (min-width: 640px) 33vw, 100vw"
+              />
               <h3 className="text-lg font-semibold">{t(`b2b.packaging.${option}.name`)}</h3>
               <p className="text-cacao/80">{t(`b2b.packaging.${option}.description`)}</p>
             </li>
