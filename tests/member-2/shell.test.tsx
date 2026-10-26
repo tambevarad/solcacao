@@ -45,7 +45,7 @@ function DraftPage() {
 describe('routing shell', () => {
   it('renders the layout, html lang and route title at /en', async () => {
     renderApp('/en');
-    expect(await screen.findByRole('heading', { name: 'HomePage' })).toBeInTheDocument();
+    expect(await screen.findByRole('navigation', { name: 'Main' })).toBeInTheDocument();
     // Title and lang are applied in effects, which may run just after the first paint.
     await waitFor(() => expect(document.title).toBe('Artisanal chocolate · SolCacao'));
     expect(document.documentElement.lang).toBe('en');
@@ -54,7 +54,6 @@ describe('routing shell', () => {
       'href',
       '#main',
     );
-    expect(screen.getByText('Placeholder')).toBeInTheDocument();
   });
 
   it('redirects / to /en', async () => {
@@ -159,7 +158,7 @@ describe('language switching', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     renderApp('/en', loader);
     fireEvent.click(await screen.findByRole('button', { name: /Try again/ }));
-    expect(await screen.findByRole('heading', { name: 'HomePage' })).toBeInTheDocument();
+    expect(await screen.findByRole('navigation', { name: 'Main' })).toBeInTheDocument();
   });
 
   it('makes missing keys visible in development', async () => {
@@ -215,7 +214,10 @@ describe('header search and navigation', () => {
   it('shows a labeled pending notice instead of crashing while the cart is a stub', async () => {
     renderApp('/en');
     fireEvent.click(await screen.findByRole('button', { name: 'Open cart. Items: 0' }));
-    expect(screen.getByRole('status')).toHaveTextContent('The cart drawer is not available yet.');
+    // Scoped to the header: feature pages (e.g. the homepage) have their own status regions.
+    expect(within(screen.getByRole('banner')).getByRole('status')).toHaveTextContent(
+      'The cart drawer is not available yet.',
+    );
   });
 });
 
