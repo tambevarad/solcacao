@@ -16,6 +16,11 @@ for (const path of ['/en', '/es/wholesale']) {
     });
     const images = page.locator('main img');
     expect(await images.count()).toBeGreaterThan(5);
+    // Content that arrives after the scroll (e.g. featured products from api.catalog) can sit above
+    // the viewport; load every image eagerly so the check covers it too.
+    await images.evaluateAll((nodes) =>
+      nodes.forEach((node) => node instanceof HTMLImageElement && (node.loading = 'eager')),
+    );
     await expect
       .poll(() =>
         images.evaluateAll((nodes) =>

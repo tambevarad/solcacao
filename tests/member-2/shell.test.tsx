@@ -182,7 +182,7 @@ describe('header search and navigation', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
 
     await waitFor(() => expect(location()).toBe('/es/catalog?search=cacao+70%25'));
-    expect(screen.queryByRole('searchbox')).toBeNull();
+    expect(within(screen.getByRole('banner')).queryByRole('searchbox')).toBeNull();
     expect(screen.getByRole('main')).toHaveFocus();
 
     fireEvent.click(screen.getByRole('button', { name: 'Probe back' }));
@@ -194,7 +194,7 @@ describe('header search and navigation', () => {
     const trigger = await screen.findByRole('button', { name: 'Open search' });
     fireEvent.click(trigger);
     fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Escape' });
-    expect(screen.queryByRole('searchbox')).toBeNull();
+    expect(within(screen.getByRole('banner')).queryByRole('searchbox')).toBeNull();
     expect(trigger).toHaveFocus();
   });
 
@@ -211,13 +211,10 @@ describe('header search and navigation', () => {
     expect(screen.getByRole('button', { name: 'Colecciones' })).toHaveFocus();
   });
 
-  it('shows a labeled pending notice instead of crashing while the cart is a stub', async () => {
+  it('opens the shared cart drawer from the header', async () => {
     renderApp('/en');
     fireEvent.click(await screen.findByRole('button', { name: 'Open cart. Items: 0' }));
-    // Scoped to the header: feature pages (e.g. the homepage) have their own status regions.
-    expect(within(screen.getByRole('banner')).getByRole('status')).toHaveTextContent(
-      'The cart drawer is not available yet.',
-    );
+    expect(await screen.findByRole('dialog', { name: 'Your cart' })).toBeInTheDocument();
   });
 });
 
