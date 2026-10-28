@@ -102,6 +102,7 @@ Coordinator integration work:
 Checks run on the integrated code (coordinator branch for PR #12, on top of fc8ee86):
 
 - **Real MongoDB** (Docker `mongo:8.0`, `TEST_MONGODB_URI`): `npm run check` passed 518/518 with 0 skipped. This was the first run of members 1, 3, 4 and 5's persistence suites; all passed.
+- **CI MongoDB:** PR #12's CI passed 518/518. After it merged (e088f4b, approved by danielyglesias), the push run failed before any test because a newer `mongo:8.0` image refuses to start on the runner's Linux 6.19+ kernel (SERVER-121912). The follow-up PR moves the CI service to `mongo:7.0`; `npm run check` passed 518/518 locally against 7.0.45.
 - `npm run build`: pass. The >500 kB bundle advisory is a Phase 4 item.
 - **Browser:** `npm run test:e2e` with installed Chrome: 14 passed.
   - Guest checkout to the confirmation page.
