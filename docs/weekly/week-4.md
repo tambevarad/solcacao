@@ -12,7 +12,7 @@ Each member: PR/commit, owned progress, tests, visual reviewer and peer approval
 | 4 Krish Ruparel       | #5             | Homepage, wholesale page, four-step quote wizard, quote API with private PDF storage                                                                                   | Wizard, page, adapter, API rule tests; real-Mongo persistence suite passed on 2026-10-28                     | tambevarad                                               | 6fc3f7b, 2026-10-26                               |
 | 5 Daniel Yglesias     | #10            | Contact, feedback, six-piece sampler, Story/Care, inquiries API, SMTP notifications, notifyQuote                                                                       | Validation, idempotency, escaping, SMTP outage, adapter and page tests; real-Mongo test passed on 2026-10-28 | tambevarad (screenshots at 1440/375, EN/ES)              | 88c9a0d, 2026-10-28                               |
 
-Coordinator integration PR #12 (in review when recorded):
+Coordinator integration PR #12, approved by danielyglesias and merged as e088f4b on 2026-10-28:
 
 - real `requireAuth`/`optionalAuth`/`requireRole('b2b')` and `notifyQuote` wired into the catalog and B2B routers;
 - startup builds every model's indexes;
@@ -20,7 +20,9 @@ Coordinator integration PR #12 (in review when recorded):
 - cross-feature journeys;
 - run instructions and these records.
 
-Integrated development commit: fc8ee86 (all five member PRs). Update to the PR #12 merge commit once it merges.
+The PR's CI passed (518/518, every member's persistence suite on real MongoDB). The push run after the merge failed before any test: a newer `mongo:8.0` image refuses to start on the runner's Linux 6.19+ kernel (SERVER-121912). A follow-up coordinator PR runs the CI service on `mongo:7.0`; 518/518 passed locally against 7.0.45. `compose.yaml` stays on 8.0 for local development.
+
+Integrated development commit: e088f4b (all five member PRs plus PR #12). The annotated `phase-2-submission` tag marks the commit after the CI follow-up merges.
 
 Demo observations (coordinator walkthrough in mock mode, not the academic demo):
 
@@ -43,6 +45,6 @@ Blockers and next week:
 - Phase 3 binds the UI to the real API.
 - Phase 4 covers code splitting and deployment.
 - The team still needs a real WhatsApp number.
-- A release PR development → main follows PR #12.
+- A release PR development → main follows the CI follow-up.
 
 Do not prefill a review, attendance, commit or success that did not occur.
