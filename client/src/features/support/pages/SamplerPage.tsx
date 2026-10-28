@@ -70,7 +70,7 @@ export default function SamplerPage() {
             <EmptyState title={t('support.sampler.empty')} />
           )}
           {status === 'ready' && (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
               {products.map((product) => {
                 const quantity = items.find((item) => item.productId === product.id)?.quantity ?? 0;
                 return (
@@ -83,19 +83,20 @@ export default function SamplerPage() {
                         alt={product.images[0].alt[locale]}
                       />
                     )}
-                    <div className="space-y-4 p-4">
-                      <h3 className="text-lg">{product.name[locale]}</h3>
-                      <p className="text-sm">{product.description[locale]}</p>
-                      <div className="flex flex-wrap items-center gap-3">
+                    <div className="space-y-4 p-3 sm:p-4">
+                      <h3 className="break-words text-base sm:text-lg">{product.name[locale]}</h3>
+                      <p className="hidden text-sm sm:block">{product.description[locale]}</p>
+                      <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
                         <Button
                           variant="secondary"
+                          className="min-w-11"
                           disabled={!quantity}
                           onClick={() => change(product.id, -1)}
                           aria-label={t('support.sampler.remove', { name: product.name[locale] })}
                         >
                           −
                         </Button>
-                        <span>
+                        <span className="order-first w-full text-center text-sm sm:order-none sm:w-auto">
                           {t(
                             quantity === 1
                               ? 'support.sampler.quantityOne'
@@ -105,6 +106,7 @@ export default function SamplerPage() {
                         </span>
                         <Button
                           variant="secondary"
+                          className="min-w-11"
                           disabled={total >= 6}
                           onClick={() => change(product.id, 1)}
                           aria-label={t('support.sampler.add', { name: product.name[locale] })}

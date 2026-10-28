@@ -8,7 +8,26 @@ for (const width of [375, 768, 1440]) {
         await page.goto(`/${locale}/${route}`);
         await expect(page.locator('main h1')).toBeVisible();
         await expect(page.locator('html')).toHaveAttribute('lang', locale);
-        if (route === 'sampler') await expect(page.locator('main article').first()).toBeVisible();
+        if (route === 'sampler') {
+          const cards = page.locator('main article');
+          await expect(cards.first()).toBeVisible();
+          const positions = await cards.evaluateAll((elements) =>
+            elements.slice(0, 2).map((element) => {
+              const { x, y } = element.getBoundingClientRect();
+              return { x, y };
+            }),
+          );
+          expect(positions).toHaveLength(2);
+          expect(positions[0].y).toBe(positions[1].y);
+          expect(positions[1].x).toBeGreaterThan(positions[0].x);
+          for (const button of await cards.first().locator('button').all()) {
+            const size = await button.boundingBox();
+            expect(size?.width ?? 0).toBeGreaterThanOrEqual(44);
+            expect(size?.height ?? 0).toBeGreaterThanOrEqual(44);
+          }
+          if (width < 640) await expect(cards.first().locator('p')).toBeHidden();
+          else await expect(cards.first().locator('p')).toBeVisible();
+        }
         if (route === 'story' || route === 'care') {
           await expect(page.locator('main article section')).toHaveCount(2);
           await expect(page.locator('main')).not.toContainText(
