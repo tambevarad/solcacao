@@ -1,14 +1,20 @@
 import { test, expect } from '@playwright/test';
 
-// Phase 2 shell checks against the mock-mode dev server. Feature pages are still placeholders, so
-// these assert shell behavior only; owners add their own journeys.
+// Phase 2 shell checks against the mock-mode dev server, across every member's routed pages.
+// Cross-feature journeys live in journeys.spec.ts.
 const pages = [
   '/en',
   '/es/catalog?category=truffle',
   '/en/products/peru-85-dark-bar',
   '/es/checkout',
+  '/en/wholesale',
   '/es/wholesale/request',
+  '/en/login',
+  '/es/register',
   '/en/contact',
+  '/es/sampler',
+  '/en/story',
+  '/es/care',
   '/es/no-existe',
   '/fr/catalog',
 ];
