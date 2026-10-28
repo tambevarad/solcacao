@@ -1,7 +1,9 @@
 # Student 1 handoff
 
 Current phase: 2 (Core Development), ready for review on `aman-auth`. Evidence:
-`team/member-1/phase-2-evidence.md`. Phase 1 status is still `not_started` (decision D21).
+`team/member-1/phase-2-evidence.md`. Phase 1 status is recorded as `ready_for_review` (decision
+D21). It is member-reported, and the hosted prototype URL and demo evidence are still missing; see
+`team/member-1/phase-1-evidence.md`.
 
 ## Public exports delivered
 
