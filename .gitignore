@@ -11,3 +11,5 @@ server/storage/*
 !server/storage/.gitkeep
 *.log
 .DS_Store
+
+.agent/

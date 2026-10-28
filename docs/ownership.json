@@ -7,7 +7,11 @@
     "server/src/shared/",
     "server/src/app.ts",
     "server/src/index.ts",
-    "tests/health.test.ts"
+    "tests/health.test.ts",
+    "docs/data-model.md",
+    "docs/phase1/erd.mmd",
+    "docs/phase1/erd.svg",
+    "docs/phase1/erd.dot"
   ],
   "2": [
     "client/src/features/shell/",
@@ -15,6 +19,10 @@
     "team/member-2/",
     "tests/member-2/",
     "client/src/shared/",
+    "client/public/images/",
+    "client/public/og-image.jpg",
+    "client/public/apple-touch-icon.png",
+    "client/public/favicon.svg",
     "client/src/api/",
     "client/src/main.tsx",
     "client/src/routes.tsx",
@@ -50,13 +58,16 @@
     "tests/e2e/",
     "tests/tooling.test.ts",
     "TEAM-QUICKSTART.md",
-    ".gitattributes"
+    ".gitattributes",
+    "compose.yaml"
   ],
   "3": [
     "client/src/features/catalog/",
     "server/src/features/catalog/",
     "team/member-3/",
-    "tests/member-3/"
+    "tests/member-3/",
+    "contracts/fixtures.ts",
+    "client/public/placeholders/"
   ],
   "4": [
     "client/src/features/b2b/",

@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 2,
   "successEnvelope": {
     "data": "Typed response"
   },
@@ -89,7 +89,7 @@
       "request": "path locale=en|es",
       "response": "Dictionary",
       "successStatus": 200,
-      "rules": "Flat namespaced dictionary; unsupported locale -> 400"
+      "rules": "Flat namespaced dictionary assembled from all five features' locales via client/src/features/shell/dictionaries.ts (same source as the mock adapter, compiled into dist/server); exact-match en|es only, otherwise 400 VALIDATION_ERROR with fieldErrors.locale; Cache-Control: no-cache with ETag"
     },
     {
       "method": "GET",
@@ -97,9 +97,9 @@
       "access": "public",
       "owner": 3,
       "request": "ProductQuery in URL",
-      "response": "ProductPage",
+      "response": "Product[] raw JSON list",
       "successStatus": 200,
-      "rules": "Pagination/filter/sort per contracts"
+      "rules": "Blueprint JSON List; pagination response headers; cacaoPct exact alias or cacaoMin/cacaoMax range"
     },
     {
       "method": "GET",
@@ -126,10 +126,10 @@
       "path": "/api/cart/persist",
       "access": "user",
       "owner": 3,
-      "request": "PersistCartInput",
+      "request": "CartLine[] raw JSON array; If-Match: \"<revision>\" header",
       "response": "Cart",
       "successStatus": 200,
-      "rules": "Compare revision; mismatch -> 409"
+      "rules": "Blueprint array payload; compare revision; mismatch409"
     },
     {
       "method": "POST",
@@ -191,5 +191,9 @@
       "successStatus": 201,
       "rules": "Persist before notifying; same requestId returns original receipt"
     }
+  ],
+  "wireExceptions": [
+    "GET /api/products returns raw Product[]; pagination in X-Page,X-Limit,X-Total-Count,X-Total-Pages headers",
+    "POST /api/cart/persist request body is raw CartLine[]; If-Match carries quoted expected revision"
   ]
 }

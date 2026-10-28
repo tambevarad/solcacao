@@ -1,11 +1,28 @@
 {
   "member": 4,
   "phases": {
-    "2": {
+    "1": {
       "state": "not_started",
       "commit": null,
       "checks": [],
       "blockers": []
+    },
+    "2": {
+      "state": "integrated",
+      "commit": "6fc3f7b",
+      "checks": [
+        "npm run typecheck: pass",
+        "npx vitest run tests/member-4: 72 passed, 10 skipped without TEST_MONGODB_URI; 82 passed with Docker MongoDB 8.0",
+        "npm run check: fail - 4 tests in tests/member-2 assert the HomePage placeholder (patch proposed in handoff.md); 141 passed, 10 skipped",
+        "npm run check:structure and check:workflow: pass (run separately)",
+        "npm run build: pass, no warnings",
+        "npm run check:ownership -- --member 4 --base development: pass (39 files)",
+        "npm run test:e2e: 8 passed (Playwright Chromium 1243)",
+        "Coordinator review: PR #5 approved by tambevarad and merged into development as 6fc3f7b (2026-10-26)",
+        "Coordinator verification 2026-10-28: full suite against a real MongoDB (Docker mongo:8.0, TEST_MONGODB_URI) passed 518/518, including this member's persistence tests; CI now runs them on every PR (PR #12)",
+        "Coordinator integration PR #12: requireAuth + requireRole('b2b') and Student 5's notifyQuote wired into b2bRouter; B2B journey e2e (sign-in dialog, four steps, ES switch, receipt) and .env.example VITE_B2B_MOCK_SCENARIO line added"
+      ],
+      "blockers": ["Phase 1 status not yet recorded by member 4 (D21)"]
     },
     "3": {
       "state": "not_started",

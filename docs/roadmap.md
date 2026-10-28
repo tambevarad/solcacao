@@ -1,0 +1,16 @@
+# Two source schedules kept intact
+
+The SolCacao blueprint specifies HOW to execute across eight weeks. The course screenshot specifies WHAT must be shown at academic checkpoints. They have different labels. Execute the blueprint roadmap below and meet the course checkpoint deliverables as well; do not postpone backend development because the screenshot calls its third checkpoint backend development. No dates beyond week ranges were supplied.
+
+| Execution phase                     | Blueprint exact focus                                                                                                            | Academic deliverable also tracked                                                                                                                  |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1, Weeks1–2, Architecture & Setup   | Initialize repository; configure Tailwind; model database schema; set up routing shell; outline localized key-value translations | Phase1 planning/design: ERD, database schema, three-page overview, MarvelApp or MockFlow interactive prototype; MS Teams demo                      |
+| 2, Weeks3–4, Core Development       | Each student codes components AND individual REST routes; endpoint data validation tests; sync client-side states                | Phase2 frontend: complete React UI, responsive design, client functionality; demo. Backend work is already underway/completed to satisfy blueprint |
+| 3, Weeks5–6, Integration & API Bind | Connect React to Node/Express endpoints; audit database triggers; security sweeps; verify ES/EN maps                             | Phase3 backend: REST API, DB integration, server logic; demo now also shows real frontend/API binding                                              |
+| 4, Weeks7–8, Audit, Polish & Launch | Compress assets; optimize API queries; lazy-load images; deploy cloud; document setup; team presentations                        | Phase4 fully integrated app, comprehensive docs,20–30minute face-to-face presentation/demo                                                         |
+
+Blueprint evaluation is functionality40%, code quality25%, visual/UX20%, collaboration10%, deployment/docs5%. Screenshot labels each visible Phase1–4 checkpoint15%; those are separate grading breakdowns, not percentages to combine.
+
+Each week: all five members contribute owned work, a reviewer inspects every PR visually and checks tests, at least one peer approves, coordinator merges approved PRs into development and records the integration in docs/weekly/week-N.md. Stable release goes development -> main via reviewed PR. Never record work/review/deployment that did not occur.
+
+The initial scaffold is provided setup material, not evidence that the students completed or submitted Phase1. Phase1 commands audit/extend it and produce each student’s own contribution. If actual instructor dates impose a different schedule, record them in a reviewed decision before agents proceed.

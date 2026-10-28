@@ -7,6 +7,19 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    # Real MongoDB for every member's persistence suite (Student 1 handoff proposal 2). Each suite
+    # uses its own database or collections; without TEST_MONGODB_URI they are skipped locally.
+    # 7.0, not 8.x: MongoDB 8.x refuses to start on the runner's Linux 6.19+ kernel (SERVER-121912,
+    # bundled TCMalloc). Move back to 8.x once a fixed image ships; compose.yaml stays on 8.0 locally.
+    services:
+      mongo:
+        image: mongo:7.0
+        ports: ['27017:27017']
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1}).ok'"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      TEST_MONGODB_URI: mongodb://127.0.0.1:27017/solcacao_test_ci
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,5 +31,4 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
-# Phase 3: Student 1 adds a MongoDB service and integration test job.
-# Phase 4: Student 2 adds real-mode browser tests; no mock substitution in that job.
+# Phase 3: Student 2 adds real-mode browser tests; no mock substitution in that job.

@@ -1,6 +1,9 @@
+import type { ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { RequireAuth, RequireRole } from './features/auth/public.js';
 import { Layout } from './features/shell/Layout.js';
+import { PageFrame } from './features/shell/PageFrame.js';
+import type { RouteMetaId } from './features/shell/meta.js';
 import LoginPage from './features/auth/pages/LoginPage.js';
 import RegisterPage from './features/auth/pages/RegisterPage.js';
 import AccountPage from './features/auth/pages/AccountPage.js';
@@ -17,41 +20,54 @@ import FeedbackPage from './features/support/pages/FeedbackPage.js';
 import SamplerPage from './features/support/pages/SamplerPage.js';
 import StoryPage from './features/support/pages/StoryPage.js';
 import CarePage from './features/support/pages/CarePage.js';
+
+/** Default title/description, error containment and usePageMeta support for every page. */
+const page = (meta: RouteMetaId, element: ReactNode) => (
+  <PageFrame meta={meta}>{element}</PageFrame>
+);
+
+// Source of truth for URLs (docs/contracts.md). Paths are canonical and never translated; only the
+// /:locale prefix changes. Route changes go through Student 2.
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/en" replace />} />
       <Route path="/:locale" element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path="catalog" element={<CatalogPage />} />
-        <Route path="products/:slug" element={<ProductPage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
+        <Route index element={page('home', <HomePage />)} />
+        <Route path="catalog" element={page('catalog', <CatalogPage />)} />
+        <Route path="products/:slug" element={page('product', <ProductPage />)} />
+        <Route path="login" element={page('login', <LoginPage />)} />
+        <Route path="register" element={page('register', <RegisterPage />)} />
         <Route
           path="account"
-          element={
+          element={page(
+            'account',
             <RequireAuth>
               <AccountPage />
-            </RequireAuth>
-          }
+            </RequireAuth>,
+          )}
         />
-        <Route path="checkout" element={<CheckoutPage />} />
-        <Route path="order-confirmation" element={<OrderConfirmationPage />} />
-        <Route path="wholesale" element={<WholesalePage />} />
+        <Route path="checkout" element={page('checkout', <CheckoutPage />)} />
+        <Route
+          path="order-confirmation"
+          element={page('orderConfirmation', <OrderConfirmationPage />)}
+        />
+        <Route path="wholesale" element={page('wholesale', <WholesalePage />)} />
         <Route
           path="wholesale/request"
-          element={
+          element={page(
+            'quoteRequest',
             <RequireRole role="b2b">
               <QuoteWizardPage />
-            </RequireRole>
-          }
+            </RequireRole>,
+          )}
         />
-        <Route path="contact" element={<ContactPage />} />
-        <Route path="feedback" element={<FeedbackPage />} />
-        <Route path="sampler" element={<SamplerPage />} />
-        <Route path="story" element={<StoryPage />} />
-        <Route path="care" element={<CarePage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="contact" element={page('contact', <ContactPage />)} />
+        <Route path="feedback" element={page('feedback', <FeedbackPage />)} />
+        <Route path="sampler" element={page('sampler', <SamplerPage />)} />
+        <Route path="story" element={page('story', <StoryPage />)} />
+        <Route path="care" element={page('care', <CarePage />)} />
+        <Route path="*" element={page('notFound', <NotFoundPage />)} />
       </Route>
     </Routes>
   );

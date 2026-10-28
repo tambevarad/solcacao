@@ -1,27 +1,32 @@
 {
   "1": {
-    "name": "UNASSIGNED",
-    "github": "UNASSIGNED",
-    "area": "auth"
+    "name": "Aman Gulati",
+    "github": "amang26",
+    "area": "auth",
+    "branch": "aman-auth"
   },
   "2": {
-    "name": "UNASSIGNED",
-    "github": "UNASSIGNED",
-    "area": "shell"
+    "name": "Varad Tambe",
+    "github": "tambevarad",
+    "area": "shell",
+    "branch": "varad-shell"
   },
   "3": {
-    "name": "UNASSIGNED",
-    "github": "UNASSIGNED",
-    "area": "catalog"
+    "name": "Reethika Gajulapati",
+    "github": "ReethikaGajulapati",
+    "area": "catalog",
+    "branch": "reethika-catalog"
   },
   "4": {
-    "name": "UNASSIGNED",
-    "github": "UNASSIGNED",
-    "area": "b2b"
+    "name": "Krish Ruparel",
+    "github": "Krishr21",
+    "area": "b2b",
+    "branch": "krish-b2b"
   },
   "5": {
-    "name": "UNASSIGNED",
-    "github": "UNASSIGNED",
-    "area": "support"
+    "name": "Daniel Yglesias",
+    "github": "danielyglesias",
+    "area": "support",
+    "branch": "daniel-support"
   }
 }

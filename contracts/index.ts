@@ -1,4 +1,4 @@
-/** Contract v1. Read docs/contracts.md before modifying. JSON uses these shapes. */
+/** Contract v2. Read docs/contracts.md before modifying. JSON uses these shapes. */
 export type Locale = 'en' | 'es';
 export type Role = 'retail' | 'b2b';
 export type LocalizedText = Record<Locale, string>;
@@ -59,6 +59,7 @@ export interface Product {
 export interface ProductQuery {
   search?: string;
   origin?: string;
+  cacaoPct?: number; // exact percentage alias from blueprint example; mutually exclusive with range
   cacaoMin?: number;
   cacaoMax?: number;
   priceMinCents?: number;
@@ -173,9 +174,13 @@ export interface Api {
 export interface ErrorBody {
   error: { code: string; message: string; fieldErrors?: Record<string, string> };
 }
+export interface HttpOptions {
+  method?: 'GET' | 'POST' | 'PATCH';
+  body?: unknown;
+  multipart?: FormData;
+  headers?: Record<string, string>;
+}
 export interface HttpClient {
-  request<T>(
-    path: string,
-    options?: { method?: 'GET' | 'POST' | 'PATCH'; body?: unknown; multipart?: FormData },
-  ): Promise<T>;
+  request<T>(path: string, options?: HttpOptions): Promise<T>;
+  requestRaw<T>(path: string, options?: HttpOptions): Promise<{ body: T; headers: Headers }>;
 }

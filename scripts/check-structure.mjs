@@ -18,11 +18,11 @@ for (let n = 1; n <= 5; n++) {
     'context.md',
     'handoff.md',
     'status.json',
-    ...['2', '3', '4'].flatMap((p) => [`phase-${p}.md`, `phase-${p}-evidence.md`]),
+    ...['1', '2', '3', '4'].flatMap((p) => [`phase-${p}.md`, `phase-${p}-evidence.md`]),
   ])
     if (!existsSync(`team/member-${n}/${f}`)) failures.push(`Missing member ${n} ${f}`);
   const status = read(`team/member-${n}/status.json`);
-  for (const phase of ['2', '3', '4'])
+  for (const phase of ['1', '2', '3', '4'])
     if (!states.has(status.phases[phase]?.state))
       failures.push(`Invalid member ${n} phase ${phase} state`);
 }

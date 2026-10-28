@@ -1,6 +1,10 @@
 # Course submission checkpoints
 
-Latest source: uploaded CSE5335 Fall2026 phase screenshot. Phase 2,3,4 are each 15% in that screenshot. The blueprint's functionality/code/UX/collaboration/deployment percentages describe a different rubric breakdown; do not conflate them.
+Academic checkpoint source: uploaded CSE5335 Fall2026 phase screenshot. Phases 1,2,3,4 are each 15% in that screenshot. The blueprint's functionality/code/UX/collaboration/deployment percentages describe a different rubric breakdown; do not conflate them.
+
+## Phase 1 planning and design
+
+Deliver reviewed ERD, database schema design, exactly three-page overview, an interactive MarvelApp or MockFlow prototype and an MS Teams demo. All five contribute their subsystem design and evidence. Finalize docs/phase1 artifacts, verify the actual accessible prototype URL and record the integrated commit; create phase-1-submission only after acceptance. Local frames alone do not complete the prototype requirement.
 
 ## Phase 2 frontend development
 
@@ -22,4 +26,6 @@ Suggested 25-minute allocation: overview/architecture 3min; Student1 auth/securi
 
 Checklist: all integration.md scenarios; live URL; fresh-clone README test; current schema/API docs; actual contributors and PRs; license/asset register; secrets scan; evidence of desktop/mobile/EN/ES; known limitations; presentation rehearsal; approved `phase-4-final` tag.
 
-Phase1 ERD/schema/overview/prototype deliverables are outside this request. The engineering schema document here does not satisfy or replace their separate academic submission.
+Phase1 is now included: finalize the ERD/schema, three-page overview, interactive MarvelApp/MockFlow prototype and MS Teams demo. See docs/phase1/README.md. Local frames alone are not the hosted prototype requirement.
+
+Implementation timing follows docs/roadmap.md: backend coding is already Phase2 and real API binding is Phase3. These submission headings describe what to demonstrate, not permission to delay blueprint milestones.

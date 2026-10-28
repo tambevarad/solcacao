@@ -1,11 +1,33 @@
 {
   "member": 1,
   "phases": {
-    "2": {
+    "1": {
       "state": "not_started",
       "commit": null,
       "checks": [],
       "blockers": []
+    },
+    "2": {
+      "state": "integrated",
+      "commit": "fc8ee86",
+      "checks": [
+        "npm run typecheck: pass",
+        "npx vitest run tests/member-1 tests/health.test.ts: 121 passed, 10 skipped (real-Mongo persistence block, no TEST_MONGODB_URI)",
+        "npm run check: fail - 2 member-4 tests assert auth stubs (patch in handoff.md, verified: 446 passed, 41 skipped); 444 passed, 2 failed, 41 skipped without it",
+        "npm run check:structure and check:workflow: pass (run separately)",
+        "npm run build: pass, warning: 548.63 kB chunk over 500 kB advisory",
+        "npm run check:ownership -- --member 1 --base development: pass (40 files)",
+        "compiled server: placeholder JWT_SECRET and unreachable MongoDB both exit 1 with clear messages",
+        "npm run test:e2e: not run - no disk space for Playwright browser download",
+        "Manual (Playwright on installed Chrome, mock mode): 375/768/1440 px no overflow, EN/ES, keyboard modal focus return, reload signs out, 0 console errors",
+        "Coordinator review: PR #11 approved by tambevarad and merged into development as fc8ee86 (2026-10-28)",
+        "Coordinator verification 2026-10-28: full suite against a real MongoDB (Docker mongo:8.0, TEST_MONGODB_URI) passed 518/518, including this member's persistence tests; CI now runs them on every PR (PR #12)",
+        "Coordinator integration PR #12: requireAuth/optionalAuth/requireRole wired into the catalog and B2B routers; startup builds every model's indexes; the two Member 4 stub tests were updated in coordinator commit 72fef79 before merge"
+      ],
+      "blockers": [
+        "Phase 1 status not yet recorded by member 1 (D21)",
+        "Proposal 3 (move auth schemas into contracts/validation.ts) deferred by the coordinator; no behavior change"
+      ]
     },
     "3": {
       "state": "not_started",

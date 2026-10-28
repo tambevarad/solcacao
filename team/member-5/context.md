@@ -1,43 +1,35 @@
-# Student 5 context — Support sampler content and notifications
+# Student 5 — Personalization Forms, Contacts & Notification Bridges
 
-Read root AGENTS.md, context.md, docs/contracts.md, docs/api.json, docs/decisions.md and docs/design.md before implementation. Then read ONLY the requested phase file completely; future phases are context, not permission to implement them.
+## Read order
 
-## Your ownership
+AGENTS.md -> context.md -> docs/roadmap.md -> docs/contracts.md -> docs/api.json -> docs/design/frans-reference.md -> this file -> requested phase-P.md. Read current status and code before editing. Source blueprint and screenshot are transcribed in docs/sources; keep both, with the crosswalk in roadmap.md.
 
-- Client: `client/src/features/support/` including matching locales.
-- Server: `server/src/features/support/`.
-- Tests/evidence: `tests/member-5/` and `team/member-5/`.
-- Additional ownership follows root context.md and docs/ownership.json.
-- Requirement IDs: SUP-01–05.
-- Public seams: support pages/mock.ts/http.ts; server/features/support/notifications.ts.
+## Exact ownership
 
-You must use the central DTOs and existing provider signatures. Read the existing implementation before replacing any file: a later session may be resuming partially finished work. Do not duplicate another member's state, models, middleware, seed data or translations. Pending peer work is a named dependency, not an invitation to implement it.
+Client and server features/support, tests/member-5, team/member-5, and the additional paths in docs/ownership.json. You own this subsystem’s frontend AND backend. Student1 coordinates central database relationships; Student2 owns shared shell/static assets/localization and coordinates integration. Other features’ internal code is not yours.
 
-## Phase playbooks
+## Four execution phases
 
-- [Phase 2 — frontend](phase-2.md)
-- [Phase 3 — backend](phase-3.md)
-- [Phase 4 — integration](phase-4.md)
+1. [Phase1 Architecture & Setup](phase-1.md): Weeks1–2, including owned schema modeling, routing/interface setup and translation outline.
+2. [Phase2 Core Development](phase-2.md): Weeks3–4, both React components and individual REST endpoints/validation tests/state synchronization.
+3. [Phase3 Integration & API Bind](phase-3.md): Weeks5–6, real API binding, trigger review, security sweep and ES/EN audit.
+4. [Phase4 Audit, Polish & Launch](phase-4.md): Weeks7–8, optimization, live deployment, documentation and team presentation.
 
-## Give this to any coding agent
+## One instruction to your coding agent
 
 ```text
-Read AGENTS.md, context.md, docs/contracts.md, docs/api.json,
-and team/member-5/context.md, then team/member-5/phase-2.md.
-Implement only Student 5 Phase 2 in my owned files.
-Preserve the shared contracts and other owners' work. Verify prerequisites,
-run the listed checks, and record real results in my phase evidence and handoff.
-Stop before committing/pushing/merging and before starting the next phase.
+Run npm run agent -- --member 5 --phase 1. Read the generated task packet
+and every required reference it names. Implement only that member and phase,
+following its steps and exact contracts. Run checks, update evidence and handoff,
+and stop before commit/push/merge/deploy or starting another phase.
 ```
 
-For later phases replace both occurrences of Phase 2/phase-2 with the requested phase. Run `npm run phase -- --member 5 --phase 2` for a printable brief and status check.
+Change only the phase number for later phases. The command creates the full packet at .agent/task.md; it does not launch a vendor-specific AI itself. Give the instruction to an already open agent in this repository. If your agent cannot run shell commands, attach the same listed documents and use the equivalent prompts in the PDF.
 
-## Completion protocol
+## Before implementation
 
-Run `npm run check`, `npm run build`, targeted tests and the phase manual scenarios. Run `npm run check:ownership -- --member 5 --base development` before review. Unapproved shared-file changes require an owner handoff; the checker is a local aid and does not replace peer review. If a dependency prevents a full scenario, mark it blocked and identify the exact export/PR needed.
+Use the dedicated branch from roster.json (initial alias student5-support); its prefix is replaced by the actual student name at team setup. Branches originate from development and are synchronized before each phase. Do not create a separate primary branch or commit directly to main/development. Use npm run setup -- --member 5 after the revised template has been reviewed into development.
 
-Update phase evidence and handoff with actual commands/results and changed paths. Set phase state to ready_for_review only when own checks pass. A reviewer changes it to integrated after merge and global verification. Proposed commit subject: `feat(support): complete phase N scope`. Do not claim all phases complete after a template build.
+## Finish
 
-## Shared documentation and infrastructure handoffs
-
-When a phase step asks you to update README, deployment/API/schema docs, asset register, CI or another shared file outside your ownership, write the exact proposed text/patch in your own handoff.md. Student2 integrates shared documentation/build/CI changes; Student1 integrates shared server changes. The request to document your work does not grant permission to edit another owner's files. Your own feature README, tests and evidence remain directly editable.
+Run npm run check, npm run build, owned tests and visual scenarios. Update your own phase evidence/status/handoff. When a step requests a shared README/API/assets/CI change outside your paths, write an exact patch proposal in your handoff for its owner; do not silently edit another member’s files. The teammate reviews/commits, opens a PR, receives one peer approval and joins the weekly integration demo. A command or agent cannot self-award human review or course submission.

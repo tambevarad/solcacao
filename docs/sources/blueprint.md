@@ -1,6 +1,6 @@
 # Original project blueprint text
 
-Extracted verbatim from the user-supplied SolCacao requirements DOCX. Formatting is simplified. Current phase execution follows course-phases.md and the later screenshot, not the week labels below.
+Extracted verbatim from the user-supplied SolCacao requirements DOCX. Formatting is simplified. Both source schedules are preserved through ../roadmap.md.
 
 PROJECT BLUEPRINT & REQUIREMENTS
 SolCacao Artisanal Chocolate Platform

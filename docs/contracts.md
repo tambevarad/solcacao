@@ -1,10 +1,10 @@
-# Contract v1
+# Contract v2
 
-Read `contracts/index.ts`, `contracts/validation.ts` and `docs/api.json` together. DTOs are JSON boundaries, not Mongoose documents. Field spellings, enums, units and path names are fixed. Expand runtime validators to cover every endpoint in Phase 3; the starter schemas cover only representative critical boundaries.
+Read `contracts/index.ts`, `contracts/validation.ts` and `docs/api.json` together. DTOs are JSON boundaries, not Mongoose documents. Field spellings, enums, units and path names are fixed. Expand runtime validators to cover every endpoint in Phase 2; the starter schemas cover only representative critical boundaries.
 
 ## Wire conventions
 
-Responses are `{ "data": <DTO> }`, including lists (the DTO itself contains items and pagination). Failures are `{ "error": { "code": "VALIDATION_ERROR", "message": "Invalid request", "fieldErrors": { "quantity": "Minimum 50" } } }`. `HttpClient.request<T>` unwraps data once and throws ApiError. UI and mock methods return DTOs directly. File downloads are binary and exempt from the JSON wrapper.
+Responses are normally `{ "data": <DTO> }`. Exception: GET /api/products returns a raw JSON Product[] list as required by the blueprint; pagination is in X-Page, X-Limit, X-Total-Count, X-Total-Pages headers. Cross-origin deployments expose those headers through CORS. catalog/http.ts calls requestRaw<Product[]> and reconstructs the internal ProductPage DTO; other consumers still see ProductPage. Failures are `{ "error": { "code": "VALIDATION_ERROR", "message": "Invalid request", "fieldErrors": { "quantity": "Minimum 50" } } }`. `HttpClient.request<T>` unwraps data once and throws ApiError. UI and mock methods return DTOs directly. File downloads are binary and exempt from the JSON wrapper.
 
 All IDs are 24-character hexadecimal ObjectId strings; no `_id` or `__v` in API output. Timestamps ISO 8601 UTC strings. All monetary amounts are integer USD cents; format with Intl.NumberFormat(locale, {style:'currency',currency:'USD'}). Never multiply a client-provided price. Request JSON must be strict; reject unexpected fields, malformed IDs, NaN, fractions where integers are required, oversized strings and invalid enum values. No raw query object passed into Mongo filters.
 
@@ -18,7 +18,7 @@ Statuses: 400 invalid input, 401 missing/invalid/expired token, 403 wrong role, 
 
 ## Catalog
 
-Query keys are search, origin, cacaoMin, cacaoMax, priceMinCents, priceMaxCents, category, page, limit, sort, locale. page=1, limit=12 (1–48), sort=name, locale=en by default. Cacao range 0–100 inclusive; price >=0; min<=max. origin exact canonical match. category bar|truffle|seasonal. search is a trimmed literal substring, maximum 100 chars, case-insensitive on the selected localized name/description; escape regex metacharacters. AND all supplied filters. Sorting name by selected localized name, priceAsc/Desc by cents, always id as tie breaker. Empty result total=0,totalPages=0,items=[]; an out-of-range page is empty without redirect. Only active products; missing/inactive slug ->404. Product DTO stock derives from Inventory.availableUnits. Query totals and returned items must apply identical predicates.
+Query keys are search, origin, cacaoPct, cacaoMin, cacaoMax, priceMinCents, priceMaxCents, category, page, limit, sort, locale. page=1, limit=12 (1–48), sort=name, locale=en by default. cacaoPct is an optional exact percentage (0–100) as in the blueprint example; reject combining it with cacaoMin/cacaoMax. Cacao range 0–100 inclusive; price >=0; min<=max. origin exact canonical match. category bar|truffle|seasonal. search is a trimmed literal substring, maximum 100 chars, case-insensitive on the selected localized name/description; escape regex metacharacters. AND all supplied filters. Sorting name by selected localized name, priceAsc/Desc by cents, always id as tie breaker. Empty result total=0,totalPages=0,items=[]; an out-of-range page is empty without redirect. Only active products; missing/inactive slug ->404. Product DTO stock derives from Inventory.availableUnits. Query totals and returned items must apply identical predicates.
 
 ## Cart persistence, login and races
 
@@ -28,7 +28,9 @@ Guest state key `solcacao.guestCart.v1` stores `{items,mergeId}`. Generate merge
 
 On guest -> authenticated transition: capture the guest cart, call merge(items,mergeId), replace UI state with returned cart, then clear guest storage ONLY after success. The server atomically sums matching product quantities, capped by min(99, available stock); drops unavailable/zero-stock products. UI compares before/after and displays adjustments. Other saved lines remain. A repeated mergeId for that user must not add again, even if the first response was lost. Store merge markers and cart revision atomically in the same Cart document. Limit stored markers to the latest 100 and document this retry horizon.
 
-Authenticated changes use persist with expectedRevision. Backend atomically updates only if revision matches; increment revision once. New cart revision 0. On conflict return CART_CONFLICT; UI refetches and asks the shopper to retry (no silent overwrite). Serialize local mutations to prevent older responses replacing newer state. Capture user id/session generation for each async action; ignore responses after logout/account switch. On authenticated -> guest clear in-memory authenticated cart and start an empty guest cart; do not copy private saved cart into guest storage. Server cart remains available after the next login. A full reload also begins logged out; saved server cart returns after login.
+Authenticated changes use the internal persist({items,expectedRevision}) API. Its HTTP adapter sends ONLY the raw items array as JSON body to POST /api/cart/persist, matching Table5.1, and sends expectedRevision as a quoted integer in If-Match (for example "0"). Missing/malformed revision header ->400; no body wrapper. The adapter returns the data Cart DTO. Backend atomically updates only if revision matches; increment revision once. New cart revision 0. On conflict return CART_CONFLICT; UI refetches and asks the shopper to retry (no silent overwrite). Serialize local mutations to prevent older responses replacing newer state. Capture user id/session generation for each async action; ignore responses after logout/account switch. On authenticated -> guest clear in-memory authenticated cart and start an empty guest cart; do not copy private saved cart into guest storage. Server cart remains available after the next login. A full reload also begins logged out; saved server cart returns after login.
+
+Known limitation (no contract change): `CatalogApi` has no lookup by id, so the cart resolves products for lines it has not loaded by paging `list({ limit: 48 })`. That is fine for the fixture catalog; if it grows, propose a reviewed `ids` query key or `getMany(ids)` here first.
 
 ## Simulated checkout
 
@@ -50,11 +52,43 @@ Use one /inquiries endpoint and category field. Validation in shared schema: nam
 
 Every feature owns locales/en.json and es.json with flat keys prefixed auth., shell., catalog., b2b., support. Student 2 combines them in mock and backend dictionaries; duplicate or missing counterpart keys fail tests. GET /i18n/:locale returns the flat dictionary in data. Product text stays in Product.name/description/etc, not UI dictionaries. setLocale updates URL prefix while preserving path/query and mounted form/cart state. Set html lang. Supported route prefixes en/es only; unknown prefix renders not-found. / redirects to /en. Canonical slug never translated. Existing routes in client/src/routes.tsx are the source of truth. No separate router per member.
 
+Key conventions:
+
+- **Shape:** `<feature>.<area>.<item>`, with camelCase segments, for example `catalog.filters.cacaoRange` or `b2b.wizard.step2Title`.
+- **Format:** one flat JSON object per file; string values only; the same keys in en.json and es.json.
+- **Variables:** written `{name}` and filled with `t(key, { name })`.
+- **No string building:** do not concatenate translated fragments or put markup in values.
+- **Shared keys:** generic shell keys (`shell.action.*`, `shell.state.*`) may be reused by any feature. Ask Student 2 for new shared keys instead of copying them into your namespace.
+- **Development checks:** a missing key renders as `⟦key⟧` and logs a warning. `npm run check` and `tests/member-2` fail on duplicate, unprefixed or unmatched keys.
+
+## Shell public surface (Phase 2, Student 2)
+
+These are the only shell imports other features should use. Signatures are stable; changes follow the proposal procedure above.
+
+- `features/shell/public.tsx`:
+  - `useLocale(): { locale: Locale; setLocale(locale: Locale): void; t(key: string, values?: Record<string, string | number>): string }`
+  - `LocaleProvider`, already mounted in main.tsx. Do not mount a second one.
+  - `localizePath(locale, path)`, for example `localizePath(locale, '/products/' + slug)` gives `/es/products/<slug>`. Build internal links with it.
+  - `SUPPORTED_LOCALES`, `isLocale(value)`.
+  - `usePageMeta({ title, description? })` overrides the route's default document title and description with already-translated text (for example a product name). Title renders as `<title> · SolCacao`.
+- `client/src/shared/index.ts`: `Button`, `buttonStyles`, `Field`, `TextArea`, `Select`, `Dialog`, `Drawer`, `LoadingState`, `EmptyState`, `ErrorState`, `Placeholder`, `Photo`, `photos` (approved site photography) and `productPhotos` (square product photos in the `Product.images` shape for catalog fixtures); sources are in docs/assets.md. Usage: client/src/shared/README.md.
+- `api/notImplemented.ts`: `NotImplementedError`, thrown by template stubs so a consumer can show a labeled pending state.
+
+Page and route rules:
+
+- `client/src/routes.tsx` wraps every routed page in `PageFrame`. It applies the localized default title and description (`shell.meta.<routeId>.*`) and contains render errors so the header, navigation and footer keep working.
+- Layout already renders the skip link, sticky header, `<main id="main">` and footer. Pages render content only: one `<h1>`, no `<main>`, header or footer of their own.
+- Owners keep their page file paths and default exports so routes.tsx keeps resolving. New routes or route paths go through Student 2.
+- How the shell uses other features' existing ports. These describe the shell's side only and add no new obligations; owners keep their own implementation choices:
+  - The header reads `useCart().count` and `open`, and calls `setOpen(true)`, all from the existing `CartState` interface. docs/design.md already asks for one shared right-hand cart drawer. The shared `<Drawer side="right">` is available for it, and Student 3 decides whether to use it.
+  - Header and drawer account links read `useAuth().user`. Sign out (desktop header and mobile drawer) calls `logout()`. Both are existing `AuthState` members (Student 1).
+  - Global search links to `/:locale/catalog?search=<trimmed term>` and Collections link to `/:locale/catalog?category=bar|truffle|seasonal`. These are the existing ProductQuery keys; design.md already keeps catalog filters in the URL.
+
 ## Cross-feature imports
 
-Client permitted ports: auth/public.tsx useAuth/AuthProvider; catalog/public.tsx useCart/CartProvider/CartDrawer; shell/public.tsx useLocale/LocaleProvider; api/index.ts api/sessionToken; shared presentational primitives. Homepage gets products through api.catalog.list. Sampler gets products through api.catalog.list/get. Do not import another feature's internal state/reducer/pages.
+Client permitted ports: auth/public.tsx useAuth/AuthProvider; catalog/public.tsx useCart/CartProvider/CartDrawer; shell/public.tsx useLocale/LocaleProvider/localizePath/usePageMeta (see "Shell public surface"); api/index.ts api/sessionToken; shared presentational primitives from client/src/shared/index.ts. Homepage gets products through api.catalog.list. Sampler gets products through api.catalog.list/get. Do not import another feature's internal state/reducer/pages.
 
-Server ports to implement in Phase 3:
+Server ports to implement in Phase 2:
 
 - Student 1 `server/src/shared/auth.ts`: requireAuth RequestHandler, requireRole(role:Role) RequestHandler, optionalAuth RequestHandler. Add `req.user?: User` via Express type augmentation; protected handlers assert presence. Middleware returns error envelope, never falls through on failure.
 - Student 1 `server/src/shared/db.ts`: connectDb(uri:string):Promise<void>, disconnectDb():Promise<void>. Tests inject/use an isolated TEST_MONGODB_URI.
@@ -63,10 +97,14 @@ Server ports to implement in Phase 3:
 
 Student 2 assembles localization from feature JSON at build/runtime with a documented path that works in compiled deployment; don't rely on a missing source directory. Contract types remain environment-neutral; browser-only File is used only by the client B2bApi port, not server request types.
 
-## Mock identity boundary for Phase 2
+## Mock identity boundary for the Phase2 frontend track
 
 Auth mock returns a token exactly `mock:<userId>` where userId is a valid deterministic ObjectId string. Its mock registry owns the fake accounts and verifies only synthetic in-memory passwords. AuthProvider stores that token in the existing sessionToken store. Catalog mock reads `sessionToken` from `client/src/api/session.ts` to key its in-memory saved cart by userId, rejecting missing tokens for protected mock operations. B2B mock calls the auth mock through a testable identity dependency or `api.auth.me()` at invocation time and enforces b2b. Avoid module-initialization API calls and cyclic imports. Mock register/me/profile/addresses refer to the same registry; no separate user copy in each feature. Mock tokens are never accepted by server middleware.
 
 Do not share actual login secrets or reuse real user passwords in mock mode. Tests use `.test` email domains and fixed synthetic credentials. Mocks must implement the same errors and DTOs as HTTP, not invent extra fields exposed to components.
 
 Guard signatures are prewired: RequireAuth({children:ReactNode}) and RequireRole({role:Role,children:ReactNode}). RequireRole includes the authentication check. Both fail closed in the template until Student1 implements the Phase2 UX. Do not rename them or add a second guard in the wizard page.
+
+## Version2 migration note
+
+No completed feature adapters existed at migration. All mock/http factories now receive a HttpClient with requestRaw as well as request. The product list/raw cart payload changes restore the blueprint’s wire formats, while keeping frontend provider APIs stable. Tests must verify HTTP shapes as well as DTO types.
