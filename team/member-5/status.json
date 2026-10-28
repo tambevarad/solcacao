@@ -25,7 +25,8 @@
         "Docker unavailable; real Mongo test NOT RUN (not counted as passing)",
         "Coordinator review: PR #10 approved by tambevarad and merged into development as 88c9a0d (2026-10-28)",
         "Coordinator verification 2026-10-28: full suite against a real MongoDB (Docker mongo:8.0, TEST_MONGODB_URI) passed 518/518, including this member's persistence tests; CI now runs them on every PR (PR #12)",
-        "Coordinator integration PR #12: startup builds the Inquiry requestId index before serving; notifyQuote wired into the B2B router"
+        "Coordinator integration PR #12: startup builds the Inquiry requestId index before serving; notifyQuote wired into the B2B router",
+        "2026-10-28 sampler follow-up on daniel-support: ready_for_review, not yet merged. Full project check: 474 passed, 46 database tests explicitly skipped; typecheck, structure and workflow passed. Build passed. Owned browser suite: 5 passed; shared journeys: 14 passed. Ownership check passes for all 8 files. Original Phase 2 integrated state/commit above refer to PR #10; coordinator records are preserved. Catalog quantity enhancement is a separate Member 3 review PR."
       ],
       "blockers": [
         "Phase 1 status not yet recorded by member 5 (D21)",
