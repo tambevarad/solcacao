@@ -116,9 +116,22 @@ Checks run on the integrated code (coordinator branch for PR #12, on top of fc8e
   - without a JWT secret it refuses to start with a clear message.
 - **Screenshots:** desktop (1440) and mobile (375) of every member's key pages, the cart drawer and the mobile menu are in `docs/phase2/screenshots/`. No console errors.
 
+## Release and submission (2026-10-28)
+
+- **Follow-ups:** #13 (CI on `mongo:7.0`), #14 and #15 (Member 5: sampler reset; catalog quantity picker under a coordinator-approved exception for Member 3's files), #17 (quantity clamp race), #19 (Member 1 Phase 1 record) and #21 (main → development sync). Each was approved by someone other than its author. The full table is in `docs/weekly/week-4.md`.
+- **Releases to main:** #16 (d10153c) and #20 (1307a52), both approved by Krishr21 and merged with merge commits so every author keeps their commits. GitHub's contributors list now shows all five members.
+- **Submission:** annotated tag `phase-2-submission` on 1307a52. CI on that commit passed 531/531 with every member's MongoDB persistence suite.
+- **Re-check of the tagged commit against the docs/submissions.md Phase 2 checklist:**
+  - Every route in EN/ES at 1440 and 375, plus the mobile menu, the cart drawer and the signed-in account and quote-wizard pages: 0 console errors or warnings, 0 failed requests, 0 missing translations, no placeholders, no overflow, one `h1` per page.
+  - A fresh clone with `npm ci` and `npm run dev:client` served the site.
+  - The catalog screenshots were retaken to show the quantity picker.
+- **CI flakes found during the release:**
+  - The #15 quantity race was fixed in #17.
+  - `CartProvider`'s sign-in merge outliving `tests/member-1/pages.test.tsx` (`window is not defined`) is still open for Members 1 and 3. An unmount guard in `CartProvider` would break the StrictMode remount in development.
+
 ## Known limitations
 
-- Each member's Phase 1 status is still unrecorded (D21).
+- Phase 1 status is still unrecorded for Members 2–5 (D21). Member 1 recorded it in #19, with the prototype and demo still open.
 - The public asset router is not mounted (Phase 3/4). Production serving of `dist/client` belongs to Phase 4 deployment.
 - The bundle exceeds Vite's 500 kB advisory; code splitting is Phase 4.
 - WhatsApp needs a real business number.
@@ -126,5 +139,5 @@ Checks run on the integrated code (coordinator branch for PR #12, on top of fc8e
 
 ## Review
 
-PRs: #3, #6, #7 and #8 merged after Krishr21's approval; integration PR #12 is in review.
-Integrated commit for the five member PRs: fc8ee86 on development.
+PRs: #3, #6, #7 and #8 merged after Krishr21's approval. Integration PR #12 was approved by danielyglesias and merged as e088f4b. #13, #16, #17, #20 and #21 were approved by Krishr21.
+Integrated commit for the five member PRs: fc8ee86 on development. Phase 2 submission commit: 1307a52 on main (tag `phase-2-submission`).

@@ -1,6 +1,6 @@
 # Phase 2 submission evidence
 
-Mock-mode screenshots of every member's pages at desktop (1440 × 900) and mobile (375 × 812), captured on 2026-10-28 from the integrated code (development fc8ee86 plus integration PR #12) with no console errors. Sign-in, persistence and notifications are mocked in the browser at this stage.
+Mock-mode screenshots of every member's pages at desktop (1440 × 900) and mobile (375 × 812), captured on 2026-10-28 from the integrated code (development fc8ee86 plus integration PR #12) with no console errors. Both `02-catalog` shots were retaken the same day at the submission commit (1307a52, tag `phase-2-submission`) to show the quantity picker added in #15; the other pages did not change. Sign-in, persistence and notifications are mocked in the browser at this stage.
 
 | File (desktop- / mobile-) | Page                               | Owner    |
 | ------------------------- | ---------------------------------- | -------- |

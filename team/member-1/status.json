@@ -6,7 +6,8 @@
       "commit": null,
       "checks": [
         "Member-reported (Aman Gulati, 2026-10-28): contributed to the ERD and database schema design (Users, Corporate Partners, Address), the three-page overview, the prototype and the MS Teams demo",
-        "git history: docs/phase1 and docs/data-model.md commits are authored by the coordinator/template; no Phase 1 commit by this member before this record"
+        "git history: docs/phase1 and docs/data-model.md commits are authored by the coordinator/template; no Phase 1 commit by this member before this record",
+        "Coordinator review: PR #19 approved by tambevarad and merged into development as 2c15fb1 (2026-10-28); released to main in #20 (1307a52). Phase 1 stays ready_for_review because its prototype URL and Teams demo blockers are open"
       ],
       "blockers": [
         "Hosted MarvelApp/MockFlow prototype URL not recorded (docs/phase1/prototype/README.md: Service not selected, Project URL not created)",
