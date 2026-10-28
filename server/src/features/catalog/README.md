@@ -47,15 +47,13 @@ npx tsx server/src/features/catalog/seed.ts                     # MONGODB_URI fr
 npx tsx server/src/features/catalog/seed.ts mongodb://127.0.0.1:27017/solcacao
 ```
 
-## Dependencies still pending (injected through `createCatalogRouter`)
+## Dependencies (injected through `createCatalogRouter`)
 
-- `requireAuth` / `optionalAuth` from Student 1 (`server/src/shared/auth.ts`). Until then the
-  exported `catalogRouter` uses `authenticationPending` (every cart route → `401`) and
-  `guestOnlyPending` (checkout accepts guests; any `Authorization` header → `401`, never a silent
-  guest downgrade). Mock tokens are never accepted.
-- `connectDb` from Student 1, called at startup in `server/src/index.ts`.
-- CORS `exposedHeaders` for the four `X-*` pagination headers in `server/src/app.ts` (Student 1) for
-  cross-origin deployments; same-origin and the Vite proxy work without it.
+- `requireAuth` / `optionalAuth` from Student 1 (`server/src/shared/auth.ts`), wired into the
+  exported `catalogRouter` during Phase 2 integration: cart routes need a verified bearer token;
+  checkout accepts guests, and a supplied but invalid token is `401`, never a silent guest downgrade.
+- `connectDb` and index initialization from Student 1, called at startup in `server/src/index.ts`.
+- CORS `exposedHeaders` for the four `X-*` pagination headers, set in `server/src/app.ts`.
 
 Tests use test doubles for these ports (`tests/member-3/catalog-test-app.ts`). Persistence tests run
 against a real MongoDB when `TEST_MONGODB_URI` is set, for example with `npm run services`:

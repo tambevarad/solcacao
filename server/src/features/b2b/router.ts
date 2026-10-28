@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 import type { User } from '../../../../contracts/index.js';
 import { idSchema } from '../../../../contracts/validation.js';
+import { requireAuth, requireRole } from '../../shared/auth.js';
+import { notifyQuote } from '../support/notifications.js';
 import { B2bError, sendError } from './errors.js';
 import { findOwnRequest, submitQuote, toReceipt } from './service.js';
 import { createLocalQuoteStorage, type QuoteFileStorage } from './storage.js';
@@ -25,16 +27,6 @@ export interface B2bRouterDependencies {
   /** Defaults to the shared mongoose connection, which Student 1's connectDb opens. */
   isDatabaseReady?: () => boolean;
 }
-
-/**
- * Fails closed until Student 1's middleware lands in server/src/shared/auth.ts: no bearer token
- * can be verified yet, so every request is unauthenticated. Mock tokens are never accepted.
- */
-export const authenticationPending: RequestHandler = (_req, res) =>
-  sendError(res, new B2bError(401, 'UNAUTHORIZED', 'Authentication required'));
-
-/** Until Student 5's notifyQuote lands nothing can be sent, and the receipt says so. */
-export const notificationPending: NotifyQuote = async () => 'failed';
 
 function signedInUser(req: Request): User {
   if (!req.user || !idSchema.safeParse(req.user.id).success)
@@ -164,12 +156,12 @@ export function createB2bRouter({
 }
 
 /**
- * Mounted by server/src/app.ts. Fails closed (401) until Student 1's requireAuth/requireRole
- * replace `authenticationPending`; see team/member-4/handoff.md for the follow-up wiring.
+ * Mounted by server/src/app.ts with Student 1's requireAuth/requireRole('b2b') and Student 5's
+ * notifyQuote (docs/contracts.md "Server ports").
  */
 export const b2bRouter = createB2bRouter({
-  requireAuth: authenticationPending,
-  requireB2b: authenticationPending,
-  notifyQuote: notificationPending,
+  requireAuth,
+  requireB2b: requireRole('b2b'),
+  notifyQuote,
   storage: createLocalQuoteStorage(process.env.UPLOAD_DIR || 'server/storage'),
 });
