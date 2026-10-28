@@ -19,7 +19,8 @@ const pages = [
   '/fr/catalog',
 ];
 
-for (const width of [375, 768, 1440]) {
+// 320px is the WCAG 1.4.10 Reflow width; 375/768/1440 are the design breakpoints.
+for (const width of [320, 375, 768, 1440]) {
   test(`no horizontal overflow at ${width}px in EN and ES`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     for (const path of pages) {
