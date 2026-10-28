@@ -8,10 +8,24 @@
       "blockers": []
     },
     "2": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "npm run typecheck: pass",
+        "npx vitest run tests/member-1 tests/health.test.ts: 121 passed, 10 skipped (real-Mongo persistence block, no TEST_MONGODB_URI)",
+        "npm run check: fail - 2 member-4 tests assert auth stubs (patch in handoff.md, verified: 446 passed, 41 skipped); 444 passed, 2 failed, 41 skipped without it",
+        "npm run check:structure and check:workflow: pass (run separately)",
+        "npm run build: pass, warning: 548.63 kB chunk over 500 kB advisory",
+        "npm run check:ownership -- --member 1 --base development: pass (40 files)",
+        "compiled server: placeholder JWT_SECRET and unreachable MongoDB both exit 1 with clear messages",
+        "npm run test:e2e: not run - no disk space for Playwright browser download",
+        "Manual (Playwright on installed Chrome, mock mode): 375/768/1440 px no overflow, EN/ES, keyboard modal focus return, reload signs out, 0 console errors"
+      ],
+      "blockers": [
+        "Real-Mongo tests (tests/member-1/persistence.test.ts, 10) not run: local disk full, Mongo image pull failed; need CI Mongo service (handoff proposal 2) or a machine with Docker",
+        "Student 4: land tests/member-4 stub-assertion patch (handoff proposal 1) so npm run check passes",
+        "Phase 1 status not yet recorded by member 1 (D21)"
+      ]
     },
     "3": {
       "state": "not_started",
