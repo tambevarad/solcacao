@@ -1,6 +1,6 @@
 # SolCacao five-student implementation template
 
-A requirements-audited React/Express/MongoDB starting repository with original UI reference assets and twenty phase playbooks. It contains architecture and placeholders, not a completed chocolate store. Begin with TEAM-QUICKSTART.md.
+A requirements-audited React/Express/MongoDB repository with original UI reference assets and twenty phase playbooks. Phase 2 is integrated: every page works in mock mode, and the Express API runs against MongoDB. Begin with TEAM-QUICKSTART.md.
 
 ## Required sequence
 
@@ -14,7 +14,12 @@ Follow TEAM-QUICKSTART.md. It covers the one-time installs and three copy-paste 
 - do my phase (the agent clones the repo, runs `npm run setup -- --member N`, implements, checks, commits and opens the PR);
 - address review comments.
 
-Node 24.19.0, Git, the GitHub CLI and repository access are prerequisites. Docker is needed for the local Mongo/SMTP sink (`npm run services`). `npm run dev` starts the web app and API; `npm run dev:client` runs the mock frontend only. Setup sends no real emails or payments.
+Node 24.19.0, Git, the GitHub CLI and repository access are prerequisites. Docker is needed for the local Mongo/SMTP sink (`npm run services`). Setup sends no real emails or payments.
+
+### Run it
+
+- **Demo (mock mode, no database):** `npm ci`, then `npm run dev:client` and open http://localhost:5173. Sign-in, persistence and notifications are mocked in the browser, and a full page reload signs you out. Fictional demo accounts: `retail@solcacao.test` / `retail-demo-pass` and `business@solcacao.test` / `business-demo-pass`.
+- **Real API:** start Docker, then `npm run services` (MongoDB and the Mailpit SMTP sink at http://localhost:8025). `npm run setup -- --member N` writes `.env` with a random `JWT_SECRET`. Load the fictional catalog with `npm run seed:catalog`, then `npm run dev` starts the web app and API. The API refuses to start without a reachable MongoDB and a real secret.
 
 ## Documents and assets
 
@@ -31,8 +36,8 @@ Node 24.19.0, Git, the GitHub CLI and repository access are prerequisites. Docke
 
 ## Checks
 
-npm ci, npm run check, npm run build. Browser tests require npx playwright install chromium, then npm run test:e2e. Initial tests verify scaffold/contracts, not unimplemented product behavior. No mock may silently replace a failing real API in Phase3/4.
+npm ci, npm run check, npm run build. Browser tests require npx playwright install chromium, then npm run test:e2e. The persistence suites run against a real MongoDB when `TEST_MONGODB_URI` is set, for example `TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test_local npm test` after `npm run services`; CI runs them with a MongoDB service on every PR. No mock may silently replace a failing real API in Phase3/4.
 
 ## Revision status
 
-The audited template is on GitHub and merged into development through PR #1 and PR #2; main has not received a release PR yet. Phase 2 starts from development; the shell foundation PR and the team working guide are described in docs/integration.md. Branch protection settings and a hosted external prototype are not claimed here. Academic Phase1 draft artifacts require team completion/review and a real MarvelApp/MockFlow prototype. No prompts can guarantee error-free code or supply human approvals; the repository makes contracts, dependencies and checks explicit.
+The audited template is on GitHub and merged into development through PR #1 and PR #2. All five members' Phase 2 PRs (#3, #5, #9, #10 and #11) and the coordinator integration PR are merged into development; the record is docs/weekly/week-4.md. main is updated only through a reviewed release PR. Branch protection settings and a hosted external prototype are not claimed here. Academic Phase1 draft artifacts require team completion/review and a real MarvelApp/MockFlow prototype. No prompts can guarantee error-free code or supply human approvals; the repository makes contracts, dependencies and checks explicit.
