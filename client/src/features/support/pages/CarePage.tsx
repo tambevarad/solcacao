@@ -1,4 +1,4 @@
-import { Placeholder } from '../../../shared/Placeholder.js';
+import { ContentPage } from '../ContentPage.js';
 export default function CarePage() {
-  return <Placeholder name="CarePage" owner={5} />;
+  return <ContentPage page="care" />;
 }
