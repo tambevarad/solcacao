@@ -16,8 +16,10 @@ describe('POST /api/b2b/quote rejects before storing anything', () => {
       .get('/api/b2b/quotes/0123456789abcdef01234567')
       .set('Authorization', 'Bearer mock:0000000000000000000000b2');
     expect(mockToken.status).toBe(401);
-    // Other features' routes still fall through to their own routers.
-    expect((await request(realApp).post('/api/inquiries').send({})).status).toBe(404);
+    // Other features' routes still fall through to their own routers (support validates the body).
+    const inquiry = await request(realApp).post('/api/inquiries').send({});
+    expect(inquiry.status).toBe(400);
+    expect(inquiry.body.error.code).toBe('VALIDATION_ERROR');
   });
 
   it('rejects a missing token and a retail role before reading the upload', async () => {
