@@ -41,7 +41,7 @@ if (branch !== roster.branch)
   );
 const files = [
   'AGENTS.md',
-  'context.md',
+  'docs/context.md',
   'docs/roadmap.md',
   'docs/contracts.md',
   'docs/api.json',

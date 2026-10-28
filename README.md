@@ -1,43 +1,49 @@
-# SolCacao five-student implementation template
+# SolCacao
 
-A requirements-audited React/Express/MongoDB repository with original UI reference assets and twenty phase playbooks. Phase 2 is integrated: every page works in mock mode, and the Express API runs against MongoDB. Begin with TEAM-QUICKSTART.md.
+A bilingual (English/Spanish) storefront for a fictional artisan chocolate maker, built by a five-person team for CSE 5335. Retail shoppers browse and filter the catalog, manage a cart and place a simulated order. Business buyers request custom-branded chocolate through a four-step quote wizard with a PDF upload. Visitors can also send enquiries and build a six-piece sampler. All products, companies and accounts in the app are fictional.
 
-## Required sequence
+## Team and areas
 
-Follow the blueprint exactly: Phase1 Weeks1–2 Architecture & Setup; Phase2 Weeks3–4 Core Development (frontend AND backend); Phase3 Weeks5–6 Integration & API Bind; Phase4 Weeks7–8 Audit, Polish & Launch. docs/roadmap.md maps these to the screenshot’s four academic deliverables, including Phase1 ERD/schema/three-page overview/MarvelApp-or-MockFlow prototype.
+| Member              | Area                                                        |
+| ------------------- | ----------------------------------------------------------- |
+| Aman Gulati         | Authentication, accounts and the server foundation          |
+| Varad Tambe         | App shell, navigation, localization; integration and CI     |
+| Reethika Gajulapati | Catalog, product pages, cart and simulated checkout         |
+| Krish Ruparel       | Homepage, wholesale page and the business quote wizard      |
+| Daniel Yglesias     | Contact, feedback, sampler, story and care pages; enquiries |
 
-## Setup and one agent instruction
+File ownership is in `docs/ownership.json`. Each member works on a dedicated branch recorded in `team/roster.json`.
 
-Follow TEAM-QUICKSTART.md. It covers the one-time installs and three copy-paste Claude Code prompts:
+## Stack
 
-- review a PR;
-- do my phase (the agent clones the repo, runs `npm run setup -- --member N`, implements, checks, commits and opens the PR);
-- address review comments.
+React 19, React Router, Vite and Tailwind CSS on the client; Node.js 24, Express 5, Mongoose and zod on the server, with MongoDB. Shared DTOs and validators live in `contracts/`. Tests use Vitest, Testing Library and Playwright.
 
-Node 24.19.0, Git, the GitHub CLI and repository access are prerequisites. Docker is needed for the local Mongo/SMTP sink (`npm run services`). Setup sends no real emails or payments.
+## Run it
 
-### Run it
+Prerequisites: Node 24.19.0 (`.nvmrc`) and Git. Docker is needed only for the real API.
 
-- **Demo (mock mode, no database):** `npm ci`, then `npm run dev:client` and open http://localhost:5173. Sign-in, persistence and notifications are mocked in the browser, and a full page reload signs you out. Fictional demo accounts: `retail@solcacao.test` / `retail-demo-pass` and `business@solcacao.test` / `business-demo-pass`.
-- **Real API:** start Docker, then `npm run services` (MongoDB and the Mailpit SMTP sink at http://localhost:8025). `npm run setup -- --member N` writes `.env` with a random `JWT_SECRET`. Load the fictional catalog with `npm run seed:catalog`, then `npm run dev` starts the web app and API. The API refuses to start without a reachable MongoDB and a real secret.
+- **Demo (mock mode, no database):** run `npm ci`, then `npm run dev:client`, and open http://localhost:5173. Sign-in, persistence and notifications are mocked in the browser, and a full page reload signs you out. Fictional demo accounts: `retail@solcacao.test` / `retail-demo-pass` and `business@solcacao.test` / `business-demo-pass`.
+- **Real API:** start Docker, then `npm run services` (MongoDB and the Mailpit SMTP sink at http://localhost:8025). `npm run setup -- --member N` writes `.env` with a random `JWT_SECRET`. Load the fictional catalog with `npm run seed:catalog`, then `npm run dev` starts the web app and the API. The API refuses to start without a reachable MongoDB and a real secret.
 
-## Documents and assets
-
-- context.md and AGENTS.md: shared rules and stable contracts.
-- team/member-N/context.md and phase-1.md through phase-4.md:20 detailed playbooks plus evidence/status.
-- docs/requirements-audit.md and requirements.md: source-by-source audit and owner/phase coverage.
-- docs/roadmap.md: exact eight-week roadmap and academic crosswalk.
-- docs/contracts.md, docs/api.json, contracts/: canonical DTOs, HTTP shapes and validators.
-- docs/data-model.md and docs/phase1/: schema, ERD, three-page overview draft and external prototype assembly kit.
-- docs/design/: Fran’s observations, SolCacao layout proposals, tokens and original wireframes/placeholder asset register.
-- docs/integration.md, submissions.md, weekly/: merge order, demos, weekly logs.
-- docs/student-playbook.pdf: student setup,20 exact prompts, review/submission routine.
-- docs/validation.md: actual checks and limitations.
+No real emails or payments are ever sent.
 
 ## Checks
 
-npm ci, npm run check, npm run build. Browser tests require npx playwright install chromium, then npm run test:e2e. The persistence suites run against a real MongoDB when `TEST_MONGODB_URI` is set, for example `TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test_local npm test` after `npm run services`; CI runs them with a MongoDB service on every PR. No mock may silently replace a failing real API in Phase3/4.
+Run `npm ci`, `npm run check` (typecheck, unit and integration tests, structure checks) and `npm run build`. Browser tests need `npx playwright install chromium`, then `npm run test:e2e`. The persistence suites run against a real MongoDB when `TEST_MONGODB_URI` is set, for example `TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test_local npm test` after `npm run services`. CI runs everything, with a MongoDB service, on every pull request.
 
-## Revision status
+## Repository layout
 
-The audited template is on GitHub and merged into development through PR #1 and PR #2. All five members' Phase 2 PRs (#3, #5, #9, #10 and #11), the coordinator integration PR and the follow-ups are merged into development. Phase 2 was released to main through reviewed release PRs #16 and #20; the submission commit is 1307a52, tag `phase-2-submission`. The record is docs/weekly/week-4.md. main is updated only through a reviewed release PR. Branch protection settings and a hosted external prototype are not claimed here. Academic Phase1 draft artifacts require team completion/review and a real MarvelApp/MockFlow prototype. No prompts can guarantee error-free code or supply human approvals; the repository makes contracts, dependencies and checks explicit.
+- `client/`: React app, organised by feature (`client/src/features/<area>`) with shared UI in `client/src/shared`.
+- `server/`: Express API, organised by the same features.
+- `contracts/`: DTOs, validators and fixtures shared by both.
+- `tests/`: per-member suites, contract and tooling tests, and Playwright journeys in `tests/e2e`.
+- `docs/`: requirements, roadmap, API and data model, design references, decisions, integration plan, submission checkpoints and weekly records.
+- `team/`: each member's phase plans, evidence, handoff notes and status.
+
+## How we work
+
+`main` and `development` are protected. Every change goes through a pull request into `development` that needs a passing CI run and one approval from another member, who also reviews it visually. Approved work is released to `main` through a reviewed release PR. The contributor workflow is in `docs/team-quickstart.md`, the merge order and dependencies in `docs/integration.md`, and the weekly integration records in `docs/weekly/`.
+
+## Status
+
+Phase 2 (front-end development) is complete and released to `main`. All five members' Phase 2 pull requests (#3, #5, #9, #10, #11), the integration PR (#12) and the follow-ups were reviewed and merged. The submitted version is tagged `phase-2-submission`. The full record is in `docs/weekly/week-4.md`, with screenshots and submission documents in `docs/phase2/`. Phase 3 binds the UI to the real API.

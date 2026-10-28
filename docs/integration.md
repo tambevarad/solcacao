@@ -68,7 +68,7 @@ To change one, write the exact change (old and new signature, consumers, tests) 
 
 ### Setup and run (Node 24.19.0 from `.nvmrc`)
 
-The fastest path is Prompt 2 in TEAM-QUICKSTART.md: your agent runs these commands for you. Manual equivalents:
+The fastest path is Prompt 2 in docs/team-quickstart.md: your agent runs these commands for you. Manual equivalents:
 
 ```sh
 npm run setup -- --member N              # clean tree required: syncs development, creates/switches your branch, .env, npm ci, hooks

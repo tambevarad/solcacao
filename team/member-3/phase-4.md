@@ -1,6 +1,6 @@
 # Student 3 Phase 4 — Audit, Polish & Launch
 
-Blueprint execution window: Weeks 7–8. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
+Blueprint execution window: Weeks 7–8. Academic checkpoint mapping: docs/roadmap.md. Read docs/context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 

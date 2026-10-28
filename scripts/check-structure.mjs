@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const failures = [];
 for (const p of [
-  'context.md',
+  'docs/context.md',
   'AGENTS.md',
   'docs/contracts.md',
   'docs/api.json',
