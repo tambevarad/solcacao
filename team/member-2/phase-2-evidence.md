@@ -120,7 +120,10 @@ Checks run on the integrated code (coordinator branch for PR #12, on top of fc8e
 
 - **Follow-ups:** #13 (CI on `mongo:7.0`), #14 and #15 (Member 5: sampler reset; catalog quantity picker under a coordinator-approved exception for Member 3's files), #17 (quantity clamp race), #19 (Member 1 Phase 1 record) and #21 (main → development sync). Each was approved by someone other than its author. The full table is in `docs/weekly/week-4.md`.
 - **Releases to main:** #16 (d10153c) and #20 (1307a52), both approved by Krishr21 and merged with merge commits so every author keeps their commits. GitHub's contributors list now shows all five members.
-- **Submission:** annotated tag `phase-2-submission` on 1307a52. CI on that commit passed 531/531 with every member's MongoDB persistence suite.
+- **Code complete:** 1307a52 on main. CI on that commit passed 531/531 with every member's MongoDB persistence suite.
+- **Accessibility (WCAG 2.2 AA):** axe-core 4.10.2 found 0 violations across 79 page states, and measured text contrast is 5.92:1 or better. A manual 320 px reflow check found the header 23 px too wide on every page. It is fixed in #22 (the wordmark tightens below 360 px) and the overflow test now covers 320 px. Report: `docs/phase2/submission/accessibility-report.pdf`.
+- **Repository tidy-up (#22):** removed unused tool files, moved `context.md` and the quickstart into `docs/` and the Claude Code instructions into `.claude/CLAUDE.md`, and rewrote README. `AGENTS.md` stays at the root for Codex.
+- **Submission:** the annotated tag `phase-2-submission` marks the submitted release commit on main.
 - **Re-check of the tagged commit against the docs/submissions.md Phase 2 checklist:**
   - Every route in EN/ES at 1440 and 375, plus the mobile menu, the cart drawer and the signed-in account and quote-wizard pages: 0 console errors or warnings, 0 failed requests, 0 missing translations, no placeholders, no overflow, one `h1` per page.
   - A fresh clone with `npm ci` and `npm run dev:client` served the site.
@@ -140,4 +143,4 @@ Checks run on the integrated code (coordinator branch for PR #12, on top of fc8e
 ## Review
 
 PRs: #3, #6, #7 and #8 merged after Krishr21's approval. Integration PR #12 was approved by danielyglesias and merged as e088f4b. #13, #16, #17, #20 and #21 were approved by Krishr21.
-Integrated commit for the five member PRs: fc8ee86 on development. Phase 2 submission commit: 1307a52 on main (tag `phase-2-submission`).
+Integrated commit for the five member PRs: fc8ee86 on development. Phase 2 code complete at 1307a52 on main; the submitted release is tagged `phase-2-submission`.

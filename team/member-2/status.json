@@ -23,7 +23,7 @@
         "npm run test:e2e: 14 passed (installed Chrome), including guest checkout, sign-in cart merge and the B2B journey",
         "Desktop/mobile screenshots of every member's pages: docs/phase2/screenshots (no console errors)",
         "Follow-ups #13, #17 and #21 approved by Krishr21; Member 5 #14/#15 and Member 1 #19 approved by tambevarad (2026-10-28)",
-        "Released to main through #16 (d10153c) and #20 (1307a52), both approved by Krishr21; annotated tag phase-2-submission on 1307a52; CI 531/531",
+        "Released to main through #16 (d10153c) and #20 (1307a52), both approved by Krishr21; CI on 1307a52 531/531; the submitted release is tagged phase-2-submission",
         "Submission re-check on 1307a52: all routes EN/ES at 1440/375 with 0 console errors, failed requests, missing keys or overflow; fresh clone npm ci + dev:client served the site"
       ],
       "blockers": [

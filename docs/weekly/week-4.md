@@ -39,11 +39,20 @@ Follow-ups merged on 2026-10-28, each approved by someone other than its author:
 
 PR #18 (main → development, no file changes) was closed; #21 does that sync.
 
-**Phase 2 submission commit: 1307a52 on main, annotated tag `phase-2-submission`** (created 2026-10-28 after approval). CI on 1307a52 passed: 531/531 tests, including every member's MongoDB persistence suite, plus typecheck, structure and workflow checks and the build. The coordinator re-checked the tagged commit against the docs/submissions.md Phase 2 checklist on 2026-10-28:
+**Phase 2 code complete at 1307a52 on main (release #20).** CI on 1307a52 passed: 531/531 tests, including every member's MongoDB persistence suite, plus typecheck, structure and workflow checks and the build. The coordinator re-checked the tagged commit against the docs/submissions.md Phase 2 checklist on 2026-10-28:
 
 - Every route was checked in EN and ES at 1440 and 375 px, plus the mobile menu, the cart drawer and the signed-in account and quote-wizard pages: 0 console errors or warnings, 0 failed requests, 0 missing translations, no placeholders, no horizontal overflow, one `h1` per page.
 - A fresh clone of the tag with Node 24.19.0 ran `npm ci`, then `npm run dev:client` served `/` and `/es/catalog`.
 - The catalog screenshots were refreshed to show the #15 quantity picker.
+
+Pre-submission PR #22 (records, accessibility and repository tidy-up), then its release to main:
+
+- WCAG 2.2 AA audit with axe-core 4.10.2 across 79 page states (every route in EN/ES at 1440 and 375, plus dialogs, form errors, the signed-in account and the quote wizard): 0 violations. Text contrast was measured at 5.92:1 or better, and every page sets `lang` to its locale.
+- One failure was found outside axe: at 320 px (WCAG 1.4.10 Reflow) every page scrolled 23 px sideways because the header was too wide. The wordmark now tightens below 360 px, and the overflow test covers 320 px. Report: `docs/phase2/submission/accessibility-report.pdf`.
+- Repository root tidied: unused tool files removed; `context.md` and `TEAM-QUICKSTART.md` moved into `docs/`; Claude Code instructions moved to `.claude/CLAUDE.md`; README rewritten. Agent workflows are unchanged (`AGENTS.md` stays at the root).
+- Submission documents (accessibility report, meeting minutes, individual contributions, AI usage report) are in `docs/phase2/submission/`.
+
+The annotated tag `phase-2-submission` marks the submitted release commit on main.
 
 Demo observations (coordinator walkthrough in mock mode, not the academic demo):
 

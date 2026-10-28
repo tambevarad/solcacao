@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SolCacao: Individual Contributions Report</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <header class="doc">
+      <div class="kicker">CSE 5335 · Phase 2 submission · Team SolCacao</div>
+      <h1>Individual Contributions Report</h1>
+      <div class="meta">
+        Phase 2 (front-end development) · Repository: github.com/tambevarad/solcacao · Prepared 28
+        October 2026
+      </div>
+    </header>
+
+    <p>
+      Each member owned one area of the application end to end: pages, client state, REST routes and
+      tests. Every change reached <code>development</code> through a pull request (PR) that passed
+      CI and was approved by another member after a visual review. The figures below come from
+      GitHub. Line counts are additions and deletions in the member's own feature PRs, excluding
+      release and sync PRs. PR #1 also contains the generated starter scaffold that Varad audited
+      (see the AI Usage Report).
+    </p>
+
+    <h2>Summary</h2>
+    <table>
+      <tr>
+        <th>Member</th>
+        <th>Area</th>
+        <th>Feature PRs (merged)</th>
+        <th>Lines (+/−)</th>
+        <th>Reviews given</th>
+      </tr>
+      <tr>
+        <td>Aman Gulati</td>
+        <td>Authentication, accounts, server foundation</td>
+        <td>#11, #19</td>
+        <td>+4,343 / −105</td>
+        <td>none recorded</td>
+      </tr>
+      <tr>
+        <td>Varad Tambe</td>
+        <td>Shell, navigation, localization; coordinator</td>
+        <td>#1, #2, #3, #6, #7, #8, #12, #13, #17</td>
+        <td>+7,531 / −1,288</td>
+        <td>7 approvals (#5, #9, #10, #11, #14, #15, #19)</td>
+      </tr>
+      <tr>
+        <td>Reethika Gajulapati</td>
+        <td>Catalog, cart, simulated checkout</td>
+        <td>#9</td>
+        <td>+6,671 / −96</td>
+        <td>none recorded</td>
+      </tr>
+      <tr>
+        <td>Krish Ruparel</td>
+        <td>Homepage, wholesale, quote wizard</td>
+        <td>#5</td>
+        <td>+4,773 / −38</td>
+        <td>13 reviews on 11 PRs (#1–#3, #6–#8, #13, #16, #17, #20, #21), 2 requesting changes</td>
+      </tr>
+      <tr>
+        <td>Daniel Yglesias</td>
+        <td>Contact, feedback, sampler, story/care; enquiries</td>
+        <td>#10, #14, #15</td>
+        <td>+3,087 / −67</td>
+        <td>1 approval (#12, integration)</td>
+      </tr>
+    </table>
+
+    <div class="member">
+      <h2>Aman Gulati: Authentication and accounts</h2>
+      <ul>
+        <li>
+          <strong>PR #11</strong> (+4,305 / −99, 42 files): sign-in and registration pages (retail
+          and business accounts), a reusable sign-in dialog and route guards, and the account page
+          with profile and address management.
+        </li>
+        <li>
+          Server foundation: JWT authentication middleware (<code>requireAuth</code>,
+          <code>optionalAuth</code>, <code>requireRole</code>) used by the catalog and B2B routes;
+          environment validation that refuses weak secrets; database bootstrap and health check; the
+          account API.
+        </li>
+        <li>
+          Tests for validation, token handling (expired, tampered, wrong audience) and address
+          ownership, plus a real-MongoDB persistence suite.
+        </li>
+        <li>
+          <strong>PR #19:</strong> recorded his Phase 1 status. He reports contributing to the ERD
+          and schema design (users, corporate partners, addresses), the overview, the prototype and
+          the Phase 1 demo.
+        </li>
+      </ul>
+      <p class="small">
+        His Phase 2 commit was recorded under his laptop's local email, so GitHub's contributor
+        graph does not credit it to his account. Authorship is shown on PR #11 and in the commit
+        itself. Later commits use his GitHub identity (#19).
+      </p>
+    </div>
+
+    <div class="member">
+      <h2>Varad Tambe: Shell, localization and team coordination</h2>
+      <ul>
+        <li>
+          <strong>Repository and Phase 1:</strong> created the repository and audited the starter
+          structure against the course and blueprint requirements (PR #1). Aligned the database
+          schema and ERD (PR #2).
+        </li>
+        <li>
+          <strong>PR #3</strong> (+3,656 / −155): app shell, header and footer, mobile menu,
+          English/Spanish routing and translation loading, page metadata, and shared UI components.
+          Addressed Krish's seven review points before approval.
+        </li>
+        <li>
+          <strong>PRs #6–#8:</strong> test fixes for the homepage hand-over; a CC0 photography
+          library, product images, favicon and social preview images (Krish requested changes on #8
+          before approving).
+        </li>
+        <li>
+          <strong>Integration (PR #12):</strong> connected Aman's authentication middleware and
+          Daniel's quote notifications to the catalog and B2B routes, added a MongoDB service to CI
+          so every member's persistence tests run, and wrote the cross-feature journey tests.
+          Reviewed and merged by Daniel.
+        </li>
+        <li>
+          <strong>CI and releases:</strong> MongoDB 7.0 for CI (#13), a fix for a timing race in the
+          quantity picker (#17), releases to <code>main</code> (#16, #20) and the
+          <code>main</code>-to-<code>development</code> sync (#21).
+        </li>
+        <li>
+          <strong>Coordination:</strong> branch protection, weekly integration records, reviews of
+          every member's Phase 2 PR, the submission checklist audit, the WCAG audit and its reflow
+          fix, and the submission tag.
+        </li>
+      </ul>
+    </div>
+
+    <div class="member">
+      <h2>Reethika Gajulapati: Catalog, cart and checkout</h2>
+      <ul>
+        <li>
+          <strong>PR #9</strong> (+6,671 / −96, 44 files): catalog with URL-based filters (origin,
+          cacao percentage, price, search), sorting and pagination; product detail page; cart drawer
+          and guest cart; simulated checkout and order confirmation.
+        </li>
+        <li>
+          Product, cart and order API: cart revisions to prevent conflicting writes, a guest-cart
+          merge on sign-in that applies only once, and checkout requests that can be safely retried,
+          with totals recalculated on the server.
+        </li>
+        <li>Adapter, cart-state, page and API tests, plus a real-MongoDB persistence suite.</li>
+      </ul>
+    </div>
+
+    <div class="member">
+      <h2>Krish Ruparel: Homepage, wholesale and business quotes</h2>
+      <ul>
+        <li>
+          <strong>PR #5</strong> (+4,773 / −38, 39 files): homepage (hero and seasonal showcase),
+          wholesale services page, and a four-step quote wizard with PDF upload that keeps the draft
+          when switching language.
+        </li>
+        <li>
+          Quote API with private PDF storage: type, signature and size checks, cleanup of rejected
+          uploads, duplicate-request handling, and owner-only access to receipts and files.
+        </li>
+        <li>Wizard, page, adapter and API tests, plus a real-MongoDB persistence suite.</li>
+        <li>
+          <strong>Reviewing:</strong> the team's most active reviewer, with 13 reviews on 11 PRs. He
+          requested changes on the shell foundation (#3, seven points) and the image library (#8).
+          He independently re-ran the full test suite, browser tests and a secrets scan before
+          approving the first release to <code>main</code> (#16).
+        </li>
+      </ul>
+    </div>
+
+    <div class="member">
+      <h2>Daniel Yglesias: Support, sampler and content pages</h2>
+      <ul>
+        <li>
+          <strong>PR #10</strong> (+2,428 / −49, 39 files): contact and feedback forms, the
+          six-piece sampler builder, and the Story and Care pages.
+        </li>
+        <li>
+          Enquiries API with validation, safe retries and HTML escaping, plus the email notification
+          service, including the quote notification used by the B2B flow.
+        </li>
+        <li>
+          <strong>Follow-ups from his own testing:</strong> the sampler resets after a successful
+          enquiry (#14), and catalog cards gained a quantity picker (#15).
+        </li>
+        <li>
+          <strong>Reviewing:</strong> reviewed and merged the integration PR (#12) after re-running
+          the full test suite and all browser tests himself.
+        </li>
+      </ul>
+    </div>
+
+    <h2>Shared responsibilities</h2>
+    <ul>
+      <li>
+        Every member wrote their own phase evidence, handoff notes and status in
+        <code>team/member-N/</code>.
+      </li>
+      <li>
+        All five take part in the Phase 2 demo, each presenting their own pages in English and
+        Spanish.
+      </li>
+      <li>
+        AI assistants were used under each member's direction; see the AI Usage Report for how, and
+        for what the team did itself.
+      </li>
+    </ul>
+  </body>
+</html>

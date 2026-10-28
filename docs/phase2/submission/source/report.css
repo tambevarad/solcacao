@@ -1,0 +1,151 @@
+@page {
+  size: Letter;
+  margin: 18mm 17mm 18mm 17mm;
+}
+:root {
+  --ink: #2b1d16;
+  --muted: #6b5a50;
+  --line: #e4d9cf;
+  --accent: #8a4b2a;
+  --soft: #f7f1ea;
+  --ok: #2f6b3a;
+  --warn: #8a5a00;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font:
+    10.5pt/1.5 'Helvetica Neue',
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+header.doc {
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+}
+header.doc .kicker {
+  color: var(--accent);
+  font-size: 8.5pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+h1 {
+  font-size: 21pt;
+  line-height: 1.2;
+  margin: 4px 0 6px;
+}
+header.doc .meta {
+  color: var(--muted);
+  font-size: 9pt;
+}
+h2 {
+  font-size: 13.5pt;
+  margin: 20px 0 6px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--line);
+  break-after: avoid;
+}
+h3 {
+  font-size: 11pt;
+  margin: 14px 0 4px;
+  break-after: avoid;
+}
+p {
+  margin: 0 0 8px;
+}
+ul,
+ol {
+  margin: 0 0 8px;
+  padding-left: 18px;
+}
+li {
+  margin: 0 0 3px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 6px 0 12px;
+  font-size: 9.5pt;
+  break-inside: auto;
+}
+th,
+td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 7px;
+  border-bottom: 1px solid var(--line);
+}
+th {
+  background: var(--soft);
+  font-weight: 600;
+}
+tr {
+  break-inside: avoid;
+}
+code {
+  font:
+    9pt Menlo,
+    Consolas,
+    monospace;
+  background: var(--soft);
+  padding: 0 3px;
+  border-radius: 3px;
+}
+.note {
+  background: var(--soft);
+  border-left: 3px solid var(--accent);
+  padding: 8px 11px;
+  margin: 8px 0 12px;
+  font-size: 9.5pt;
+}
+.summary {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0 14px;
+}
+.summary div {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.summary strong {
+  display: block;
+  font-size: 16pt;
+  line-height: 1.2;
+}
+.summary span {
+  color: var(--muted);
+  font-size: 8.5pt;
+}
+.ok {
+  color: var(--ok);
+  font-weight: 600;
+}
+.warn {
+  color: var(--warn);
+  font-weight: 600;
+}
+.meeting {
+  break-inside: avoid-page;
+  margin-bottom: 6px;
+}
+.meeting .when {
+  color: var(--muted);
+  font-size: 9pt;
+  margin: -2px 0 6px;
+}
+.member {
+  break-inside: avoid-page;
+}
+.small {
+  font-size: 9pt;
+  color: var(--muted);
+}
