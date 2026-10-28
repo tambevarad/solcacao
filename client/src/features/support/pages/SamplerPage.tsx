@@ -95,7 +95,14 @@ export default function SamplerPage() {
                         >
                           −
                         </Button>
-                        <span>{t('support.sampler.quantity', { count: quantity })}</span>
+                        <span>
+                          {t(
+                            quantity === 1
+                              ? 'support.sampler.quantityOne'
+                              : 'support.sampler.quantity',
+                            { count: quantity },
+                          )}
+                        </span>
                         <Button
                           variant="secondary"
                           disabled={total >= 6}
@@ -119,7 +126,7 @@ export default function SamplerPage() {
               <ul className="space-y-2 pt-2">
                 {items.map((item) => (
                   <li key={item.productId}>
-                    {t('support.sampler.line', {
+                    {t(item.quantity === 1 ? 'support.sampler.lineOne' : 'support.sampler.line', {
                       name:
                         products.find((p) => p.id === item.productId)?.name[locale] ??
                         item.productId,

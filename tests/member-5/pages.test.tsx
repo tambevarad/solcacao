@@ -149,6 +149,35 @@ describe('support forms', () => {
 });
 
 describe('sampler', () => {
+  it('uses singular and plural selection text in English and Spanish', async () => {
+    vi.spyOn(api.catalog, 'list').mockResolvedValue({
+      items: [product],
+      page: 1,
+      limit: 48,
+      total: 1,
+      totalPages: 1,
+    });
+    mount(<SamplerPage />);
+    const add = await screen.findByRole('button', { name: 'Add one Test bar' });
+    fireEvent.click(add);
+    expect(screen.getByText('1 selected')).toBeTruthy();
+    expect(screen.getByText('Test bar — 1 piece')).toBeTruthy();
+    expect(screen.queryByText('Test bar — 1 pieces')).toBeNull();
+    fireEvent.click(add);
+    expect(screen.getByText('2 selected')).toBeTruthy();
+    expect(screen.getByText('Test bar — 2 pieces')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Switch test locale' }));
+    await screen.findByText('2 seleccionadas');
+    expect(screen.getByText('Barra de prueba — 2 piezas')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Quitar una pieza de Barra de prueba' }));
+    expect(screen.getByText('1 seleccionada')).toBeTruthy();
+    expect(screen.getByText('Barra de prueba — 1 pieza')).toBeTruthy();
+    expect(screen.queryByText('1 seleccionadas')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Quitar una pieza de Barra de prueba' }));
+    expect(screen.getByText('0 seleccionadas')).toBeTruthy();
+    expect(screen.getByText(es['support.sampler.none'])).toBeTruthy();
+  });
+
   it('requires six pieces, caps at six, preserves selection in Spanish and submits unique IDs', async () => {
     const list = vi.spyOn(api.catalog, 'list').mockResolvedValue({
       items: [product, { ...product, id: '000000000000000000000002', active: false }],
