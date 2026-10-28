@@ -14,11 +14,13 @@ export function InquiryForm({
   samplerItems,
   children,
   unavailable = false,
+  onSuccess,
 }: {
   category: 'support' | 'feedback' | 'sampler';
   samplerItems?: CartLine[];
   children?: ReactNode;
   unavailable?: boolean;
+  onSuccess?: () => void;
 }) {
   const { locale, t } = useLocale();
   const [name, setName] = useState('');
@@ -39,6 +41,16 @@ export function InquiryForm({
   useEffect(() => {
     if (receipt) confirmation.current?.focus();
   }, [receipt]);
+
+  function clearDraft() {
+    setName('');
+    setEmail('');
+    setMessage('');
+    setTopic('support');
+    setErrors([]);
+    setFailed(false);
+    request.current = null;
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -70,6 +82,8 @@ export function InquiryForm({
     setPending(true);
     try {
       setReceipt(await api.support.submit({ ...parsed.data, requestId: request.current.id }));
+      clearDraft();
+      onSuccess?.();
     } catch (error) {
       if (error instanceof ApiError && error.fieldErrors) {
         const fields = Object.keys(error.fieldErrors).map((field) => field.split('.')[0]);
@@ -103,10 +117,7 @@ export function InquiryForm({
           variant="secondary"
           onClick={() => {
             setReceipt(null);
-            setName('');
-            setEmail('');
-            setMessage('');
-            request.current = null;
+            clearDraft();
           }}
         >
           {t('support.form.another')}

@@ -79,7 +79,10 @@ test('sampler uses the real mock catalog to submit six pieces', async ({ page })
   await page.goto('/en/sampler');
   const add = page.getByRole('button', { name: /^Add one / }).first();
   await expect(add).toBeVisible();
-  for (let count = 0; count < 6; count++) await add.click();
+  await add.click();
+  await expect(page.getByText('1 selected', { exact: true })).toBeVisible();
+  await expect(page.locator('main')).not.toContainText('⟦support.');
+  for (let count = 1; count < 6; count++) await add.click();
   await expect(page.getByText('6 of 6 pieces selected')).toBeVisible();
   await expect(add).toBeDisabled();
   await page.getByLabel('Name', { exact: false }).fill('Synthetic Shopper');
@@ -88,4 +91,11 @@ test('sampler uses the real mock catalog to submit six pieces', async ({ page })
   await page.getByRole('button', { name: 'Send enquiry', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Enquiry received' })).toBeVisible();
   await expect(page.getByText(/Demo receipt only/)).toBeVisible();
+  await page.getByRole('button', { name: 'Start another enquiry' }).click();
+  await expect(page.getByText('0 of 6 pieces selected')).toBeVisible();
+  await expect(page.getByText('No pieces selected yet.')).toBeVisible();
+  await expect(page.getByLabel('Name', { exact: false })).toHaveValue('');
+  await expect(page.getByLabel('Email', { exact: false })).toHaveValue('');
+  await expect(page.getByLabel('Message', { exact: false })).toHaveValue('');
+  await expect(page.getByRole('button', { name: /^Add one / }).first()).toBeEnabled();
 });

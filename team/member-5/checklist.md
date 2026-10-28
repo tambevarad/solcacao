@@ -10,6 +10,19 @@ For PR #10 only, coordinator Varad Tambe approved keeping `daniel-phase2` and th
 Member 4 integration-test correction. Phase 3 will use the roster branch `daniel-support`,
 created through `npm run setup -- --member 5`. No branch is renamed or deleted for this PR.
 
+## Phase 2 follow-up (2026-10-28)
+
+- [x] Clear sampler pieces and form fields after success; preserve entries and request ID on failure.
+- [x] Add the user-requested regular-shop quantity picker as a focused local catalog draft.
+- [x] Separate it onto `daniel-catalog-quantity`; keep the sampler PR entirely within Member 5 ownership.
+- [x] Update both branches to integrated development `e088f4b` and preserve coordinator records.
+- [x] Leave the resolved sampler translation keys unchanged.
+- [x] Run focused behavior tests, the full project check and the production build.
+- [x] Record the final owned browser checks and inspect EN/ES quantity controls at phone width.
+- [x] Document the exact private catalog prop change and separate Member 3 review/integration requirement.
+- [x] Revalidate the sampler on the updated integration base; catalog results are recorded in its separate handoff.
+- [ ] Student manual testing and required peer review; publication is explicitly authorized by Daniel.
+
 ## Coordinator review fixes for PR #10
 
 - [x] Retarget PR #10 to development and confirm its narrowed file scope.
