@@ -12,9 +12,9 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-// With the template auth (no Student 1 implementation yet) the wizard route must stay closed.
-it('keeps the wizard closed until real authentication exists', async () => {
+// A signed-out visitor gets the sign-in prompt; the wizard never renders without a business account.
+it('keeps the wizard closed for signed-out visitors', async () => {
   renderApp('/en/wholesale/request');
-  expect(await screen.findByText(/role guard implementation pending/)).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: 'Sign in to continue' })).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'Request a custom quote' })).toBeNull();
 });

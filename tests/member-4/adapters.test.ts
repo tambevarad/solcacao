@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { QuoteInput, User } from '../../contracts/index.js';
 import { ApiError, createHttpClient } from '../../client/src/api/http.js';
-import { NotImplementedError } from '../../client/src/api/notImplemented.js';
 import { createHttpB2B } from '../../client/src/features/b2b/http.js';
 import { createMockB2B, type MockB2bOptions } from '../../client/src/features/b2b/mock.js';
 import { MAX_FILE_BYTES } from '../../client/src/features/b2b/options.js';
@@ -71,9 +70,9 @@ describe('b2b mock adapter', () => {
     await expect(signedOut.submit(input, pdf())).rejects.toMatchObject({ status: 401 });
   });
 
-  it('asks the auth mock at call time by default (still a template stub)', async () => {
+  it('asks the auth mock at call time by default (signed out, so 401)', async () => {
     const api = createMockB2B(unusedHttp, { delayMs: 0 });
-    await expect(api.submit(input, pdf())).rejects.toBeInstanceOf(NotImplementedError);
+    await expect(api.submit(input, pdf())).rejects.toMatchObject({ status: 401 });
   });
 
   it('mirrors server validation and file errors', async () => {
