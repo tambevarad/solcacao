@@ -15,6 +15,7 @@ import shellEn from '../../client/src/features/shell/locales/en.json';
 import shellEs from '../../client/src/features/shell/locales/es.json';
 import { product } from './fixtures.js';
 import type { ReactNode } from 'react';
+import type { Locale } from '../../contracts/index.js';
 
 afterEach(() => {
   cleanup();
@@ -26,10 +27,10 @@ function Switch() {
   const navigate = useNavigate();
   return <button onClick={() => navigate('/es/contact')}>Switch test locale</button>;
 }
-function mount(page: ReactNode) {
+function mount(page: ReactNode, locale: Locale = 'en') {
   return render(
     <MemoryRouter
-      initialEntries={['/en/contact']}
+      initialEntries={[`/${locale}/contact`]}
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <LocaleProvider
@@ -149,6 +150,81 @@ describe('support forms', () => {
 });
 
 describe('sampler', () => {
+  it.each(['en', 'es'] as const)(
+    'keeps a failed %s enquiry and clears all values after success',
+    async (locale) => {
+      vi.spyOn(api.catalog, 'list').mockResolvedValue({
+        items: [product],
+        page: 1,
+        limit: 48,
+        total: 1,
+        totalPages: 1,
+      });
+      const submit = vi
+        .spyOn(api.support, 'submit')
+        .mockRejectedValueOnce(new Error('Offline'))
+        .mockResolvedValue({ id: product.id, status: 'received', notificationStatus: 'pending' });
+      const dictionary = locale === 'en' ? en : es;
+      mount(<SamplerPage />, locale);
+      const add = await screen.findByRole('button', {
+        name: dictionary['support.sampler.add'].replace('{name}', product.name[locale]),
+      });
+      for (let count = 0; count < 6; count++) fireEvent.click(add);
+      const fillDetails = () => {
+        fireEvent.change(screen.getByLabelText(new RegExp(`^${dictionary['support.form.name']}`)), {
+          target: { value: 'Synthetic Shopper' },
+        });
+        fireEvent.change(
+          screen.getByLabelText(new RegExp(`^${dictionary['support.form.email']}`)),
+          { target: { value: 'shopper@example.test' } },
+        );
+        fireEvent.change(
+          screen.getByLabelText(new RegExp(`^${dictionary['support.form.message']}`)),
+          { target: { value: 'A fictional sampler enquiry.' } },
+        );
+      };
+      fillDetails();
+      fireEvent.click(screen.getByRole('button', { name: dictionary['support.form.send'] }));
+      await screen.findByText(dictionary['support.error.request']);
+      expect(
+        screen.getByText(dictionary['support.sampler.count'].replace('{count}', '6')),
+      ).toBeTruthy();
+      expect(
+        (
+          screen.getByLabelText(
+            new RegExp(`^${dictionary['support.form.email']}`),
+          ) as HTMLInputElement
+        ).value,
+      ).toBe('shopper@example.test');
+      fireEvent.click(screen.getByRole('button', { name: dictionary['support.form.send'] }));
+      await screen.findByText(dictionary['support.receipt.mock']);
+      expect(submit.mock.calls[1][0].requestId).toBe(submit.mock.calls[0][0].requestId);
+      fireEvent.click(screen.getByRole('button', { name: dictionary['support.form.another'] }));
+      expect(
+        screen.getByText(dictionary['support.sampler.count'].replace('{count}', '0')),
+      ).toBeTruthy();
+      expect(screen.getByText(dictionary['support.sampler.none'])).toBeTruthy();
+      for (const field of ['name', 'email', 'message']) {
+        expect(
+          (document.getElementById(`support-${field}`) as HTMLInputElement | HTMLTextAreaElement)
+            .value,
+        ).toBe('');
+      }
+      expect(
+        screen.getByText(dictionary['support.sampler.quantity'].replace('{count}', '0')),
+      ).toBeTruthy();
+      const freshAdd = screen.getByRole('button', {
+        name: dictionary['support.sampler.add'].replace('{name}', product.name[locale]),
+      });
+      expect(freshAdd.hasAttribute('disabled')).toBe(false);
+      for (let count = 0; count < 6; count++) fireEvent.click(freshAdd);
+      fillDetails();
+      fireEvent.click(screen.getByRole('button', { name: dictionary['support.form.send'] }));
+      await screen.findByText(dictionary['support.receipt.mock']);
+      expect(submit.mock.calls[2][0].requestId).not.toBe(submit.mock.calls[1][0].requestId);
+    },
+  );
+
   it('uses singular and plural selection text in English and Spanish', async () => {
     vi.spyOn(api.catalog, 'list').mockResolvedValue({
       items: [product],

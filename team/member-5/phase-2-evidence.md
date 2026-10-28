@@ -1,4 +1,100 @@
-# Member 5 Phase 2 evidence — PR #10
+# Member 5 Phase 2 evidence — current follow-up
+
+## Publication review on integrated development, 2026-10-28
+
+Daniel authorized committing, pushing and opening these follow-ups. The sampler branch
+`daniel-support` now starts from `development` at `e088f4b` (merged PR #12). It changes only
+the owned InquiryForm, SamplerPage, pages/visual tests and Member 5 review records.
+
+The user-requested retail quantity enhancement is isolated on `daniel-catalog-quantity`,
+with its own tests and `catalog-quantity-handoff.md`. It needs Member 3 review and a separate
+reviewed merge. Neither PR depends on the other. No translation files changed.
+
+The coordinator's original Phase 2 integration history is preserved. Its integrated status
+does not claim either new PR is merged, and Phase 3 has not started. The original saved
+working changes remain in a safety stash and ignored local snapshots.
+
+| Verification on development `e088f4b`              | Result                                                                                            |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `taskset -c 0-3 npm run check`                     | PASS: 474 passed, 46 explicitly skipped database tests; typecheck, structure and workflow passed. |
+| `npm run build`                                    | PASS; existing bundle-size advisory remains.                                                      |
+| Owned Playwright suite                             | PASS: 5 tests, EN/ES and 375/768/1440 px.                                                         |
+| Shared browser journeys on a fresh isolated server | PASS: 14 tests.                                                                                   |
+| `git diff --check HEAD`                            | PASS.                                                                                             |
+
+The first updated full run had 473 passing tests, 46 skips and one failure waiting for the
+existing checkout retry error (`tests/member-3/pages.test.tsx:420`). The unchanged
+catalog suite then passed all 20 tests in isolation; the complete rerun above passed.
+No peer test was edited, disabled or removed. Both attempts are retained in local logs.
+The ownership check passes for all eight sampler PR files. Mongo persistence is
+left to the real-Mongo CI job; local skips are not database passes.
+
+## Historical combined local review before PR #12
+
+Member: Daniel Yglesias (5). Branch: `daniel-support`, based on `origin/development`
+at `88c9a0d` after the coordinator merged PR #10. Phase 3 is not started. The follow-up
+is local and ready for review; no new commit, push or PR has been created.
+
+### Changes and review boundary
+
+- Reset the sampler's pieces, summary, contact fields and request identity after a successful
+  enquiry. Start another enquiry begins empty. Failed submissions retain the draft and the
+  same retry request ID; a new enquiry gets a new ID.
+- At Daniel's explicit request, prepare a regular-shop quantity picker with minus/plus and
+  direct number entry before Add to cart. Respect stock, the 99-unit limit and existing cart
+  quantities; preserve the amount after failure and reset to one after success. Keep the
+  existing cart mutation queue and rapid quick-add behavior.
+- Leave all translation dictionaries unchanged: Daniel confirmed the reported sampler
+  translation marker is already resolved.
+- CatalogPage and ProductCard belong to Member 3. The exact private prop change and the
+  separate Member 3 review/integration requirement are documented in `handoff.md`. This is
+  an additional user-requested retail enhancement, not an original Member 5 requirement or
+  an approved ownership exception. No DTO, HTTP contract or public provider API changed.
+
+### Checks on the local follow-up
+
+All commands ran in Ubuntu WSL with the existing Node 24/nvm installation. CPU affinity
+limits Vitest worker pressure; no tests or assertions were removed to make checks pass.
+
+| Command / review                                                                                                                                                               | Result                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `taskset -c 0-3 npx vitest run tests/member-5/pages.test.tsx tests/member-5/retail-quantity.test.tsx tests/member-3/pages.test.tsx tests/member-2/i18n.test.ts --reporter=dot` | PASS: 62 tests across 4 files.                                                                                                                        |
+| `taskset -c 0-3 npm run check`                                                                                                                                                 | PASS: type checks, 365 tests passed / 32 database tests skipped, structure and workflow checks.                                                       |
+| `npm run build`                                                                                                                                                                | PASS; existing bundle-size advisory: shared client JS 538.35 kB, above 500 kB.                                                                        |
+| `npx playwright test --config tests/member-5/playwright.config.ts`                                                                                                             | PASS: 7 tests, including shop/support layouts at 375/768/1440 px in EN/ES, retail quantity addition in both languages, and the sampler reset journey. |
+| Visual inspection                                                                                                                                                              | Both 375 px retail screenshots inspected: controls and long Spanish labels fit the two-column product grid.                                           |
+
+The first focused run found that a pending guard blocked an existing Member 3 rapid-add
+test (61 passed / 1 failed). The implementation was corrected to preserve queued additions;
+the existing Member 3 test was not changed. The final focused and full runs above passed.
+
+The shared `npm run test:e2e` suite also passed all 11 tests. The ownership check exits 1
+for exactly the two catalog files listed in `handoff.md`; it is not a passing ownership check.
+Member 3 review/integration remains required. `git diff --check` passed.
+
+Changed files:
+
+- Catalog draft: `client/src/features/catalog/components/ProductCard.tsx` and
+  `client/src/features/catalog/pages/CatalogPage.tsx`.
+- Owned sampler fix: `client/src/features/support/InquiryForm.tsx` and
+  `client/src/features/support/pages/SamplerPage.tsx`.
+- Owned tests: `tests/member-5/pages.test.tsx`, `tests/member-5/retail-quantity.test.tsx`
+  and `tests/member-5/visual.spec.ts`.
+- Owned review records: `team/member-5/checklist.md`, `team/member-5/handoff.md`,
+  `team/member-5/phase-2-evidence.md` and `team/member-5/status.json`.
+
+Browser captures are local ignored artifacts under `.agent/quantity-followup-review/`.
+Command logs are under `.agent/quantity-followup-*.log`. These are development/mock browser
+checks with fictional product data, not real Mongo or production-order evidence.
+
+Database tests remain explicitly skipped because no test Mongo instance is configured.
+The previously recorded SMTP/WhatsApp and shared database handoff limitations still apply.
+The required student demo and peer review are not claimed as completed.
+
+## Historical PR #10 evidence
+
+The following is the original pre-merge evidence. PR #10 was subsequently merged by the
+coordinator on 2026-10-28; its pending-merge statements are historical.
 
 Date: 2026-10-27. Member: Daniel Yglesias (5). Requirement IDs: SUP-01–SUP-05.
 State: ready_for_review; not integrated and not an academic submission record.

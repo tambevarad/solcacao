@@ -53,6 +53,7 @@ export default function SamplerPage() {
         category="sampler"
         samplerItems={items}
         unavailable={status !== 'ready' || !products.length}
+        onSuccess={() => setItems([])}
       >
         <section id="support-samplerItems" tabIndex={-1} className="space-y-6">
           <h2 className="text-2xl">{t('support.sampler.select')}</h2>

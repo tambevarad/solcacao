@@ -1,4 +1,64 @@
-# Member 5 handoff — PR #10
+# Member 5 handoff — Phase 2 follow-up
+
+## Current publishing follow-up (2026-10-28)
+
+Branch: `daniel-support`, updated to `origin/development` at `e088f4b` after PR #12.
+This is a Phase 2 follow-up; Phase 3 has not started. Daniel explicitly authorized committing,
+pushing and opening the follow-up PRs. Both PRs target `development` and require peer review.
+The coordinator's original Phase 2 integration records are preserved in `status.json`;
+their integrated state refers to PR #10, not these new follow-ups.
+
+The sampler now clears its selected pieces and contact fields after a successful enquiry.
+"Start another enquiry" opens an empty form. A failed submission retains the selection,
+fields and retry request ID; a later new enquiry receives a new request ID.
+
+Daniel also explicitly requested a quantity picker on regular shop product cards, similar
+to the sampler controls. The separate catalog draft offers minus/plus buttons and direct number entry
+before Add to cart, using existing English/Spanish catalog translations. It observes stock,
+the 99-per-product cap and quantities already in the cart, retains the chosen amount after
+failure, and resets to one after success. Existing queued quick-add behavior is preserved.
+Daniel confirmed the sampler translation marker is resolved; no translation files changed.
+
+### Member 3 review proposal for the requested catalog enhancement
+
+The catalog enhancement is isolated on `daniel-catalog-quantity`, also based on `e088f4b`.
+Its ownership checker flags exactly these two Member 3 files:
+
+- `client/src/features/catalog/components/ProductCard.tsx`
+- `client/src/features/catalog/pages/CatalogPage.tsx`
+
+The private ProductCard prop changes from `onAdd(product: Product): void` to
+`onAdd(product: Product, quantity: number): Promise<void>` and adds optional
+`maxQuantity?: number`. Its sole production consumer, CatalogPage, passes the remaining
+available quantity and forwards the selected number to the existing `cart.add(product.id,
+quantity)` API. There is no DTO, HTTP schema, public provider, dependency or storage migration.
+Regression tests live under `tests/member-5`; existing Member 3 tests are unchanged.
+
+This is a user-requested review proposal, not a coordinator-approved ownership exception.
+Member 3 must review and integrate the catalog portion through a separate reviewed PR as
+required by AGENTS.md. Its exact handoff is `team/member-5/catalog-quantity-handoff.md` on that
+branch. The sampler PR contains only Member 5 files; the two PRs can merge independently.
+
+### Suggested PR wording
+
+Sampler PR: **fix(support): reset the sampler after a successful enquiry**
+
+Clear selected chocolates, contact fields and request identity after a successful enquiry,
+so Start another enquiry begins empty. Preserve failed entries and the retry request ID.
+
+Member 3 catalog PR: **feat(catalog): choose quantities before adding chocolates to the cart**
+
+Add minus/plus controls and a quantity field to regular shop product cards, similar to the
+sampler controls. Shoppers can choose an amount before Add to cart. Respect remaining stock
+and cart limits, retain the amount on failure, and reset the field after success. This is an
+additional user-requested retail improvement, outside the original Member 5 assignment.
+
+Current validation and remaining limitations are recorded in `phase-2-evidence.md`.
+
+## Historical PR #10 handoff
+
+The following records the original pre-merge handoff. PR #10 has since been merged by the
+coordinator; its former pending-merge statements do not describe this new local follow-up.
 
 Phase 2: ready_for_review, not integrated.
 PR: https://github.com/tambevarad/solcacao/pull/10 (base development).
