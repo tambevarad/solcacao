@@ -18,6 +18,7 @@ import { FilterForm } from '../components/FilterForm.js';
 import { Pagination } from '../components/Pagination.js';
 import { ProductCard } from '../components/ProductCard.js';
 import { activeFilterCount, readFilters, writeFilters, type CatalogFilters } from '../filters.js';
+import { MAX_QUANTITY } from '../rules.js';
 
 export const CATALOG_PAGE_SIZE = 12;
 
@@ -77,8 +78,8 @@ export default function CatalogPage({ catalog = api.catalog }: { catalog?: Catal
   const clearAll = () => setParams(writeFilters({ sort: filters.sort }));
   const count = activeFilterCount(filters);
 
-  async function addToCart(product: Product) {
-    await cart.add(product.id);
+  async function addToCart(product: Product, quantity: number) {
+    await cart.add(product.id, quantity);
     setAnnouncement(t('catalog.product.added', { name: product.name[locale] }));
   }
 
@@ -169,7 +170,16 @@ export default function CatalogPage({ catalog = api.catalog }: { catalog?: Catal
                 className={`grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-3 ${load.status === 'loading' ? 'opacity-60' : ''}`}
               >
                 {shown.items.map((product) => (
-                  <ProductCard key={product.id} product={product} onAdd={addToCart} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onAdd={addToCart}
+                    maxQuantity={Math.max(
+                      0,
+                      Math.min(MAX_QUANTITY, product.stock) -
+                        (cart.items.find((line) => line.productId === product.id)?.quantity ?? 0),
+                    )}
+                  />
                 ))}
               </ul>
               <Pagination page={shown.page} totalPages={shown.totalPages} hrefFor={hrefFor} />

@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 for (const width of [375, 768, 1440]) {
-  test(`support pages fit ${width}px in EN and ES`, async ({ page }) => {
+  test(`shop and support pages fit ${width}px in EN and ES`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     for (const locale of ['en', 'es']) {
-      for (const route of ['contact', 'feedback', 'sampler', 'story', 'care']) {
+      for (const route of ['catalog', 'contact', 'feedback', 'sampler', 'story', 'care']) {
         await page.goto(`/${locale}/${route}`);
         await expect(page.locator('main h1')).toBeVisible();
         await expect(page.locator('html')).toHaveAttribute('lang', locale);
@@ -74,6 +74,39 @@ test('keyboard submission, failure recovery and locale state retention', async (
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'Consulta recibida' })).toBeVisible();
 });
+
+for (const locale of ['en', 'es']) {
+  test(`retail quantity picker adds the selected amount in ${locale}`, async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 900 });
+    await page.goto(`/${locale}/catalog`);
+    const quantities = page.getByRole('spinbutton', { name: /^(Quantity of|Cantidad de) / });
+    await expect(quantities.first()).toBeVisible();
+    let selected = quantities.first();
+    for (const quantity of await quantities.all()) {
+      if (Number(await quantity.getAttribute('max')) >= 3) {
+        selected = quantity;
+        break;
+      }
+    }
+    await selected.fill('3');
+    await selected.press('Tab');
+    const card = selected.locator('xpath=ancestor::li[1]');
+    await expect(
+      card.getByRole('button', { name: /^(Add to cart:|Añadir al carrito:)/ }),
+    ).toBeEnabled();
+    await page.screenshot({ path: `test-results/member-5-retail-quantity-${locale}.png` });
+    await card.getByRole('button', { name: /^(Add to cart:|Añadir al carrito:)/ }).click();
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const saved = JSON.parse(localStorage.getItem('solcacao.guestCart.v1') || '{"items":[]}');
+          return saved.items.some((item: { quantity: number }) => item.quantity === 3);
+        }),
+      )
+      .toBe(true);
+    await expect(selected).toHaveValue('1');
+  });
+}
 
 test('sampler uses the real mock catalog to submit six pieces', async ({ page }) => {
   await page.goto('/en/sampler');
