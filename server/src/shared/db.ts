@@ -17,3 +17,11 @@ export async function disconnectDb(): Promise<void> {
 
 /** True only while the connection is open; health and routes report 503 otherwise. */
 export const isDatabaseReady = () => mongoose.connection.readyState === 1;
+
+/**
+ * Build the indexes of every registered model before serving. Unique keys back the email race,
+ * cart revisions and requestId idempotency for orders, quotes and inquiries.
+ */
+export async function ensureIndexes(): Promise<void> {
+  await Promise.all(mongoose.modelNames().map((name) => mongoose.model(name).init()));
+}

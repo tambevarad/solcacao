@@ -25,6 +25,7 @@
     "agent": "node scripts/phase-brief.mjs --packet",
     "setup": "node scripts/setup.mjs",
     "services": "node scripts/services.mjs",
+    "seed:catalog": "tsx server/src/features/catalog/seed.ts",
     "check:workflow": "node scripts/check-workflow.mjs"
   },
   "dependencies": {

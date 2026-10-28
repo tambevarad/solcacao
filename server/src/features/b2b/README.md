@@ -25,14 +25,13 @@ Owner: Student 4. See `team/member-4/context.md` and the Phase 2 handoff in `tea
 - **Database:** uses the shared mongoose connection. If it is not connected the routes return
   `503 SERVICE_UNAVAILABLE` instead of buffering.
 
-## Dependencies still pending (injected through `createB2bRouter`)
+## Dependencies (injected through `createB2bRouter`)
 
-- `requireAuth` / `requireRole('b2b')` from Student 1 (`server/src/shared/auth.ts`). Until then the
-  exported `b2bRouter` uses `authenticationPending`, which answers `401` to every request (fails
-  closed; mock tokens are never accepted).
-- `notifyQuote` from Student 5 (`server/src/features/support/notifications.ts`). Until then
-  `notificationPending` reports `failed`, because nothing was sent.
-- `connectDb` from Student 1, called at startup in `server/src/index.ts`.
+- `requireAuth` / `requireRole('b2b')` from Student 1 (`server/src/shared/auth.ts`), wired into the
+  exported `b2bRouter` during Phase 2 integration: `401` without a valid token, `403` for retail.
+- `notifyQuote` from Student 5 (`server/src/features/support/notifications.ts`), also wired; it
+  reports `failed` without throwing when SMTP is unavailable, and the receipt says so.
+- `connectDb` and index initialization from Student 1, called at startup in `server/src/index.ts`.
 
 Tests use test doubles for these ports (`tests/member-4/quote-test-app.ts`). Persistence tests run
 against a real MongoDB when `TEST_MONGODB_URI` is set, for example with `npm run services`:

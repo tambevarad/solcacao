@@ -78,21 +78,52 @@ Mock-mode dev server in the desktop app browser pane:
 - No dependency or lockfile changes.
 - Peer dependencies are listed in `handoff.md` and docs/integration.md.
 
-## Known limitations or blocked checks
+## Phase 2 integration results (2026-10-28)
 
-- **Pending peer PRs:**
-  - the real cart count and drawer path (verified only against the `CartState` interface with a test double);
-  - real auth user/logout;
-  - EN/ES state on the real product and wizard pages (verified with stand-in stateful pages);
-  - the whole-project build with peer branches.
-- **Asset router not mounted:** waiting on Student 1's `app.ts` (proposal in `handoff.md`). Private-path rejection is verified by tests.
-- **Mongo CI job:** waiting on Student 1's patch.
-- **Browser runner:** Playwright's bundled Chromium (revision 1243) is not installed on this machine, so e2e ran with installed Chrome. CI does not run e2e yet (Phase 3).
-- **Sandbox:** supertest-based tests need local port binding; they were run with it allowed.
+All five members' Phase 2 PRs are merged into development after peer approval:
+
+| PR                                                        | Owner    | Approved by | Merged as                           |
+| --------------------------------------------------------- | -------- | ----------- | ----------------------------------- |
+| #3 shell foundation (plus #6, #7, #8)                     | Member 2 | Krishr21    | 10fd054 (00381c0, 0bd8efa, 70bac90) |
+| #5 homepage, wholesale, quote wizard and API              | Member 4 | tambevarad  | 6fc3f7b                             |
+| #9 catalog, cart, simulated checkout and API              | Member 3 | tambevarad  | 3873f6f                             |
+| #10 contact, feedback, sampler, Story/Care, inquiries API | Member 5 | tambevarad  | 88c9a0d                             |
+| #11 auth UI, JWT middleware, DB bootstrap, account API    | Member 1 | tambevarad  | fc8ee86                             |
+
+Coordinator integration work:
+
+- **Stub-coupled tests:** when a member replaced a template stub, tests in other members' folders that asserted the stub broke CI. These were fixed in coordinator commits on the PR branch: 6c99fb4 in #9 and 72fef79 in #11. In #10, Member 5 applied a coordinator-approved one-line change.
+- **PR #12, integration:**
+  - Wired Member 1's `requireAuth`/`optionalAuth`/`requireRole('b2b')` and Member 5's `notifyQuote` into the catalog and B2B routers.
+  - Startup builds every model's indexes.
+  - CI runs a MongoDB service.
+  - Added cross-feature journeys and run instructions.
+
+Checks run on the integrated code (coordinator branch for PR #12, on top of fc8ee86):
+
+- **Real MongoDB** (Docker `mongo:8.0`, `TEST_MONGODB_URI`): `npm run check` passed 518/518 with 0 skipped. This was the first run of members 1, 3, 4 and 5's persistence suites; all passed.
+- `npm run build`: pass. The >500 kB bundle advisory is a Phase 4 item.
+- **Browser:** `npm run test:e2e` with installed Chrome: 14 passed.
+  - Guest checkout to the confirmation page.
+  - Guest cart kept on sign-in and cleared on sign-out.
+  - The B2B journey: sign-in dialog, four steps with a PDF, switch to ES at step 3, receipt.
+  - No horizontal overflow on every member's pages at 375/768/1440 in EN and ES.
+- **Real API started against MongoDB:**
+  - health 200 connected; products 200;
+  - cart and quote routes 401 without a token;
+  - feature indexes present (users.email, inquiries.requestId, orders.requestId, carts.userId);
+  - without a JWT secret it refuses to start with a clear message.
+- **Screenshots:** desktop (1440) and mobile (375) of every member's key pages, the cart drawer and the mobile menu are in `docs/phase2/screenshots/`. No console errors.
+
+## Known limitations
+
+- Each member's Phase 1 status is still unrecorded (D21).
+- The public asset router is not mounted (Phase 3/4). Production serving of `dist/client` belongs to Phase 4 deployment.
+- The bundle exceeds Vite's 500 kB advisory; code splitting is Phase 4.
+- WhatsApp needs a real business number.
+- Mock mode is the Phase 2 demo. Real HTTP binding of the UI is Phase 3.
 
 ## Review
 
-Proposed commit: see the PR commits on `varad-shell`.
-Reviewer: pending (one peer approval required).
-PR: opened from `varad-shell` into `development`.
-Integrated commit: pending merge.
+PRs: #3, #6, #7 and #8 merged after Krishr21's approval; integration PR #12 is in review.
+Integrated commit for the five member PRs: fc8ee86 on development.

@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { app } from './app.js';
-import { ensureAuthIndexes } from './features/auth/service.js';
-import { connectDb, disconnectDb } from './shared/db.js';
+import { connectDb, disconnectDb, ensureIndexes } from './shared/db.js';
 import { ConfigError, loadServerEnv } from './shared/env.js';
 
 /**
@@ -12,7 +11,7 @@ async function start() {
   const env = loadServerEnv();
   try {
     await connectDb(env.mongoUri);
-    await ensureAuthIndexes();
+    await ensureIndexes();
   } catch (error) {
     throw new Error(
       `Could not connect to MongoDB (${error instanceof Error ? error.name : 'unknown error'}). ` +

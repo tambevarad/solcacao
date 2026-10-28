@@ -1,6 +1,6 @@
 # Student 2 handoff
 
-Current phase: 2 (Core Development). The shell foundation PR from `varad-shell` is ready for review. Peer integration steps follow after it merges.
+Current phase: 2 (Core Development), integrated. All five members' Phase 2 PRs are merged into development (record: docs/weekly/week-4.md). Coordinator integration PR #12 wires real auth and notifyQuote, adds the CI MongoDB service and the cross-feature journeys. Applied from peer handoffs in PR #12: Student 1 proposals 2 and 4, Student 3 proposals 3 and 6 (note), Student 4 proposals 2 and 3. Deferred: Student 1 proposal 3 (auth schemas into contracts), Student 3 proposal 5 (code splitting, Phase 4).
 
 ## Public exports delivered
 

@@ -8,6 +8,7 @@ import {
 import mongoose from 'mongoose';
 import type { User } from '../../../../contracts/index.js';
 import { idSchema } from '../../../../contracts/validation.js';
+import { optionalAuth, requireAuth } from '../../shared/auth.js';
 import {
   cartLinesSchema,
   fieldErrorsOf,
@@ -40,21 +41,6 @@ export interface CatalogRouterDependencies {
 }
 
 const unauthorized = () => new CatalogError(401, 'UNAUTHORIZED', 'Authentication required');
-
-/**
- * Fails closed until Student 1's requireAuth lands in server/src/shared/auth.ts: no bearer token
- * can be verified yet, so every cart request is unauthenticated. Mock tokens are never accepted.
- */
-export const authenticationPending: RequestHandler = (_req, res) => sendError(res, unauthorized());
-
-/**
- * Until Student 1's optionalAuth lands, checkout accepts guests only. A request that carries any
- * Authorization header cannot be verified, so it is rejected rather than downgraded to a guest.
- */
-export const guestOnlyPending: RequestHandler = (req, res, next) => {
-  if (req.get('authorization') !== undefined) return sendError(res, unauthorized());
-  next();
-};
 
 function signedInUser(req: Request): User {
   if (!req.user || !idSchema.safeParse(req.user.id).success) throw unauthorized();
@@ -195,10 +181,7 @@ function prefixed(fieldErrors: Record<string, string>): Record<string, string> {
 }
 
 /**
- * Mounted by server/src/app.ts. Cart routes fail closed (401) and checkout is guest-only until
- * Student 1's requireAuth/optionalAuth replace the pending handlers; see team/member-3/handoff.md.
+ * Mounted by server/src/app.ts with Student 1's middleware (server/src/shared/auth.ts): cart routes
+ * require a verified bearer token; checkout accepts guests, and a supplied but invalid token is 401.
  */
-export const catalogRouter = createCatalogRouter({
-  requireAuth: authenticationPending,
-  optionalAuth: guestOnlyPending,
-});
+export const catalogRouter = createCatalogRouter({ requireAuth, optionalAuth });
