@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus } from 'lucide-react';
 import type { Product } from '../../../../../contracts/index.js';
@@ -38,10 +38,15 @@ export function ProductCard({
   const stepStyles =
     'inline-flex size-11 shrink-0 items-center justify-center rounded border border-line hover:bg-line/60 disabled:opacity-50 disabled:cursor-not-allowed';
 
-  useEffect(() => {
+  // Clamp the draft only when the remaining quantity changes (for example after another add). This
+  // adjusts state during render instead of in a mount effect, which could run after the shopper's
+  // first keystroke and silently cap an over-limit entry to a valid one.
+  const [clampedFor, setClampedFor] = useState(max);
+  if (clampedFor !== max) {
+    setClampedFor(max);
     setDraft((value) => (Number(value) > max ? String(Math.max(1, max)) : value));
     setQuantityError(false);
-  }, [max]);
+  }
 
   function changeQuantity(next: number) {
     setDraft(String(Math.max(1, Math.min(max, next))));
