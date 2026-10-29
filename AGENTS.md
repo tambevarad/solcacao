@@ -1,6 +1,6 @@
 # Agent entry point
 
-Read `context.md` first, then `docs/roadmap.md`, `docs/contracts.md`, `docs/api.json`, `docs/decisions.md`, and `docs/design/frans-reference.md` and the requested `team/member-N/context.md` including its current phase file. Read current code and `team/member-N/status.json` before editing. These files describe project conventions; explicit user instructions take precedence. Report consequential conflicts rather than silently rewriting the plan.
+Read `docs/context.md` first, then `docs/roadmap.md`, `docs/contracts.md`, `docs/api.json`, `docs/decisions.md`, and `docs/design/frans-reference.md` and the requested `team/member-N/context.md` including its current phase file. Read current code and `team/member-N/status.json` before editing. These files describe project conventions; explicit user instructions take precedence. Report consequential conflicts rather than silently rewriting the plan.
 
 Implement only the requested member and phase. If either is missing and cannot be inferred from the user's request, ask for the missing identifier. Never implement all five roles simply because you can read their plans. Do not infer that a stub means its feature is completed. Do not invoke subagents unless the user authorizes delegation.
 

@@ -21,7 +21,10 @@
         "Integration PR #12 (in review): real auth and notifyQuote wiring, CI MongoDB service, cross-feature journeys, records",
         "Coordinator verification 2026-10-28: full suite against a real MongoDB (Docker mongo:8.0, TEST_MONGODB_URI) passed 518/518, including every member's persistence tests; CI now runs them on every PR (PR #12)",
         "npm run test:e2e: 14 passed (installed Chrome), including guest checkout, sign-in cart merge and the B2B journey",
-        "Desktop/mobile screenshots of every member's pages: docs/phase2/screenshots (no console errors)"
+        "Desktop/mobile screenshots of every member's pages: docs/phase2/screenshots (no console errors)",
+        "Follow-ups #13, #17 and #21 approved by Krishr21; Member 5 #14/#15 and Member 1 #19 approved by tambevarad (2026-10-28)",
+        "Released to main through #16 (d10153c) and #20 (1307a52), both approved by Krishr21; CI on 1307a52 531/531; the submitted release is tagged phase-2-submission",
+        "Submission re-check on 1307a52: all routes EN/ES at 1440/375 with 0 console errors, failed requests, missing keys or overflow; fresh clone npm ci + dev:client served the site"
       ],
       "blockers": [
         "Phase 1 status not yet recorded by the coordinator (D21)",

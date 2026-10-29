@@ -13,3 +13,6 @@ server/storage/*
 .DS_Store
 
 .agent/
+# Claude Code: share only the project instructions; keep local settings untracked.
+.claude/*
+!.claude/CLAUDE.md

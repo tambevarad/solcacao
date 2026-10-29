@@ -26,7 +26,10 @@
         "Coordinator review: PR #10 approved by tambevarad and merged into development as 88c9a0d (2026-10-28)",
         "Coordinator verification 2026-10-28: full suite against a real MongoDB (Docker mongo:8.0, TEST_MONGODB_URI) passed 518/518, including this member's persistence tests; CI now runs them on every PR (PR #12)",
         "Coordinator integration PR #12: startup builds the Inquiry requestId index before serving; notifyQuote wired into the B2B router",
-        "2026-10-28 sampler follow-up on daniel-support: ready_for_review, not yet merged. Full project check: 474 passed, 46 database tests explicitly skipped; typecheck, structure and workflow passed. Build passed. Owned browser suite: 5 passed; shared journeys: 14 passed. Ownership check passes for all 8 files. Original Phase 2 integrated state/commit above refer to PR #10; coordinator records are preserved. Catalog quantity enhancement is a separate Member 3 review PR."
+        "2026-10-28 sampler follow-up on daniel-support: ready_for_review, not yet merged. Full project check: 474 passed, 46 database tests explicitly skipped; typecheck, structure and workflow passed. Build passed. Owned browser suite: 5 passed; shared journeys: 14 passed. Ownership check passes for all 8 files. Original Phase 2 integrated state/commit above refer to PR #10; coordinator records are preserved. Catalog quantity enhancement is a separate Member 3 review PR.",
+        "Coordinator review: follow-up PR #14 (sampler reset) approved by tambevarad and merged into development as 4fc8a22 (2026-10-28); the \"not yet merged\" note above predates the merge",
+        "Coordinator review: PR #15 (catalog quantity picker, Member 3 files under a coordinator-approved ownership exception) approved by tambevarad and merged as abfe61f; its clamp race was fixed in coordinator PR #17 (a27cd79)",
+        "Released to main in #16 and #20 (1307a52); the submitted release on main is tagged phase-2-submission"
       ],
       "blockers": [
         "Phase 1 status not yet recorded by member 5 (D21)",

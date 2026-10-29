@@ -25,7 +25,7 @@ Replace `<PR>` with the PR number.
 ```text
 Help me review pull request #<PR> in https://github.com/tambevarad/solcacao. I am the reviewer and I make the decision.
 1. If this folder is not already a clone of that repo, clone it here with gh and work inside it. Check that Node 24.x is active (.nvmrc) and gh is signed in. If not, stop and tell me exactly what to run.
-2. Read AGENTS.md, context.md, docs/integration.md, docs/contracts.md and the PR description. Check out the PR (gh pr checkout <PR>), run npm ci, then npm run check, npm run build, and npm run check:ownership -- --member <the author's member number from team/roster.json> --base origin/development. Report every result exactly.
+2. Read AGENTS.md, docs/context.md, docs/integration.md, docs/contracts.md and the PR description. Check out the PR (gh pr checkout <PR>), run npm ci, then npm run check, npm run build, and npm run check:ownership -- --member <the author's member number from team/roster.json> --base origin/development. Report every result exactly.
 3. Review the diff for contract violations, edits outside the author's ownership, secrets, missing EN/ES keys, missing tests, and claims in the PR that the code does not back up. List concrete findings with file:line.
 4. Start npm run dev:client in the background and give me a short checklist of pages and flows to look at in the browser at desktop and phone width, in English and Spanish.
 5. Wait for me. Only if I explicitly say "approve", run gh pr review <PR> --approve with a short summary of what was checked. If I say "request changes", post my comments with gh pr review <PR> --request-changes. If I am the coordinator and explicitly say "merge", run gh pr merge <PR> --merge once it is approved and the checks pass. Never approve or merge on your own.
@@ -80,4 +80,4 @@ Details live in:
 - the "Phase 2 working guide" in docs/integration.md: ownership, shared files, dependencies and merge order;
 - docs/github-setup.md: branch protection and the review cycle.
 
-These prompts replace the shorter "stop before commit" prompts in docs/student-playbook.pdf. AGENTS.md lets an agent commit, push and open a PR when the member's instruction authorizes it, as Prompt 2 does.
+AGENTS.md lets an agent commit, push and open a PR when the member's instruction authorizes it, as Prompt 2 does.

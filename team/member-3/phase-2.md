@@ -1,6 +1,6 @@
 # Student 3 Phase 2 — Core Development
 
-Blueprint execution window: Weeks 3–4. Academic checkpoint mapping: docs/roadmap.md. Read context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
+Blueprint execution window: Weeks 3–4. Academic checkpoint mapping: docs/roadmap.md. Read docs/context.md, docs/contracts.md, docs/api.json and your member context first. Preserve owner boundaries.
 
 ## Entry conditions
 
