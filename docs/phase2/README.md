@@ -21,11 +21,13 @@ Header, footer, language switch and layout on every page: Member 2. Run it yours
 
 ## Submission documents
 
+Live demo: https://tambevarad.github.io (static mock-mode build of the `phase-2-submission` tag on GitHub Pages; see `docs/deployment.md`).
+
 PDFs in `submission/`, with their HTML sources in `submission/source/`:
 
-| Document                     | Contents                                                                                                              |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| accessibility-report.pdf     | WCAG 2.2 AA audit: axe-core across 117 page states (EN/ES at 1440, 375 and 320 px) plus manual checks; one reflow fix |
-| meeting-minutes.pdf          | Weekly in-person meetings, September–October 2026, compiled afterwards and cross-referenced to PRs and decisions      |
-| individual-contributions.pdf | Each member's area, PRs, line counts and reviews                                                                      |
-| ai-usage-report.pdf          | How the team used Claude Code and Codex, what the team did itself, and the safeguards                                 |
+| Document                     | Contents                                                                                                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| accessibility-report.pdf     | WCAG 2.2 AA audit: PageSpeed Insights / Lighthouse 100 on all 19 live pages (mobile and desktop), WAVE on the shared layout, axe-core across 117 page states, manual checks; one reflow fix |
+| meeting-minutes.pdf          | Weekly in-person meetings, September–October 2026, compiled afterwards and cross-referenced to PRs and decisions                                                                            |
+| individual-contributions.pdf | Each member's area, PRs, line counts and reviews                                                                                                                                            |
+| ai-usage-report.pdf          | How the team used Claude Code and Codex, what the team did itself, and the safeguards                                                                                                       |

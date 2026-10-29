@@ -2,6 +2,17 @@
 
 This repository has not deployed a completed application. Student 2 coordinates; Student 1 owns DB/secrets/startup, Student 4 durable upload storage, Student 5 SMTP. Select a host capable of running Node and persistent disk, or approve S3 as an alternative. No provider/account/budget has been assumed.
 
+## Phase 2 static demo (live)
+
+The full application below is not deployed yet. The Phase 2 front end is hosted as a static demo:
+
+- URL: https://tambevarad.github.io (GitHub Pages; the repository `tambevarad/tambevarad.github.io` holds only the built files).
+- Built from tag `phase-2-submission` with `VITE_API_MODE=mock npx vite build --config vite.config.ts`. Mock mode only: no API, database, uploads or email.
+- GitHub Pages has no rewrite rules. Each EN/ES route and product page is a copy of `index.html` (for example `en/catalog.html`) so that it returns 200. `404.html` is the same copy for any other path, which renders the app's not-found page.
+- Why GitHub Pages: the uta.cloud account had no hosting space set up, and the professor confirmed that any third-party host is acceptable.
+- Verified 28 October 2026 by Varad Tambe: every route returns 200. The Phase 2 audit (every route in EN/ES at 1440 and 375 px, plus signed-in pages) found no console errors, failed requests or overflow on the live URL. Google PageSpeed Insights results are in `docs/phase2/submission/accessibility-report.pdf`.
+- To update it, rebuild, recreate the route copies and push to that repository. Phase 4 replaces this demo with the full deployment.
+
 ## Current scaffold commands
 
 `npm ci`; `npm run check`; `npm run build`; `npm start` starts the API skeleton. Build outputs: dist/client and dist/server. Current server does NOT serve the SPA and does NOT connect Mongo. Do not describe this skeleton as production-ready.

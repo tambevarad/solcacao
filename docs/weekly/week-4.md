@@ -45,14 +45,16 @@ PR #18 (main → development, no file changes) was closed; #21 does that sync.
 - A fresh clone of the tag with Node 24.19.0 ran `npm ci`, then `npm run dev:client` served `/` and `/es/catalog`.
 - The catalog screenshots were refreshed to show the #15 quantity picker.
 
-Pre-submission PR #22 (records, accessibility and repository tidy-up), then its release to main:
+Pre-submission PR #22 (records, accessibility and repository tidy-up), then its release to main (#23, `144c30e`, approved by Krishr21):
 
-- WCAG 2.2 AA audit with axe-core 4.10.2 across 79 page states (every route in EN/ES at 1440 and 375, plus dialogs, form errors, the signed-in account and the quote wizard): 0 violations. Text contrast was measured at 5.92:1 or better, and every page sets `lang` to its locale.
+- WCAG 2.2 AA audit with axe-core 4.10.2 across 117 page states (every route in EN/ES at 1440, 375 and 320 px, plus dialogs, form errors, the signed-in account and the quote wizard): 0 violations. Text contrast was measured at 5.92:1 or better, and every page sets `lang` to its locale.
 - One failure was found outside axe: at 320 px (WCAG 1.4.10 Reflow) every page scrolled 23 px sideways because the header was too wide. The wordmark now tightens below 360 px, and the overflow test covers 320 px. Report: `docs/phase2/submission/accessibility-report.pdf`.
 - Repository root tidied: unused tool files removed; `context.md` and `TEAM-QUICKSTART.md` moved into `docs/`; Claude Code instructions moved to `.claude/CLAUDE.md`; README rewritten. Agent workflows are unchanged (`AGENTS.md` stays at the root).
 - Submission documents (accessibility report, meeting minutes, individual contributions, AI usage report) are in `docs/phase2/submission/`.
 
 The annotated tag `phase-2-submission` marks the submitted release commit on main.
+
+Live demo (28 Oct): the uta.cloud account had no hosting space set up, and the professor confirmed that any third-party host is acceptable. The static mock-mode build of the tag is published at https://tambevarad.github.io (GitHub Pages; repository `tambevarad/tambevarad.github.io` holds only the build). Every EN/ES route returns HTTP 200. The Phase 2 audit spec re-run against the live URL found no console errors, failed requests, missing translations or overflow. Google PageSpeed Insights scores are in the accessibility report. Full deployment with the API stays in Phase 4 (`docs/deployment.md`).
 
 Demo observations (coordinator walkthrough in mock mode, not the academic demo):
 

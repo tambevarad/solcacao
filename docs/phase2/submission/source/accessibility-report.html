@@ -10,39 +10,70 @@
       <div class="kicker">CSE 5335 · Phase 2 submission · Team SolCacao</div>
       <h1>Accessibility Report: WCAG 2.2 Level AA</h1>
       <div class="meta">
-        Audit date: 28 October 2026 · Application: SolCacao web client (English and Spanish), mock
-        mode · Team: Aman Gulati, Varad Tambe, Reethika Gajulapati, Krish Ruparel, Daniel Yglesias
+        Audit date: 28 October 2026 · Live site: https://tambevarad.github.io · Application:
+        SolCacao web client (English and Spanish), mock mode · Team: Aman Gulati, Varad Tambe,
+        Reethika Gajulapati, Krish Ruparel, Daniel Yglesias
       </div>
     </header>
 
     <h2>1. Summary</h2>
     <p>
-      We audited every page of the SolCacao client against the Web Content Accessibility Guidelines
-      (WCAG) 2.2 at conformance level AA. We combined the axe-core automated engine with manual
-      checks for the criteria that automated tools cannot fully decide. The automated audit found
-      <strong>no violations</strong>. The manual checks found <strong>one failure</strong>: the
-      header did not reflow at 320&nbsp;px (criterion 1.4.10). It was fixed and re-verified before
-      submission. With that fix, every check in this report passes.
+      We audited the SolCacao client against the Web Content Accessibility Guidelines (WCAG) 2.2 at
+      conformance level AA. We used two free website checkers on the live site: Google PageSpeed
+      Insights (Lighthouse) and WebAIM WAVE. We also ran the axe-core engine across every
+      interactive state, and did manual checks for the criteria that automated tools cannot fully
+      decide.
     </p>
+    <ul>
+      <li>
+        <strong>Lighthouse:</strong> every one of the 19 live pages scored
+        <strong>100/100</strong> for accessibility, on mobile and on desktop.
+      </li>
+      <li>
+        <strong>axe-core:</strong> <strong>no violations</strong> in any of the 117 page states.
+      </li>
+      <li>
+        <strong>Manual checks:</strong> found <strong>one failure</strong>. The header did not
+        reflow at 320&nbsp;px (criterion 1.4.10). It was fixed and re-verified before submission.
+      </li>
+    </ul>
     <div class="summary">
       <div>
-        <strong>117</strong
-        ><span>page states audited (24 pages and states × EN/ES × 3 widths)</span>
+        <strong class="ok">100/100</strong
+        ><span>Lighthouse accessibility on all 19 live pages, mobile and desktop</span>
       </div>
-      <div><strong class="ok">0</strong><span>automated WCAG 2.2 A/AA violations</span></div>
-      <div><strong>3,162</strong><span>automated rule checks passed</span></div>
+      <div>
+        <strong class="ok">0</strong
+        ><span>axe-core WCAG 2.2 A/AA violations across 117 page states</span>
+      </div>
+      <div>
+        <strong class="ok">0</strong><span>WAVE errors and contrast errors (shared layout)</span>
+      </div>
       <div><strong>1 → 0</strong><span>manual failures found and fixed</span></div>
     </div>
 
     <h2>2. Tools and method</h2>
     <ul>
       <li>
-        <strong>axe-core 4.10.2</strong> (Deque Systems, free and open source). This is the engine
-        behind Lighthouse's and axe DevTools' accessibility audits. We ran it in Google Chrome
-        through Playwright, using the rule tags <code>wcag2a</code>, <code>wcag2aa</code>,
-        <code>wcag21a</code>, <code>wcag21aa</code> and <code>wcag22aa</code>. The site is not
-        publicly hosted until Phase 4, so we ran it locally rather than through a website scanner
-        such as WAVE.
+        <strong>Google PageSpeed Insights</strong> (pagespeed.web.dev, free). This is Google's
+        website that runs the Lighthouse 13.5.0 accessibility audit, which is built on axe-core,
+        against a public URL on a simulated phone and on desktop. We ran it on the live site for the
+        home, catalog and wholesale pages. Google then rate-limited further runs for the day, so we
+        ran the other 16 pages with Lighthouse 13.5.0 itself. That is the same free, open-source
+        engine and version, run against the same live URLs.
+      </li>
+      <li>
+        <strong>WebAIM WAVE</strong> (wave.webaim.org, free). WAVE loads a page through its own
+        proxy address. Our app decides which page to show from the address, so WAVE could only
+        display our "page not found" view. That view still contains the header, navigation, footer
+        and skip link that every page shares, so we report WAVE for that shared layout only.
+      </li>
+      <li>
+        <strong>axe-core 4.10.2</strong> (Deque Systems, free and open source), run in Google Chrome
+        through Playwright with the rule tags <code>wcag2a</code>, <code>wcag2aa</code>,
+        <code>wcag21a</code>, <code>wcag21aa</code> and <code>wcag22aa</code>. It covers the states
+        a URL-based checker cannot reach, such as open dialogs and menus, form errors and signed-in
+        pages.
       </li>
       <li>
         <strong>Viewports:</strong> 1440&nbsp;px (desktop), 375&nbsp;px (phone) and 320&nbsp;px (the
@@ -64,7 +95,161 @@
       open cart drawer; open mobile menu; open sign-in dialog; signed-in account page.
     </p>
 
-    <h2>3. Automated results (axe-core)</h2>
+    <h2>3. Website checks on the live site</h2>
+
+    <div style="break-inside: avoid">
+      <h3>Google PageSpeed Insights and Lighthouse 13.5.0: accessibility score</h3>
+      <table>
+        <tr>
+          <th style="width: 32%">Page</th>
+          <th>English, mobile</th>
+          <th>English, desktop</th>
+          <th>Spanish, mobile</th>
+          <th>Spanish, desktop</th>
+        </tr>
+        <tr>
+          <td>Home *</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+        </tr>
+        <tr>
+          <td>Catalog *</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+        </tr>
+        <tr>
+          <td>Product detail</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+        </tr>
+        <tr>
+          <td>Wholesale *</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+        </tr>
+        <tr>
+          <td>Contact</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+        </tr>
+        <tr>
+          <td>Six-piece sampler</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+        </tr>
+        <tr>
+          <td>Quote request</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Sign in</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Create account</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Checkout</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Feedback</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Our story</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+        <tr>
+          <td>Care guide</td>
+          <td class="ok">100</td>
+          <td class="ok">100</td>
+          <td>–</td>
+          <td>–</td>
+        </tr>
+      </table>
+      <p class="small">
+        * Run on the PageSpeed Insights website. Saved reports:
+        pagespeed.web.dev/analysis/https-tambevarad-github-io-en/9pd3za0gzn (home),
+        …/https-tambevarad-github-io-en-catalog/i6wwvnxejv (catalog) and
+        …/https-tambevarad-github-io-en-wholesale/wdgf58rn7c (wholesale). The other runs used
+        Lighthouse 13.5.0 against the same live site. Spanish was run on the six main pages, and
+        every page shares the same templates in both languages. All 19 pages passed every applicable
+        Lighthouse accessibility audit (25 to 28 per page) with none failed. Lighthouse also lists
+        10 "additional items to check manually" per page, such as focus order; section 5 covers
+        them.
+      </p>
+    </div>
+
+    <figure>
+      <img
+        src="img/pagespeed-home-mobile.jpg"
+        alt="PageSpeed Insights report for https://tambevarad.github.io/en, 28 October 2026, mobile: Performance 99, Accessibility 100, Best Practices 100, SEO 100"
+      />
+      <figcaption>
+        Google PageSpeed Insights, home page, mobile (desktop also scored 100 for accessibility).
+        Saved report: pagespeed.web.dev/analysis/https-tambevarad-github-io-en/9pd3za0gzn
+      </figcaption>
+    </figure>
+
+    <h3>WebAIM WAVE: shared layout</h3>
+    <table>
+      <tr>
+        <th>Errors</th>
+        <th>Contrast errors</th>
+        <th>Alerts</th>
+        <th>Features</th>
+        <th>Structural elements</th>
+        <th>ARIA</th>
+        <th>AIM score</th>
+      </tr>
+      <tr>
+        <td class="ok">0</td>
+        <td class="ok">0</td>
+        <td class="ok">0</td>
+        <td>9</td>
+        <td>16</td>
+        <td>31</td>
+        <td class="ok">10 / 10</td>
+      </tr>
+    </table>
+    <p class="small">
+      The features WAVE recognized include the skip link and its target and the page language. The
+      structure includes one <code>h1</code> and the banner, navigation, main and footer landmarks.
+    </p>
+
+    <h2>4. Automated results across all states (axe-core)</h2>
     <table>
       <tr>
         <th>Result type</th>
@@ -84,12 +269,12 @@
       <tr>
         <td>Needs review: <code>color-contrast</code></td>
         <td>30</td>
-        <td class="ok">Pass after manual measurement (section 4.1)</td>
+        <td class="ok">Pass after manual measurement (section 5)</td>
       </tr>
       <tr>
         <td>Needs review: <code>link-in-text-block</code></td>
         <td>12</td>
-        <td class="ok">Not applicable after manual check (section 4.2)</td>
+        <td class="ok">Not applicable after manual check (section 5)</td>
       </tr>
     </table>
     <p class="small">
@@ -98,7 +283,7 @@
       of these items was checked by hand.
     </p>
 
-    <h2>4. Manual verification</h2>
+    <h2 style="break-before: page">5. Manual verification</h2>
     <table>
       <tr>
         <th style="width: 30%">WCAG criterion</th>
@@ -195,7 +380,7 @@
       </tr>
     </table>
 
-    <h2>5. Issues found and fixed</h2>
+    <h2>6. Issues found and fixed</h2>
     <table>
       <tr>
         <th>#</th>
@@ -218,7 +403,7 @@
       </tr>
     </table>
 
-    <h2>6. Limitations and next steps</h2>
+    <h2>7. Limitations and next steps</h2>
     <ul>
       <li>
         Automated tools catch only part of all accessibility barriers, which is why we added the
@@ -226,17 +411,20 @@
         plan a VoiceOver (macOS/iOS) and NVDA (Windows) pass through the main journeys.
       </li>
       <li>
-        This audit covers the Phase 2 client in mock mode. When the site is deployed in Phase 4, we
-        will repeat it on the public URL with WAVE and Lighthouse and include the backend error
-        states.
+        PageSpeed Insights, Lighthouse and WAVE check a page as it first loads, signed out. Dialogs,
+        form errors and signed-in pages are covered by the axe-core runs and the manual checks.
+      </li>
+      <li>
+        The live site is the Phase 2 client in mock mode. When the full application with the API is
+        deployed in Phase 4, we will repeat these checks and include the server error states.
       </li>
     </ul>
 
-    <h2>7. Conformance statement</h2>
+    <h2>8. Conformance statement</h2>
     <p>
-      Based on the automated and manual checks above, the SolCacao Phase 2 client meets WCAG 2.2
-      Level AA for every page and interactive state listed in section 2. The single failure we found
-      (1.4.10 Reflow) was fixed before submission.
+      Based on the website checks, automated tests and manual checks above, the SolCacao Phase 2
+      client meets WCAG 2.2 Level AA for every page and interactive state listed in section 2. The
+      single failure we found (1.4.10 Reflow) was fixed before submission.
     </p>
   </body>
 </html>
