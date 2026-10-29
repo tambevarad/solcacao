@@ -149,3 +149,18 @@ code {
   font-size: 9pt;
   color: var(--muted);
 }
+figure {
+  margin: 8px 0 14px;
+  break-inside: avoid;
+}
+figure img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+figcaption {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 8.5pt;
+}

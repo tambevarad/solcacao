@@ -2,6 +2,8 @@
 
 A bilingual (English/Spanish) storefront for a fictional artisan chocolate maker, built by a five-person team for CSE 5335. Retail shoppers browse and filter the catalog, manage a cart and place a simulated order. Business buyers request custom-branded chocolate through a four-step quote wizard with a PDF upload. Visitors can also send enquiries and build a six-piece sampler. All products, companies and accounts in the app are fictional.
 
+**Live demo: https://tambevarad.github.io** (the Phase 2 front end in mock mode, hosted on GitHub Pages). Sign-in, the cart, orders and form submissions are simulated in the browser. Fictional demo accounts: `retail@solcacao.test` / `retail-demo-pass` and `business@solcacao.test` / `business-demo-pass`.
+
 ## Team and areas
 
 | Member              | Area                                                        |
@@ -46,4 +48,17 @@ Run `npm ci`, `npm run check` (typecheck, unit and integration tests, structure 
 
 ## Status
 
-Phase 2 (front-end development) is complete and released to `main`. All five members' Phase 2 pull requests (#3, #5, #9, #10, #11), the integration PR (#12) and the follow-ups were reviewed and merged. The submitted version is tagged `phase-2-submission`. The full record is in `docs/weekly/week-4.md`, with screenshots and submission documents in `docs/phase2/`. Phase 3 binds the UI to the real API.
+Phase 2 (front-end development) is complete and released to `main`. All five members' Phase 2 pull requests (#3, #5, #9, #10, #11), the integration PR (#12) and the follow-ups were reviewed and merged. The submitted version is tagged `phase-2-submission`. The full record is in `docs/weekly/week-4.md`, with screenshots in `docs/phase2/screenshots/`. Phase 3 binds the UI to the real API.
+
+### Phase 2 submission
+
+| Item                     | Where                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| Code                     | Tag [`phase-2-submission`](https://github.com/tambevarad/solcacao/tree/phase-2-submission) on `main`         |
+| Live demo                | https://tambevarad.github.io                                                                                 |
+| Accessibility report     | [`docs/phase2/submission/accessibility-report.pdf`](docs/phase2/submission/accessibility-report.pdf)         |
+| Meeting minutes          | [`docs/phase2/submission/meeting-minutes.pdf`](docs/phase2/submission/meeting-minutes.pdf)                   |
+| Individual contributions | [`docs/phase2/submission/individual-contributions.pdf`](docs/phase2/submission/individual-contributions.pdf) |
+| AI usage report          | [`docs/phase2/submission/ai-usage-report.pdf`](docs/phase2/submission/ai-usage-report.pdf)                   |
+
+The HTML sources of the four reports are in `docs/phase2/submission/source/`.
