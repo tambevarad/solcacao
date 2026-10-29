@@ -85,7 +85,9 @@ export function Header() {
         <Link
           to={localizePath(locale)}
           aria-label={t('shell.header.homeLink')}
-          className="px-2 text-lg font-semibold tracking-[0.25em] uppercase sm:text-xl"
+          // Below 360px the full letter-spaced wordmark plus four 44px icon buttons is wider than
+          // the screen (WCAG 1.4.10 Reflow at 320px), so the wordmark tightens there only.
+          className="px-2 text-lg font-semibold tracking-[0.25em] uppercase max-[359px]:px-0 max-[359px]:text-base max-[359px]:tracking-[0.18em] sm:text-xl"
         >
           {BRAND_NAME}
         </Link>

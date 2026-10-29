@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SolCacao: AI Usage Report</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <header class="doc">
+      <div class="kicker">CSE 5335 · Phase 2 submission · Team SolCacao</div>
+      <h1>AI Usage Report</h1>
+      <div class="meta">
+        Phase 2 (front-end development) · Prepared 28 October 2026 · Aman Gulati, Varad Tambe,
+        Reethika Gajulapati, Krish Ruparel, Daniel Yglesias
+      </div>
+    </header>
+
+    <h2>1. Summary</h2>
+    <p>
+      We used AI coding assistants throughout the project as pair programmers. Four members used
+      Claude Code (Anthropic) and one used Codex (OpenAI). The team set the requirements,
+      architecture, task definitions, design decisions and acceptance criteria. Each member directed
+      an assistant within their own area. The assistants drafted most of the implementation code and
+      tests from those specifications. Every change was reviewed, run and tested by a team member
+      and approved by a second member before it was merged. We are responsible for all submitted
+      work.
+    </p>
+
+    <h2>2. Tools</h2>
+    <table>
+      <tr>
+        <th>Tool</th>
+        <th>Used by</th>
+        <th>Main uses</th>
+      </tr>
+      <tr>
+        <td>Claude Code (Anthropic)</td>
+        <td>Aman, Varad, Reethika, Krish</td>
+        <td>
+          Implementing scoped features in the member's own area, writing tests, review support,
+          debugging CI, integration and documentation drafts
+        </td>
+      </tr>
+      <tr>
+        <td>Codex (OpenAI)</td>
+        <td>Daniel</td>
+        <td>
+          Implementing the support area, follow-up improvements, review support. The repository's
+          starter scaffold and planning templates were also generated with Codex and then audited by
+          Varad (PR #1).
+        </td>
+      </tr>
+    </table>
+
+    <h2>3. How we used AI</h2>
+    <h3>Planning and requirements</h3>
+    <p>
+      We used the assistants to turn the course checkpoints and the project blueprint into
+      per-member phase plans, shared data contracts and an ownership map. The team then reviewed
+      these and changed them where needed, for example the data model (ERD), the mock-first plan for
+      Phase 2 and the merge order.
+    </p>
+    <h3>Implementation</h3>
+    <p>
+      Each member gave their assistant a scoped task for their own area and phase, limited to the
+      files they own. The assistant drafted the code and tests. The member reviewed the diff, ran
+      the app at phone and desktop widths in English and Spanish, and asked for revisions before
+      committing.
+    </p>
+    <h3>Code review</h3>
+    <p>
+      Reviewers used assistants to run the full checks and summarize a pull request against the
+      contracts and ownership rules. The decision to approve or request changes was always made by
+      the reviewer. Krish's review of the shell foundation (#3), for example, raised seven points:
+    </p>
+    <ul>
+      <li>a missing desktop sign-out;</li>
+      <li>an accessibility mismatch between visible and spoken link labels (WCAG 2.5.3);</li>
+      <li>contract changes that needed the affected owners' review;</li>
+      <li>a schema section deleted by mistake;</li>
+      <li>inaccurate test counts in the evidence.</li>
+    </ul>
+    <p>
+      All seven were fixed before he approved. He also requested changes on the image library (#8).
+    </p>
+    <h3>Integration, CI and debugging</h3>
+    <p>
+      The coordinator used Claude Code to wire cross-area dependencies (authentication middleware,
+      quote notifications) and to find the root cause of CI failures:
+    </p>
+    <ul>
+      <li>the database image could not start on GitHub's newer runners;</li>
+      <li>two timing-dependent tests;</li>
+      <li>tests that still expected placeholder pages.</li>
+    </ul>
+    <p>Each fix went through a reviewed pull request.</p>
+    <h3>Quality assurance and documentation</h3>
+    <p>
+      Assistants helped run the submission checklist, the WCAG 2.2 AA audit and the contrast and
+      reflow measurements. They also drafted evidence files and weekly records from actual test
+      output, and the team checked them.
+    </p>
+
+    <h2>4. Representative prompts (summarized)</h2>
+    <table>
+      <tr>
+        <th style="width: 18%">Purpose</th>
+        <th>Prompt (summarized)</th>
+        <th style="width: 30%">Team member's role</th>
+      </tr>
+      <tr>
+        <td>Feature work</td>
+        <td>
+          "Implement the Phase 2 scope in my area's plan within the files I own, follow the shared
+          contracts, add tests for validation and failure cases, and report every check result. Do
+          not change other members' files; propose shared changes instead."
+        </td>
+        <td>
+          Chose the scope, reviewed the diff, tested the pages by hand in both languages, approved
+          the commit
+        </td>
+      </tr>
+      <tr>
+        <td>Code review</td>
+        <td>
+          "Check out pull request N, run the full checks, and list contract or ownership problems,
+          missing translations and untested behavior with file references. I will make the
+          decision."
+        </td>
+        <td>Did the visual review, decided to approve or request changes, wrote the comments</td>
+      </tr>
+      <tr>
+        <td>Debugging</td>
+        <td>
+          "CI fails before the tests start. Read the job log, identify the root cause and propose
+          the smallest fix that keeps the database tests enabled."
+        </td>
+        <td>Confirmed the diagnosis, chose the fix, got it reviewed by a teammate</td>
+      </tr>
+      <tr>
+        <td>Accessibility</td>
+        <td>
+          "Audit every page and interactive state against WCAG 2.2 AA, verify anything the tool
+          cannot decide, and propose fixes for real failures."
+        </td>
+        <td>Reviewed the findings and approved the reflow fix</td>
+      </tr>
+      <tr>
+        <td>Records</td>
+        <td>
+          "Draft the weekly integration record from the merged pull requests and actual check
+          results, and mark anything not verified."
+        </td>
+        <td>Checked the facts against GitHub and corrected or approved the text</td>
+      </tr>
+    </table>
+
+    <h2>5. What the team did</h2>
+    <ul>
+      <li>
+        <strong>Direction and design.</strong> We chose the project, split it into five owned areas,
+        picked the stack, and decided the data model, authentication approach, mock-first Phase 2
+        plan and bilingual requirement. We also set the visual direction and the policy of fictional
+        data and CC0 imagery only.
+      </li>
+      <li>
+        <strong>Task definition.</strong> Each member decided what their assistant should build,
+        broke it into steps and set the acceptance criteria from the course and blueprint
+        requirements.
+      </li>
+      <li>
+        <strong>Review and testing.</strong> Every merged pull request was approved by a member
+        other than its author: 19 approvals and 2 change requests across 19 merged PRs. Feature PRs
+        were visually reviewed at phone and desktop widths in English and Spanish. Daniel and Krish
+        re-ran the full test suite themselves before approving the integration (#12) and the first
+        release (#16).
+      </li>
+      <li>
+        <strong>Product decisions from hands-on testing.</strong> Daniel identified that the sampler
+        should reset after an enquiry and that shoppers needed a quantity picker (#14, #15). Krish's
+        review added the desktop sign-out and fixed the language-switch labels (#3).
+      </li>
+      <li>
+        <strong>Integration and process decisions.</strong> The coordinator decided merge order,
+        ownership exceptions and the release process, and configured branch protection. When an
+        assistant suggested changing the repository's default branch, we checked the suggestion
+        against the course's GitHub guidelines first and rejected it.
+      </li>
+    </ul>
+
+    <h2>6. Safeguards and verification</h2>
+    <ul>
+      <li>
+        Protected branches: nothing merges without passing CI and approval from a second person,
+        admins included.
+      </li>
+      <li>
+        Automated checks on every pull request: type checking, 531 unit and integration tests
+        (including each member's real-MongoDB persistence suite), structure checks and a production
+        build. The Playwright browser journeys were run before each merge.
+      </li>
+      <li>
+        No secrets, credentials or personal data were shared with AI tools; all demo data is
+        fictional.
+      </li>
+      <li>
+        Assistants were limited to the requesting member's own files; anything shared went through a
+        proposal and a reviewed pull request.
+      </li>
+      <li>
+        AI output was not accepted as is. Problems we caught and corrected include tests coupled to
+        placeholder pages, two timing-dependent tests, a CI environment incompatibility and the
+        reflow failure found in the accessibility audit.
+      </li>
+    </ul>
+
+    <h2>7. Reflection</h2>
+    <p>
+      The assistants let a five-person team build a large, well-tested application in a short time.
+      What made that work was the structure we put around them: clear ownership, shared contracts,
+      required peer review and automated tests. The biggest risks we saw were confident but wrong
+      suggestions and tests that passed for the wrong reasons. Human review and real-database
+      testing caught both. In Phase 3 we will keep the same process while connecting the interface
+      to the live API.
+    </p>
+  </body>
+</html>

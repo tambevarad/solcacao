@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SolCacao: Accessibility Report (WCAG 2.2 AA)</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <header class="doc">
+      <div class="kicker">CSE 5335 · Phase 2 submission · Team SolCacao</div>
+      <h1>Accessibility Report: WCAG 2.2 Level AA</h1>
+      <div class="meta">
+        Audit date: 28 October 2026 · Application: SolCacao web client (English and Spanish), mock
+        mode · Team: Aman Gulati, Varad Tambe, Reethika Gajulapati, Krish Ruparel, Daniel Yglesias
+      </div>
+    </header>
+
+    <h2>1. Summary</h2>
+    <p>
+      We audited every page of the SolCacao client against the Web Content Accessibility Guidelines
+      (WCAG) 2.2 at conformance level AA. We combined the axe-core automated engine with manual
+      checks for the criteria that automated tools cannot fully decide. The automated audit found
+      <strong>no violations</strong>. The manual checks found <strong>one failure</strong>: the
+      header did not reflow at 320&nbsp;px (criterion 1.4.10). It was fixed and re-verified before
+      submission. With that fix, every check in this report passes.
+    </p>
+    <div class="summary">
+      <div>
+        <strong>117</strong
+        ><span>page states audited (24 pages and states × EN/ES × 3 widths)</span>
+      </div>
+      <div><strong class="ok">0</strong><span>automated WCAG 2.2 A/AA violations</span></div>
+      <div><strong>3,162</strong><span>automated rule checks passed</span></div>
+      <div><strong>1 → 0</strong><span>manual failures found and fixed</span></div>
+    </div>
+
+    <h2>2. Tools and method</h2>
+    <ul>
+      <li>
+        <strong>axe-core 4.10.2</strong> (Deque Systems, free and open source). This is the engine
+        behind Lighthouse's and axe DevTools' accessibility audits. We ran it in Google Chrome
+        through Playwright, using the rule tags <code>wcag2a</code>, <code>wcag2aa</code>,
+        <code>wcag21a</code>, <code>wcag21aa</code> and <code>wcag22aa</code>. The site is not
+        publicly hosted until Phase 4, so we ran it locally rather than through a website scanner
+        such as WAVE.
+      </li>
+      <li>
+        <strong>Viewports:</strong> 1440&nbsp;px (desktop), 375&nbsp;px (phone) and 320&nbsp;px (the
+        WCAG reflow width), each in English and Spanish.
+      </li>
+      <li>
+        <strong>Manual checks:</strong> measured contrast ratios, reflow at 320&nbsp;px, page
+        language, keyboard operation and focus management, skip link, reduced motion, target size,
+        headings, labels and error messages.
+      </li>
+    </ul>
+
+    <h3>Pages and states covered</h3>
+    <p>
+      Home; Catalog (default and filtered); Product detail; Sign in; Create account; Checkout
+      (empty, and with an item plus validation errors); Wholesale; Quote request (signed out, and as
+      a business account at step 1, with validation errors and in Spanish); Contact (default and
+      with validation errors); Feedback; Six-piece sampler; Our story; Care guide; Not-found page;
+      open cart drawer; open mobile menu; open sign-in dialog; signed-in account page.
+    </p>
+
+    <h2>3. Automated results (axe-core)</h2>
+    <table>
+      <tr>
+        <th>Result type</th>
+        <th>Count</th>
+        <th>Outcome</th>
+      </tr>
+      <tr>
+        <td>Violations (WCAG 2.2 A and AA)</td>
+        <td>0</td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>Rule checks passed (summed over all states)</td>
+        <td>3,162</td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>Needs review: <code>color-contrast</code></td>
+        <td>30</td>
+        <td class="ok">Pass after manual measurement (section 4.1)</td>
+      </tr>
+      <tr>
+        <td>Needs review: <code>link-in-text-block</code></td>
+        <td>12</td>
+        <td class="ok">Not applicable after manual check (section 4.2)</td>
+      </tr>
+    </table>
+    <p class="small">
+      "Needs review" means axe could not decide automatically, here because elements overlap (for
+      example a text area inside a styled field, or text over the cart drawer's backdrop). Every one
+      of these items was checked by hand.
+    </p>
+
+    <h2>4. Manual verification</h2>
+    <table>
+      <tr>
+        <th style="width: 30%">WCAG criterion</th>
+        <th>What we checked</th>
+        <th style="width: 12%">Result</th>
+      </tr>
+      <tr>
+        <td>1.4.3 Contrast (Minimum)</td>
+        <td>
+          We computed contrast for every text element on the home, catalog, product, wholesale,
+          checkout, contact, feedback and sampler pages and in the open cart drawer. The lowest
+          ratio is 5.92:1, for the accent "eyebrow" labels; body text is 7:1 to 12:1. The AA minimum
+          is 4.5:1.
+        </td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>1.4.1 Use of Color (links)</td>
+        <td>
+          The flagged links ("Back to all chocolates", "Continue shopping") are standalone links
+          with an arrow icon, not links inside a paragraph, so color is not the only cue. Links
+          within body text are underlined.
+        </td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>1.4.10 Reflow</td>
+        <td>
+          <span class="warn">Found:</span> at 320&nbsp;px every page scrolled 23&nbsp;px sideways.
+          The letter-spaced wordmark plus four 44&nbsp;px header buttons needed about 327&nbsp;px of
+          a 304&nbsp;px row.<br /><span class="ok">Fixed:</span> below 360&nbsp;px the wordmark
+          tightens its size and spacing (wider layouts are unchanged). Re-verified on all 26 page
+          and language combinations, and our automated test suite now checks for overflow at
+          320&nbsp;px.
+        </td>
+        <td class="ok">Pass (fixed)</td>
+      </tr>
+      <tr>
+        <td>3.1.1 Language of Page</td>
+        <td>
+          The <code>&lt;html lang&gt;</code> attribute follows the route: <code>en</code> on English
+          pages and <code>es</code> on Spanish pages, verified on all 26 page and language
+          combinations.
+        </td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>2.1.1 Keyboard · 2.4.3 Focus Order · 2.4.7 Focus Visible</td>
+        <td>
+          Automated tests check that the mobile menu traps focus and returns it to the menu button.
+          They also check that the sign-in dialog returns focus to the control that opened it, and
+          that contact and sampler forms submit by keyboard and move focus to the error summary.<br />
+          We moved through the quote wizard by keyboard only (Tab, Space, Enter); focus moves to
+          each new step's heading. Focus outlines are a visible 3&nbsp;px ring.
+        </td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>2.4.1 Bypass Blocks</td>
+        <td>A "Skip to content" link is the first focusable element on every page.</td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>2.4.2 Page Titled · 1.3.1 Info and Relationships</td>
+        <td>
+          Every page has a localized title and exactly one <code>h1</code>, verified on all routes.
+          Landmarks (banner, navigation, main, contentinfo) are present.
+        </td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>2.5.8 Target Size (Minimum)</td>
+        <td>
+          Icon buttons and quantity steppers are 44 × 44&nbsp;px; the AA minimum is 24 × 24&nbsp;px.
+        </td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>3.3.1 Error Identification · 3.3.2 Labels or Instructions</td>
+        <td>
+          Every field has a visible label. Validation errors are described in text next to the
+          field, collected in a focused error summary (<code>role="alert"</code>), and translated in
+          both languages.
+        </td>
+        <td class="ok">Pass</td>
+      </tr>
+      <tr>
+        <td>2.3.3 Animation from Interactions (AAA, advisory)</td>
+        <td>
+          Transitions are disabled when the user prefers reduced motion
+          (<code>prefers-reduced-motion</code>).
+        </td>
+        <td class="ok">Supported</td>
+      </tr>
+    </table>
+
+    <h2>5. Issues found and fixed</h2>
+    <table>
+      <tr>
+        <th>#</th>
+        <th>Criterion</th>
+        <th>Issue</th>
+        <th>Fix</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>1.4.10 Reflow (AA)</td>
+        <td>
+          Horizontal scrolling of 23&nbsp;px on every page at 320&nbsp;px because of header width
+        </td>
+        <td>
+          Responsive wordmark below 360&nbsp;px; overflow test extended to 320&nbsp;px (shell owner,
+          Varad Tambe)
+        </td>
+        <td class="ok">Resolved</td>
+      </tr>
+    </table>
+
+    <h2>6. Limitations and next steps</h2>
+    <ul>
+      <li>
+        Automated tools catch only part of all accessibility barriers, which is why we added the
+        manual checks above. We have not yet tested with real screen-reader users. For Phase 4 we
+        plan a VoiceOver (macOS/iOS) and NVDA (Windows) pass through the main journeys.
+      </li>
+      <li>
+        This audit covers the Phase 2 client in mock mode. When the site is deployed in Phase 4, we
+        will repeat it on the public URL with WAVE and Lighthouse and include the backend error
+        states.
+      </li>
+    </ul>
+
+    <h2>7. Conformance statement</h2>
+    <p>
+      Based on the automated and manual checks above, the SolCacao Phase 2 client meets WCAG 2.2
+      Level AA for every page and interactive state listed in section 2. The single failure we found
+      (1.4.10 Reflow) was fixed before submission.
+    </p>
+  </body>
+</html>
