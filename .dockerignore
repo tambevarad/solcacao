@@ -1,0 +1,12 @@
+.git
+.agent
+.claude
+.venv
+.env
+.env.*
+!.env.example
+node_modules
+dist
+server/storage
+test-results
+playwright-report

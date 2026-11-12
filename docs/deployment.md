@@ -15,7 +15,7 @@ The full application below is not deployed yet. The Phase 2 front end is hosted 
 
 ## Current scaffold commands
 
-`npm ci`; `npm run check`; `npm run build`; `npm start` starts the API skeleton. Build outputs: dist/client and dist/server. Current server does NOT serve the SPA and does NOT connect Mongo. Do not describe this skeleton as production-ready.
+`npm ci`; `npm run check`; `npm run build`; `npm start`. Build outputs: dist/client and dist/server. `npm start` validates the environment, connects to MongoDB (it exits if it cannot) and serves the API. With `CLIENT_DIST_DIR=dist/client` it also serves the built client and the deep-link fallback (`server/src/features/shell/client.ts`, D22). The `Dockerfile` builds the same thing as one production image. Not deployed yet: see the runbook below.
 
 ## Changes required in Phase 4
 
@@ -27,6 +27,27 @@ The full application below is not deployed yet. The Phase 2 front end is hosted 
 6. Use actual Mongo service and safe network access settings; create indexes/migrations deliberately. Run explicit synthetic seed only in demo database; never auto-drop on startup.
 7. Use Mailpit for development or authorized SMTP configuration for live demonstration. Never silently treat disabled SMTP as sent.
 8. Run health/readiness, deep link, auth/cart/quote/contact and restart tests. Record exact commands/results below. Deploy only after the target/account and any costs are authorized.
+
+Done in Student 2's first Phase 3/4 PR (D22): items 1 to 3. The `Dockerfile` builds the client with `VITE_API_MODE=http` and `VITE_API_BASE_URL=/api`; `createClientRouter` serves it after the `/api` routers with a deep-link fallback, and unknown `/api` paths keep the JSON 404. CI builds the image and runs the live-API browser journeys (`npm run test:e2e:live`). Items 4 to 8 happen on the host, below.
+
+## Railway runbook (host chosen 2026-11-12)
+
+Railway's Hobby plan ($5 a month including $5 of usage; check railway.com/pricing) runs the app, MongoDB and Mailpit in one project, with a volume for uploads. Varad creates the account, pays, and enters every secret; nobody else needs access. Railway builds the root `Dockerfile` automatically. Its older `railway.json` config file is deprecated, so all settings below go in the dashboard.
+
+1. **Project.** New project, then "Deploy from GitHub repo" `tambevarad/solcacao`. Deploy `development` while testing, and switch the service to `main` for the final release.
+2. **MongoDB.** "+ New", Database, MongoDB. Railway creates the `MONGO_URL` variable on that service.
+3. **Mailpit (demo inbox).** "+ New", Docker Image `axllent/mailpit:v1.27`, with variables `MP_SMTP_BIND_ADDR=[::]:1025`, `MP_UI_BIND_ADDR=[::]:8025` and `MP_UI_AUTH=demo:<a password you choose>`. Give it a public domain on port 8025, so the inbox can be shown in the demo behind that password. SMTP stays on the private network.
+4. **App service variables.** Railway sets `PORT`.
+   - `MONGODB_URI=${{MongoDB.MONGO_URL}}/solcacao?authSource=admin`
+   - `JWT_SECRET`: 64 random hex characters from `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`, run on your own machine
+   - `UPLOAD_DIR=/data/uploads`, with a volume on the app service mounted at `/data`
+   - `SMTP_HOST=${{Mailpit.RAILWAY_PRIVATE_DOMAIN}}`, `SMTP_PORT=1025`, `SMTP_SECURE=false`, `MAIL_FROM=solcacao@example.test`, `SUPPORT_EMAIL=support@example.test`
+   - `CLIENT_ORIGIN=https://<the app's public domain>`
+   - Leave `VITE_WHATSAPP_NUMBER` unset until the business supplies a number.
+5. **Networking and health.** Generate a public domain for the app, and set the healthcheck path to `/api/health`.
+6. **Demo data.** The seed refuses `NODE_ENV=production`, so run it from your own machine against the demo database only. Enable MongoDB's public TCP proxy, then run `npm run seed:catalog -- "<public MONGO_URL>/solcacao?authSource=admin"`. It upserts the fictional catalog and deletes nothing.
+7. **Verify, then fill in the section below.** Check that `/api/health` reports the database connected, that `/es/catalog` survives a refresh, and that `/api/nope` returns JSON. Then run register, sign-in, cart merge, guest checkout, a quote with a PDF, and a sampler enquiry whose email appears in Mailpit. Finally restart the app service and check that the uploaded PDF still downloads.
+8. **Rollback.** Railway keeps earlier deployments: open the service's deployments and redeploy the last good one. Data in MongoDB and the volume is untouched.
 
 ## Fill after verification
 
