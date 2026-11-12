@@ -31,4 +31,81 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
-# Phase 3: Student 2 adds real-mode browser tests; no mock substitution in that job.
+
+  # Phase 3 live-API journeys (D22): the compiled API serves a client built with
+  # VITE_API_MODE=http, against a real MongoDB and Mailpit. No mock adapter can answer here.
+  e2e-live:
+    name: e2e (live API, Phase 3)
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7.0
+        ports: ['27017:27017']
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1}).ok'"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+      mailpit:
+        image: axllent/mailpit:v1.27
+        ports: ['1025:1025', '8025:8025']
+    env:
+      MONGODB_URI: mongodb://127.0.0.1:27017/solcacao_e2e
+      PORT: '4000'
+      CLIENT_ORIGIN: http://127.0.0.1:4000
+      CLIENT_DIST_DIR: dist/client
+      UPLOAD_DIR: /tmp/solcacao-uploads
+      SMTP_HOST: 127.0.0.1
+      SMTP_PORT: '1025'
+      SMTP_SECURE: 'false'
+      MAIL_FROM: solcacao@example.test
+      SUPPORT_EMAIL: support@example.test
+      VITE_API_MODE: http
+      VITE_API_BASE_URL: /api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Seed the fictional catalog
+        run: npm run seed:catalog
+      - name: Start the compiled API with the built client
+        run: |
+          export JWT_SECRET="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
+          nohup npm start > api.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4000/api/health && exit 0
+            sleep 1
+          done
+          cat api.log
+          exit 1
+      - run: npm run test:e2e:live
+      - name: API log
+        if: failure()
+        run: cat api.log
+
+  # Phase 2 mock-mode browser checks, kept apart from the live journeys and labeled as mocks.
+  e2e-mock:
+    name: e2e (mock mode, Phase 2)
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_MODE: mock
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  # Builds the production image so a broken deploy shows up in review, not on the host.
+  image:
+    name: production image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --tag solcacao:ci .

@@ -20,6 +20,7 @@
     "phase": "node scripts/phase-brief.mjs",
     "check:ownership": "node scripts/check-ownership.mjs",
     "test:e2e": "playwright test",
+    "test:e2e:live": "playwright test --config playwright.live.config.ts",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "agent": "node scripts/phase-brief.mjs --packet",
