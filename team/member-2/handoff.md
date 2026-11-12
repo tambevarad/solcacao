@@ -38,21 +38,22 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
 
 ## Shared change proposals
 
-1. **Student 1, `server/src/app.ts`; needed for Phase 3 compiled serving, not Phase 2.** Mount public assets before the JSON 404 handler:
+1. **Student 1, `server/src/app.ts` (Phase 3 and 4, D22; supersedes the earlier `/placeholders` mount).** Production serving of the built client. Mount it after the five `/api` routers and before `notFoundHandler`:
 
    ```ts
-   import path from 'node:path';
-   import { createPublicAssetsRouter } from './features/shell/assets.js';
-   app.use(
-     '/placeholders',
-     createPublicAssetsRouter({
-       root: path.resolve('dist/client/placeholders'),
-       privateDirs: [path.resolve(process.env.UPLOAD_DIR || 'server/storage')],
-     }),
-   );
+   import { createClientRouter } from './features/shell/client.js';
+   // Production only: serves the built client with the deep-link fallback (Student 2, D22). Unset in
+   // development, where Vite serves the client.
+   if (process.env.CLIENT_DIST_DIR)
+     app.use(
+       createClientRouter({
+         root: process.env.CLIENT_DIST_DIR,
+         privateDirs: process.env.UPLOAD_DIR ? [process.env.UPLOAD_DIR] : [],
+       }),
+     );
    ```
 
-   Impact: no contract change; `tests/health.test.ts` is unaffected. If Phase 3 production serving hosts all of `dist/client`, this mount is replaced by that configuration instead.
+   Impact: no contract or API change. Nothing changes unless `CLIENT_DIST_DIR` is set, so development, CI and `tests/health.test.ts` behave as before. `/api` paths pass through the router untouched and keep their JSON 404; the router refuses to start if the client root overlaps `UPLOAD_DIR`. Behaviour is covered by `tests/member-2/client-serving.test.ts`. Because Student 1's turn comes last under D22, this lands in Student 2's first Phase 3/4 PR as a coordinator-approved ownership exception, once Student 1 has agreed in writing on the PR.
 
 2. **Student 1 to Student 2, `.github/workflows/ci.yml`.** When Student 1 provides the Mongo service patch (`TEST_MONGODB_URI`), Student 2 adds it as a separate job. Typecheck, unit tests and build stay global. No change in this PR.
 
