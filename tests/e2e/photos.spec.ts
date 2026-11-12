@@ -7,6 +7,8 @@ for (const path of ['/en', '/es/wholesale']) {
     page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(path);
+    // Most pages load their code on first visit (D22); wait for the page itself before scrolling.
+    await expect(page.locator('main h1')).toBeVisible();
     // Lazy images load as they near the viewport; scroll through the page to trigger them.
     await page.evaluate(async () => {
       for (let y = 0; y < document.body.scrollHeight; y += 600) {
