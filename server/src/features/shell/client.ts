@@ -10,8 +10,28 @@ export interface ClientAppOptions {
   privateDirs?: string[];
 }
 
-/** Pages the app renders itself. Any other extensionless path still gets the app, with a 404. */
-const APP_PATH = /^\/(?:(?:en|es)(?:\/.*)?)?$/;
+/**
+ * The routes in client/src/routes.tsx, below /:locale (tests/member-2/client-serving.test.ts keeps
+ * the two lists in step). They get index.html with 200. Any other extensionless path gets the same
+ * page, which renders not-found, with a 404, so a mistyped address is never served as a success.
+ */
+const APP_ROUTES = [
+  'catalog',
+  'products/[^/]+',
+  'login',
+  'register',
+  'account',
+  'checkout',
+  'order-confirmation',
+  'wholesale',
+  'wholesale/request',
+  'contact',
+  'feedback',
+  'sampler',
+  'story',
+  'care',
+];
+const APP_PATH = new RegExp(`^/(?:(?:en|es)(?:/(?:${APP_ROUTES.join('|')}))?/?)?$`);
 
 const isApiPath = (p: string) => p === '/api' || p.startsWith('/api/');
 
@@ -21,7 +41,7 @@ const isApiPath = (p: string) => p === '/api' || p.startsWith('/api/');
  * - /api paths pass straight through, so unknown API routes keep their JSON 404;
  * - hashed files under /assets are cached for a year, other static files for an hour;
  * - any other GET for an extensionless path gets index.html, so /en and /es deep links survive a
- *   refresh. Paths outside the two locales get the same page (it renders not-found) with a 404.
+ *   refresh. Paths that are not app routes get the same page (it renders not-found) with a 404.
  * Missing files keep the JSON 404 rather than receiving HTML.
  */
 export function createClientRouter({ root, privateDirs = [] }: ClientAppOptions): Router {

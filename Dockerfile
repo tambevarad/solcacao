@@ -17,6 +17,8 @@ ENV VITE_API_MODE=$VITE_API_MODE \
 RUN npm run build && npm prune --omit=dev
 
 FROM node:24.19.0-bookworm-slim
+# Runs as root on purpose: Railway mounts volumes owned by root, and the private upload folder
+# (UPLOAD_DIR) lives on that volume. Switch to `USER node` only on a host that mounts it writable.
 WORKDIR /app
 ENV NODE_ENV=production \
     CLIENT_DIST_DIR=/app/dist/client
