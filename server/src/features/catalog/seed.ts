@@ -6,7 +6,7 @@ import { InventoryModel, ProductModel } from './models.js';
 
 /**
  * Explicit, idempotent fixture seed (docs/data-model.md). Upserts the fictional catalog fixtures
- * and their inventory by fixed ObjectId. It never drops or deletes anything and never runs on
+ * and their inventory by fixed ObjectId. It never deletes or drops documents and never runs on
  * server startup. Usage (MongoDB from `npm run services`):
  *
  *   npx tsx server/src/features/catalog/seed.ts            # uses MONGODB_URI from .env
@@ -14,7 +14,9 @@ import { InventoryModel, ProductModel } from './models.js';
  */
 export async function seedCatalogFixtures(): Promise<{ products: number }> {
   const products = makeCatalogFixtures();
-  await ProductModel.init();
+  // Deliberate index migration for the products collection only: builds the declared indexes and
+  // drops ones the schema no longer declares (the Phase 2 list indexes). Documents are untouched.
+  await ProductModel.syncIndexes();
   await InventoryModel.init();
   for (const { id, stock, ...product } of products) {
     const _id = new mongoose.Types.ObjectId(id);

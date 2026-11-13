@@ -30,16 +30,44 @@
       ]
     },
     "3": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "Environment: Windows 11, Node 24.19.0, local MongoDB 9.0.4, TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test_ci (PowerShell); branch reethika-catalog merged with origin/development (2e06236, already up to date)",
+        "npm run typecheck: pass",
+        "npx vitest run tests/member-3 tests/member-5/retail-quantity.test.tsx: 160 passed, 0 skipped (persistence against MongoDB)",
+        "npm run check: pass, 46 files, 572 passed, 0 skipped; structure and workflow valid (first run: 2 timeouts at 5 s; own merge-marker test given a 30 s budget, Student 2 tooling test passed on rerun)",
+        "npm run build (VITE_API_MODE=http): pass, no chunk warning; no fixture text in the HTTP bundle",
+        "npm run check:ownership -- --member 3 --base development: pass",
+        "tests/member-3 live journeys (compiled API + seeded MongoDB, Chrome channel): 11 passed",
+        "npm run test:e2e (mock): 15 passed via temporary Chrome config (Playwright Chromium download fails here)",
+        "tests/e2e/live (Student 2) on local API: 3 passed, 1 failed (contact needs Mailpit, unavailable), 2 fixme",
+        "pages.test.tsx flake fix: 20/20 under 5 parallel copies",
+        "Index benchmark (5,000 products): 4,500 keys + in-memory sort per list query -> 12-283 keys, no SORT stage",
+        "Full-suite stability: branch last 3 runs 572/572; untouched development 2 of 5 runs failed (timing), see phase-3-evidence.md",
+        "PR #30 opened into development; review requested from tambevarad"
+      ],
+      "blockers": [
+        "tests/member-3 live journeys not yet in CI (handoff proposal 8, Student 2)",
+        "Mailpit unavailable on this machine: Student 2 live contact journey not verifiable locally"
+      ]
     },
     "4": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "Deployed site (Railway, development before this PR): /api/health connected; deep links and JSON 404 ok",
+        "Deployed: ?origin=peru returned products with X-Total-Count 0 (defect fixed in this PR)",
+        "Deployed: member-3 live spec 10 passed, 1 skipped (stale stock needs DB) with LIVE_EXPECT_FLOATING_NOTICE=0; without it the merge-notice journey fails on pre-PR code",
+        "Deployed and local: 24/24 page audits (EN/ES x 375/768/1440 x catalog, filtered, product, checkout): no overflow, correct lang, no console errors",
+        "Images: product WebP 13.7-112.7 KiB (no re-encode needed); first catalog row eager, rest lazy; at 375 px 8 of 12 photos load before scrolling",
+        "Presentation segment drafted in phase-4-evidence.md",
+        "PR #30 opened into development; review requested from tambevarad"
+      ],
+      "blockers": [
+        "After merge: Student 2 runs the seed once on Railway (drops Phase 2 indexes) and the live spec without LIVE_EXPECT_FLOATING_NOTICE=0 (handoff proposal 9)",
+        "Presentation rehearsal and peer PR review are human steps, not done by the agent"
+      ]
     }
   }
 }

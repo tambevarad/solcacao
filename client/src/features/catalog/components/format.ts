@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLocale } from '../../shell/public.js';
-import { CATALOG_ORIGINS } from '../fixtures.js';
+import { CATALOG_ORIGINS } from '../rules.js';
 
 /** Integer USD cents in the visitor's locale. Spanish changes formatting, never the currency. */
 export function useMoney() {
