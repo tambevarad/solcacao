@@ -1,6 +1,6 @@
 # Student 2 Phase 3 evidence
 
-State: in progress on `varad-shell` (first D22 turn; Phases 3 and 4 share one PR). Not ready for review yet: the live-API browser journeys have not run (their first run is this PR's CI), and the deployment is pending.
+State: ready for review on `varad-shell`, PR #27 (first D22 turn; Phases 3 and 4 share one PR). The live-API browser journeys pass in CI, and the app is deployed on Railway (phase-4-evidence.md).
 
 ## Implemented requirements and changed paths
 
@@ -35,8 +35,10 @@ macOS, Node 24.19.0, 2026-11-12. Docker Desktop was not running, so no local Mon
 | `npm run check:workflow`                                                                                                             | pass                           | CI baseline valid with the new jobs                                                                                                                                    |
 | `npm run check:ownership -- --member 2 --base development`                                                                           | flags `server/src/app.ts` only | the recorded ownership exception                                                                                                                                       |
 | `npx playwright test --config playwright.live.config.ts --list`                                                                      | pass                           | 5 tests: 3 journeys, 2 placeholders                                                                                                                                    |
-| `npm run test:e2e:live`                                                                                                              | **not run locally**            | needs MongoDB; first run is CI job `e2e-live`                                                                                                                          |
-| `docker build .`                                                                                                                     | **not run locally**            | Docker daemon not running; CI job `image` builds it                                                                                                                    |
+| `npm run test:e2e:live`                                                                                                              | **not run locally**            | needs MongoDB; run in CI instead (below)                                                                                                                               |
+| `docker build .`                                                                                                                     | **not run locally**            | Docker daemon not running; built in CI instead (below)                                                                                                                 |
+| CI on PR #27, run 43330996734 (`3edf69e`)                                                                                            | pass except `e2e-mock`         | `e2e-live` 3 passed against mongo:7.0 and Mailpit; `image` built; `verify` passed; `e2e-mock` failed on a photo check (`photos.spec.ts`), fixed in `934ea77`           |
+| CI on PR #27, run 43331635312 (`934ea77`)                                                                                            | pass                           | `e2e-live`, `e2e-mock` (15 passed), `image` and `verify` (after one rerun of a known timing flake in `tests/member-3/pages.test.tsx`)                                  |
 
 ## Manual demo observations
 
@@ -56,13 +58,13 @@ No DTO, route or `docs/api.json` change. `server/src/app.ts` gains one condition
 
 ## Known limitations or blocked checks
 
-- Live-API journeys and the image build: CI evidence pending.
 - Persistence suites were skipped locally (no Docker); CI runs them on MongoDB.
+- `tests/member-3/pages.test.tsx` ("reuses the requestId for a retry…") can time out on slower runners; it is Student 3's to fix in her D22 turn.
 - Student 1 has not reviewed the `app.ts` change.
 
 ## Review
 
-Proposed commit: in progress on `varad-shell`
+Proposed commit: `varad-shell` (PR #27)
 Reviewer: Krishr21 (D22)
-PR:
+PR: https://github.com/tambevarad/solcacao/pull/27
 Integrated commit:

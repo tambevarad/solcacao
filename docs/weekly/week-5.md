@@ -36,7 +36,7 @@ Contract changes and affected owners: none (contractVersion 2). One shared-file 
 
 Blockers and next week:
 
-- The deployment waits for Varad's Railway account (runbook in docs/deployment.md).
+- Deployed on Railway on 2026-11-13 from `varad-shell`: https://solcacao-production.up.railway.app (results in docs/deployment.md). The trial's 500 MB volume made MongoDB refuse writes, so the project moved to the Hobby plan with a 5 GB database volume.
 - The live-API journeys and the image build get their first run in this PR's CI.
 - Members without a working local MongoDB run the setup check before their turn.
 - Krish's turn starts after Student 2's PR merges.

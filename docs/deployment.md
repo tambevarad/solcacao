@@ -1,10 +1,10 @@
 # Phase 4 deployment runbook template
 
-This repository has not deployed a completed application. Student 2 coordinates; Student 1 owns DB/secrets/startup, Student 4 durable upload storage, Student 5 SMTP. Select a host capable of running Node and persistent disk, or approve S3 as an alternative. No provider/account/budget has been assumed.
+The full application is deployed on Railway at https://solcacao-production.up.railway.app (runbook and verified results below; D22). Student 2 coordinates; Student 1 owns DB/secrets/startup, Student 4 durable upload storage, Student 5 SMTP.
 
 ## Phase 2 static demo (live)
 
-The full application below is not deployed yet. The Phase 2 front end is hosted as a static demo:
+The Phase 2 front end is still hosted separately as a static mock-mode demo:
 
 - URL: https://tambevarad.github.io (GitHub Pages; the repository `tambevarad/tambevarad.github.io` holds only the built files).
 - Built from tag `phase-2-submission` with `VITE_API_MODE=mock npx vite build --config vite.config.ts`. Mock mode only: no API, database, uploads or email.
@@ -15,7 +15,7 @@ The full application below is not deployed yet. The Phase 2 front end is hosted 
 
 ## Current scaffold commands
 
-`npm ci`; `npm run check`; `npm run build`; `npm start`. Build outputs: dist/client and dist/server. `npm start` validates the environment, connects to MongoDB (it exits if it cannot) and serves the API. With `CLIENT_DIST_DIR=dist/client` it also serves the built client and the deep-link fallback (`server/src/features/shell/client.ts`, D22). The `Dockerfile` builds the same thing as one production image. Not deployed yet: see the runbook below.
+`npm ci`; `npm run check`; `npm run build`; `npm start`. Build outputs: dist/client and dist/server. `npm start` validates the environment, connects to MongoDB (it exits if it cannot) and serves the API. With `CLIENT_DIST_DIR=dist/client` it also serves the built client and the deep-link fallback (`server/src/features/shell/client.ts`, D22). The `Dockerfile` builds the same thing as one production image, which is what Railway runs.
 
 ## Changes required in Phase 4
 
@@ -51,14 +51,26 @@ Railway's Hobby plan ($5 a month including $5 of usage; check railway.com/pricin
 
 ## Fill after verification
 
-Host/service:
-Commit/tag:
-Frontend URL:
-API health URL:
-Mongo environment (name only):
-Private storage mount:
-SMTP mode:
-Deployment command:
-Rollback procedure:
-Verified by/date:
+Host/service: Railway (Hobby plan), project `innovative-unity`, environment `production`. Services: `solcacao` (this repo's Dockerfile), `MongoDB` (Railway MongoDB template, mongo 8.0), `Mailpit` (`axllent/mailpit:v1.27`).
+Commit/tag: `934ea77` on `varad-shell` (PR #27). Switch the service to `development` after it merges, and to `main` for the final release.
+Frontend URL: https://solcacao-production.up.railway.app (the API serves the client; public port 8080).
+API health URL: https://solcacao-production.up.railway.app/api/health → `{"data":{"status":"ok","database":"connected"}}`
+Mongo environment (name only): Railway `MongoDB` service, database `solcacao`, reached over the private network (`MONGODB_URI` references `MONGO_URL`). Volume `mongodb-volume`, 5 GB. On the trial plan's 500 MB volume, MongoDB refused every write: it requires 500 MiB free. Public TCP access is removed after seeding; re-enable it briefly only to re-seed.
+Private storage mount: volume `solcacao-volume` at `/data`, with `UPLOAD_DIR=/data/uploads`. It is not under the client root (startup refuses an overlap).
+SMTP mode: Mailpit on the private network (`SMTP_HOST` references `Mailpit.RAILWAY_PRIVATE_DOMAIN`, port 1025). The demo inbox is https://mailpit-production-29902785.up.railway.app, behind `MP_UI_AUTH`; the Mailpit service sets `PORT=8025` so its domain routes to the inbox.
+Deployment command: automatic on push to the service's branch; `railway redeploy --service solcacao` reuses the last build.
+Rollback procedure: open the service's Deployments in Railway and redeploy the last good deployment. MongoDB and volume data are untouched.
+Verified by/date: Varad Tambe (with Claude Code), 2026-11-13. Results:
+
+- the catalog seeded from a local machine (`seed:catalog`, 15 fixtures, 14 active);
+- every `/en` and `/es` deep link returns 200; `/fr/catalog` returns 404 with the app; `/api/nope` and a missing asset return JSON 404s;
+- `/api/i18n/es` returns 574 keys; `/api/products` returns 14 in total;
+- security headers (CSP, HSTS, nosniff) are present;
+- in the browser, a guest order gives `POST /api/orders` 201 (demo receipt, $9.99) and the cart empties;
+- a six-piece sampler enquiry gives `POST /api/inquiries` 201: "Your enquiry has been saved… The enquiry notification was sent." (SMTP to Mailpit);
+- after a redeploy, health still reports the database connected and all 14 products remain.
+
 Known limitations:
+
+- Sign-in, the cart merge and the business quote with a PDF were not exercised on the live site in this check. They pass in CI's live-API journeys against MongoDB, and Student 4 verifies the quote upload surviving a redeploy on this host in his D22 turn.
+- The demo inbox and database are fictional demo data only.

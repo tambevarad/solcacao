@@ -33,29 +33,29 @@
       ]
     },
     "3": {
-      "state": "in_progress",
+      "state": "ready_for_review",
       "commit": null,
       "checks": [
         "D22 turn 1 on varad-shell (2026-11-12); PR #26 merged as 2bdc09c first (approved by Krishr21)",
         "npm run check: pass (499 passed, 46 persistence tests skipped locally: Docker not running)",
         "tests/member-2/client-serving.test.ts + assets.test.ts: 21 passed",
-        "Compiled app without a database: deep links, JSON 404s, error state with no mock fallback, no CSP errors (manual, 1280 px)"
+        "Compiled app without a database: deep links, JSON 404s, error state with no mock fallback, no CSP errors (manual, 1280 px)",
+        "CI on PR #27 (934ea77): e2e-live (3 journeys on MongoDB + Mailpit), e2e-mock (15), image and verify passed; verify needed one rerun of a known member-3 timing flake"
       ],
       "blockers": [
-        "Live-API journeys (npm run test:e2e:live) and the image build not yet run: first run is this PR's CI",
         "server/src/app.ts mount is a coordinator-approved ownership exception; Student 1 has not reviewed it"
       ]
     },
     "4": {
-      "state": "in_progress",
+      "state": "ready_for_review",
       "commit": null,
       "checks": [
         "Lazy routes: 555 kB single chunk split, no chunk-size warning (largest 252.88 kB)",
         "Photo library measured: 61 images, none over 250 kB, lazy with srcset; no change needed",
-        "Dockerfile + Railway runbook (docs/deployment.md); CI image job"
+        "Deployed on Railway 2026-11-13: https://solcacao-production.up.railway.app; health connected, deep links, guest order 201, sampler enquiry 201 with notification sent, data kept after redeploy (docs/deployment.md)"
       ],
       "blockers": [
-        "Not deployed: waiting for Varad's Railway account",
+        "Quote upload surviving a redeploy is Student 4's check in his D22 turn",
         "HTTP builds still ship the mock adapters (follow-up)"
       ]
     }
