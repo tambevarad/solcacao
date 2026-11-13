@@ -41,3 +41,10 @@ D21 (2026-10-25, coordinator Varad Tambe): Phase 2 implementation is authorized 
 - The shared Phase 1 setup was delivered through PRs #1 and #2. Each member's `team/member-N/status.json` Phase 1 entry stays as recorded until that member records their own Phase 1 contribution truthfully. Nothing is backfilled as integrated.
 - `npm run agent -- --member N --phase 2` therefore shows the "previous phase" condition as a note citing this decision, not as a blocker. Agents proceed on the member's dedicated branch and mention it in phase-2-evidence.md. Branch mismatches still block.
 - Academic Phase 1 items (hosted MarvelApp/MockFlow prototype, MS Teams demo) are tracked separately in docs/phase1/prototype/README.md and are not implied complete.
+
+D22 (2026-11-12, coordinator Varad Tambe): Phases 3 and 4 run together, one member at a time.
+
+- Turn order: Student 2 (Varad), Student 4 (Krish), Student 3 (Reethika), Student 5 (Daniel), Student 1 (Aman), then a closing Student 2 turn for the final records, the release to main and the tags. Each turn is one PR covering both phases. The next turn starts after it merges and begins by merging development into the member's branch.
+- Krish reviews Student 2's PRs; Varad reviews the other members' PRs. Every PR still needs a visual review, passing checks and one approval.
+- `npm run agent -- --member N --phase 4` therefore shows an unfinished Phase 3 as a note citing this decision, not as a blocker. Each phase keeps its own evidence file and status entry. Branch mismatches still block.
+- Phase 3 evidence comes from a real MongoDB and Mailpit, and Phase 4 evidence from the deployed site; mocked runs count for neither. If Phase 3 is due before the sequence ends, the coordinator tags `phase-3-submission` on the latest merged commit that meets the Phase 3 checklist in docs/submissions.md.

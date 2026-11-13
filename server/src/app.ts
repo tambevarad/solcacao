@@ -6,6 +6,7 @@ import { shellRouter } from './features/shell/router.js';
 import { catalogRouter } from './features/catalog/router.js';
 import { b2bRouter } from './features/b2b/router.js';
 import { supportRouter } from './features/support/router.js';
+import { createClientRouter } from './features/shell/client.js';
 import { isDatabaseReady } from './shared/db.js';
 import { errorHandler, notFoundHandler } from './shared/errors.js';
 export const app = express();
@@ -36,6 +37,15 @@ app.use('/api', shellRouter);
 app.use('/api', catalogRouter);
 app.use('/api', b2bRouter);
 app.use('/api', supportRouter);
+// Production only: serves the built client with the deep-link fallback (Student 2, D22). Unset in
+// development, where Vite serves the client.
+if (process.env.CLIENT_DIST_DIR)
+  app.use(
+    createClientRouter({
+      root: process.env.CLIENT_DIST_DIR,
+      privateDirs: process.env.UPLOAD_DIR ? [process.env.UPLOAD_DIR] : [],
+    }),
+  );
 
 app.use(notFoundHandler);
 app.use(errorHandler);

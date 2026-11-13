@@ -1,29 +1,40 @@
-import type { ReactNode } from 'react';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { RequireAuth, RequireRole } from './features/auth/public.js';
 import { Layout } from './features/shell/Layout.js';
 import { PageFrame } from './features/shell/PageFrame.js';
 import type { RouteMetaId } from './features/shell/meta.js';
-import LoginPage from './features/auth/pages/LoginPage.js';
-import RegisterPage from './features/auth/pages/RegisterPage.js';
-import AccountPage from './features/auth/pages/AccountPage.js';
+import { LoadingState } from './shared/index.js';
 import NotFoundPage from './features/shell/pages/NotFoundPage.js';
-import CatalogPage from './features/catalog/pages/CatalogPage.js';
-import ProductPage from './features/catalog/pages/ProductPage.js';
-import CheckoutPage from './features/catalog/pages/CheckoutPage.js';
-import OrderConfirmationPage from './features/catalog/pages/OrderConfirmationPage.js';
 import HomePage from './features/b2b/pages/HomePage.js';
-import WholesalePage from './features/b2b/pages/WholesalePage.js';
-import QuoteWizardPage from './features/b2b/pages/QuoteWizardPage.js';
-import ContactPage from './features/support/pages/ContactPage.js';
-import FeedbackPage from './features/support/pages/FeedbackPage.js';
-import SamplerPage from './features/support/pages/SamplerPage.js';
-import StoryPage from './features/support/pages/StoryPage.js';
-import CarePage from './features/support/pages/CarePage.js';
 
-/** Default title/description, error containment and usePageMeta support for every page. */
+// The landing and not-found pages ship in the main bundle; every other page loads on first visit
+// (Phase 4 code splitting, D22).
+const LoginPage = lazy(() => import('./features/auth/pages/LoginPage.js'));
+const RegisterPage = lazy(() => import('./features/auth/pages/RegisterPage.js'));
+const AccountPage = lazy(() => import('./features/auth/pages/AccountPage.js'));
+const CatalogPage = lazy(() => import('./features/catalog/pages/CatalogPage.js'));
+const ProductPage = lazy(() => import('./features/catalog/pages/ProductPage.js'));
+const CheckoutPage = lazy(() => import('./features/catalog/pages/CheckoutPage.js'));
+const OrderConfirmationPage = lazy(
+  () => import('./features/catalog/pages/OrderConfirmationPage.js'),
+);
+const WholesalePage = lazy(() => import('./features/b2b/pages/WholesalePage.js'));
+const QuoteWizardPage = lazy(() => import('./features/b2b/pages/QuoteWizardPage.js'));
+const ContactPage = lazy(() => import('./features/support/pages/ContactPage.js'));
+const FeedbackPage = lazy(() => import('./features/support/pages/FeedbackPage.js'));
+const SamplerPage = lazy(() => import('./features/support/pages/SamplerPage.js'));
+const StoryPage = lazy(() => import('./features/support/pages/StoryPage.js'));
+const CarePage = lazy(() => import('./features/support/pages/CarePage.js'));
+
+/**
+ * Default title/description, error containment and usePageMeta support for every page. Suspense
+ * sits inside PageFrame so a page chunk that fails to load shows the page error state.
+ */
 const page = (meta: RouteMetaId, element: ReactNode) => (
-  <PageFrame meta={meta}>{element}</PageFrame>
+  <PageFrame meta={meta}>
+    <Suspense fallback={<LoadingState />}>{element}</Suspense>
+  </PageFrame>
 );
 
 // Source of truth for URLs (docs/contracts.md). Paths are canonical and never translated; only the
