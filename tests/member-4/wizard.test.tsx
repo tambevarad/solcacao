@@ -2,26 +2,36 @@
 import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  cleanup,
+  configure,
+  fireEvent,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import type { QuoteInput, QuoteReceipt, User } from '../../contracts/index.js';
 import { ApiError } from '../../client/src/api/http.js';
+import { sessionToken } from '../../client/src/api/session.js';
 import QuoteWizardPage, {
   type SubmitQuote,
 } from '../../client/src/features/b2b/pages/QuoteWizardPage.js';
 import { MAX_FILE_BYTES } from '../../client/src/features/b2b/options.js';
+import { quoteDraftStore } from '../../client/src/features/b2b/draftStore.js';
 import { pdfFile, renderInLayout } from './harness.js';
 
 // Stand-in for Student 1's published useAuth() port: a signed-in business account. Access
-// control itself (RequireRole) is covered in guard.test.tsx.
-const auth = vi.hoisted(() => ({
-  user: {
-    id: '0000000000000000000000b2',
-    name: 'Test Buyer',
-    email: 'buyer@example.test',
-    role: 'b2b',
-    companyName: 'Test Co',
-  } satisfies User,
-}));
+// control itself (RequireRole) is covered in guard.test.tsx. Tests may switch `auth.user` to
+// another account; `logout` records calls.
+const BUYER: User = {
+  id: '0000000000000000000000b2',
+  name: 'Test Buyer',
+  email: 'buyer@example.test',
+  role: 'b2b',
+  companyName: 'Test Co',
+};
+const auth = vi.hoisted(() => ({ user: null as User | null, logout: vi.fn() }));
 vi.mock('../../client/src/features/auth/public.js', () => ({
   AuthProvider: ({ children }: { children: ReactNode }) => children,
   RequireAuth: ({ children }: { children: ReactNode }) => children,
@@ -31,9 +41,13 @@ vi.mock('../../client/src/features/auth/public.js', () => ({
     ready: true,
     login: vi.fn(),
     register: vi.fn(),
-    logout: vi.fn(),
+    logout: auth.logout,
   }),
 }));
+
+// The full suite runs files in parallel; allow slow renders instead of the 1 s default.
+configure({ asyncUtilTimeout: 5000 });
+vi.setConfig({ testTimeout: 20_000 });
 
 const IDS = ['11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222'];
 const receipt: QuoteReceipt = {
@@ -46,8 +60,9 @@ const receipt: QuoteReceipt = {
 function setup(
   submitQuote: SubmitQuote = vi.fn(async () => receipt),
   entry = '/en/wholesale/request',
+  requestIds = IDS,
 ) {
-  const ids = [...IDS];
+  const ids = [...requestIds];
   const createRequestId = vi.fn(() => ids.shift() ?? 'unexpected');
   renderInLayout(
     entry,
@@ -92,10 +107,15 @@ async function reachReview() {
 
 beforeEach(() => {
   vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  auth.user = BUYER;
+  auth.logout.mockClear();
 });
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  // The draft store outlives the page by design; each test starts from an empty wizard.
+  quoteDraftStore.clear();
+  sessionToken.set(null);
 });
 
 describe('quote wizard steps', () => {
@@ -325,5 +345,135 @@ describe('submission', () => {
     await screen.findByRole('heading', { name: 'Demo quote request completed' });
     expect(screen.getByText('Failed')).toBeInTheDocument();
     expect(screen.getByText(/You don't need to send the request again/)).toBeInTheDocument();
+  });
+});
+
+// Session expiry: Student 1's RequireRole replaces the wizard with a sign-in prompt, which
+// unmounts it. cleanup() followed by a new render is that unmount and the return after sign-in.
+describe('draft kept while the page is away (session expiry, other pages)', () => {
+  const OTHER_IDS = ['44444444-4444-4444-8444-444444444444'];
+  const restoredNote = /Your earlier answers in this browser tab are still here/;
+
+  it('brings back the step, answers and file for the same account, and can start over', async () => {
+    setup();
+    await completeStepOne();
+    await completeStepTwo(pdfFile('kept.pdf'));
+    fireEvent.click(screen.getByRole('radio', { name: /Bulk/ }));
+    cleanup();
+
+    setup();
+    await stepHeading('Packaging and contact');
+    expect(screen.getByText(restoredNote)).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /Bulk/ })).toBeChecked();
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+    await stepHeading('Branding file');
+    expect(screen.getByTestId('selected-file')).toHaveTextContent('kept.pdf');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Start over' }));
+    await stepHeading('Cacao and quantity');
+    expect(screen.queryByText(restoredNote)).toBeNull();
+    expect(screen.getByLabelText(/Quantity \(units\)/)).toHaveValue('');
+    // Starting over keeps the account's company and email prefilled.
+    expect(quoteDraftStore.getSnapshot().state.draft).toMatchObject({
+      companyName: 'Test Co',
+      contactEmail: 'buyer@example.test',
+      packaging: '',
+    });
+  });
+
+  it('never shows one account’s draft to another account', async () => {
+    setup();
+    await completeStepOne();
+    cleanup();
+
+    auth.user = { ...BUYER, id: '0000000000000000000000c4', email: 'other@example.test' };
+    setup();
+    await stepHeading('Cacao and quantity');
+    expect(screen.getByLabelText(/Quantity \(units\)/)).toHaveValue('');
+    expect(screen.queryByText(restoredNote)).toBeNull();
+    cleanup();
+
+    // The first account's draft was discarded, not set aside.
+    auth.user = BUYER;
+    setup();
+    await stepHeading('Cacao and quantity');
+    expect(screen.getByLabelText(/Quantity \(units\)/)).toHaveValue('');
+  });
+
+  it('signs out after a refused session, then resends the same attempt once signed in again', async () => {
+    const submitQuote = vi
+      .fn<SubmitQuote>()
+      .mockRejectedValueOnce(new ApiError(401, 'UNAUTHORIZED', 'Authentication required'))
+      .mockResolvedValueOnce(receipt);
+    setup(submitQuote);
+    await reachReview();
+    fireEvent.click(screen.getByRole('button', { name: 'Send quote request' }));
+    expect(
+      await screen.findByText(/Your session has ended. Sign in again with your business account/),
+    ).toBeInTheDocument();
+    expect(auth.logout).toHaveBeenCalledTimes(1);
+    cleanup();
+
+    // Signed in again: the review returns without the stale message, and the unsent attempt is
+    // sent unchanged (same requestId and file), not as a new request.
+    setup(submitQuote, '/en/wholesale/request', OTHER_IDS);
+    await stepHeading('Review and send');
+    expect(screen.getByText(restoredNote)).toBeInTheDocument();
+    expect(screen.queryByText(/Your session has ended/)).toBeNull();
+    expect(screen.getByRole('form')).toHaveTextContent('brand.pdf');
+    fireEvent.click(screen.getByRole('button', { name: 'Send quote request' }));
+    await screen.findByRole('heading', { name: 'Demo quote request completed' });
+    const [first, second] = submitQuote.mock.calls;
+    expect(second[0]).toEqual(first[0]);
+    expect(second[0].requestId).toBe(IDS[0]);
+    expect(second[1]).toBe(first[1]);
+    expect(auth.logout).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows the receipt of a request that finished while the page was away', async () => {
+    let resolve: (value: QuoteReceipt) => void = () => {};
+    const submitQuote = vi.fn<SubmitQuote>(
+      () => new Promise<QuoteReceipt>((done) => (resolve = done)),
+    );
+    setup(submitQuote);
+    await reachReview();
+    fireEvent.click(screen.getByRole('button', { name: 'Send quote request' }));
+    await waitFor(() => expect(submitQuote).toHaveBeenCalledTimes(1));
+    cleanup();
+
+    resolve(receipt);
+    await waitFor(() => expect(quoteDraftStore.getSnapshot().state.status).toBe('succeeded'));
+    setup(submitQuote);
+    expect(
+      await screen.findByRole('heading', { name: 'Demo quote request completed' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(receipt.id)).toBeInTheDocument();
+    expect(submitQuote).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores a late result for a draft that another account replaced', async () => {
+    let reject: (reason: unknown) => void = () => {};
+    const submitQuote = vi.fn<SubmitQuote>(
+      () => new Promise<QuoteReceipt>((_, fail) => (reject = fail)),
+    );
+    // Each account has its own session, as Student 1's AuthProvider sets it at sign-in.
+    sessionToken.set('session-of-first-account');
+    setup(submitQuote);
+    await reachReview();
+    fireEvent.click(screen.getByRole('button', { name: 'Send quote request' }));
+    await waitFor(() => expect(submitQuote).toHaveBeenCalledTimes(1));
+    cleanup();
+
+    sessionToken.set('session-of-other-account');
+    auth.user = { ...BUYER, id: '0000000000000000000000c4', email: 'other@example.test' };
+    setup(submitQuote);
+    await stepHeading('Cacao and quantity');
+    await act(async () => {
+      reject(new ApiError(401, 'UNAUTHORIZED', 'Authentication required'));
+    });
+    // The other account is not signed out and its new draft is untouched.
+    expect(auth.logout).not.toHaveBeenCalled();
+    expect(quoteDraftStore.getSnapshot().state).toMatchObject({ status: 'editing', step: 1 });
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 });

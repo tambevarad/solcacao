@@ -184,4 +184,27 @@ describe.skipIf(!uri)('B2B quote persistence (real MongoDB)', () => {
       .set('x-test-user', BUSINESS_A);
     expect(missing.status).toBe(404);
   });
+
+  it('still serves the saved file after a restart on the same upload directory', async () => {
+    const before = await createQuoteTestApp();
+    const created = await before.submit(BUSINESS_A, { file: pdfBytes('restart') });
+    expect(created.status).toBe(201);
+    const id: string = created.body.data.id;
+
+    // A restart: new router and storage objects, same directory and database.
+    const after = await createQuoteTestApp({ uploadRoot: before.uploadRoot });
+    expect(await after.storedFiles()).toEqual(await before.storedFiles());
+    const file = await request(after.app)
+      .get(`/api/b2b/quotes/${id}/file`)
+      .set('x-test-user', BUSINESS_A)
+      .buffer(true)
+      .parse((res, done) => {
+        const chunks: Buffer[] = [];
+        res.on('data', (chunk: Buffer) => chunks.push(chunk));
+        res.on('end', () => done(null, Buffer.concat(chunks)));
+      });
+    expect(file.status).toBe(200);
+    expect(file.body).toEqual(pdfBytes('restart'));
+    expect((await request(after.app).get(`/api/b2b/quotes/${id}/file`)).status).toBe(401);
+  });
 });
