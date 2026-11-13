@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Product, ProductPage, ProductQuery } from '../../../../../contracts/index.js';
 import { NotImplementedError } from '../../../api/notImplemented.js';
-import { EmptyState, ErrorState, LoadingState, buttonStyles } from '../../../shared/index.js';
+import { EmptyState, ErrorState, buttonStyles } from '../../../shared/index.js';
 import { localizePath, useLocale } from '../../shell/public.js';
+import { useNearViewport } from './DeferredPhoto.js';
 import { ImageSlot } from './ImageSlot.js';
 
 export type ListProducts = (query: ProductQuery) => Promise<ProductPage>;
@@ -16,6 +17,49 @@ type LoadState =
   | { status: 'ready'; items: Product[] };
 
 export const FEATURED_LIMIT = 4;
+
+const grid = 'grid gap-6 sm:grid-cols-2 lg:grid-cols-4';
+const imageBox = 'aspect-[4/3] w-full rounded border border-line';
+
+/** Product photo that loads only when the card nears the viewport; its box holds the space. */
+function ProductImage({ image, alt }: { image: Product['images'][number]; alt: string }) {
+  const { ref, near } = useNearViewport<HTMLDivElement>();
+  if (!near)
+    return <div ref={ref} role="img" aria-label={alt} className={`${imageBox} bg-white`} />;
+  return (
+    <img
+      src={image.url}
+      alt={alt}
+      width={480}
+      height={360}
+      loading="lazy"
+      decoding="async"
+      className={`${imageBox} bg-white object-cover`}
+    />
+  );
+}
+
+/**
+ * Loading state with the same layout as the loaded grid, so the sections below don't move when the
+ * products arrive (and their photos aren't counted as near the top of the page while it loads).
+ */
+function FeaturedSkeleton({ label }: { label: string }) {
+  return (
+    <div role="status">
+      <span className="sr-only">{label}</span>
+      <ul aria-hidden="true" className={grid}>
+        {Array.from({ length: FEATURED_LIMIT }, (_, i) => (
+          <li key={i} className="flex flex-col">
+            <div className={`${imageBox} bg-line/30`} />
+            <div className="mt-3 h-5 w-3/4 rounded bg-line/30" />
+            <div className="mt-2 h-4 w-1/2 rounded bg-line/30" />
+            <div className="mt-2 h-5 w-1/4 rounded bg-line/30" />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 /**
  * Featured items through api.catalog.list (docs/contracts.md: the homepage gets products only
@@ -52,7 +96,7 @@ export function FeaturedProducts({ listProducts }: { listProducts: ListProducts 
     </Link>
   );
 
-  if (state.status === 'loading') return <LoadingState label={t('b2b.featured.loading')} />;
+  if (state.status === 'loading') return <FeaturedSkeleton label={t('b2b.featured.loading')} />;
   if (state.status === 'pending')
     return (
       <div
@@ -76,20 +120,13 @@ export function FeaturedProducts({ listProducts }: { listProducts: ListProducts 
 
   const price = new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD' });
   return (
-    <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <ul className={grid}>
       {state.items.map((product) => {
         const image = product.images[0];
         return (
           <li key={product.id} className="flex flex-col">
             {image ? (
-              <img
-                src={image.url}
-                alt={image.alt[locale]}
-                width={480}
-                height={360}
-                loading="lazy"
-                className="aspect-[4/3] w-full rounded border border-line bg-white object-cover"
-              />
+              <ProductImage image={image} alt={image.alt[locale]} />
             ) : (
               <ImageSlot description={t('b2b.featured.imageMissing')} />
             )}

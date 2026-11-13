@@ -12,6 +12,8 @@ const SLIDES = [
 ] as const;
 
 export const SLIDE_INTERVAL_MS = 7000;
+/** Delay after the page's load event before the hidden slides' photos start loading. */
+export const PRELOAD_AFTER_LOAD_MS = 2000;
 
 const control =
   'inline-flex size-11 shrink-0 items-center justify-center rounded border border-line bg-ivory hover:bg-line/60';
@@ -56,6 +58,28 @@ export function HeroCarousel() {
   }
 
   const rotating = playing && !paused;
+
+  // Only the first slide's photo is needed for the first paint. The other slides' photos mount
+  // once the page has finished loading while rotation is on (ready before the first change, without
+  // competing with the first paint), or as soon as any slide change happens.
+  const [preload, setPreload] = useState(false);
+  useEffect(() => {
+    if (index !== 0) setPreload(true);
+  }, [index]);
+  useEffect(() => {
+    if (preload || !rotating) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const schedule = () => {
+      timer = setTimeout(() => setPreload(true), PRELOAD_AFTER_LOAD_MS);
+    };
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
+    return () => {
+      window.removeEventListener('load', schedule);
+      clearTimeout(timer);
+    };
+  }, [preload, rotating]);
+
   return (
     <section
       aria-roledescription="carousel"
@@ -149,13 +173,18 @@ export function HeroCarousel() {
                   {t(`b2b.hero.${slide.id}.cta`)}
                 </Link>
               </div>
-              <Photo
-                image={slide.image}
-                className="order-1 md:order-2"
-                ratio="aspect-[16/10]"
-                sizes="(min-width: 1200px) 560px, (min-width: 768px) 50vw, 100vw"
-                priority={i === 0}
-              />
+              {active || preload ? (
+                <Photo
+                  image={slide.image}
+                  className="order-1 md:order-2"
+                  ratio="aspect-[16/10]"
+                  sizes="(min-width: 1200px) 560px, (min-width: 768px) 50vw, 100vw"
+                  priority={i === 0}
+                />
+              ) : (
+                // Same box as the photo, so the hero keeps its height; never shown (slide hidden).
+                <div aria-hidden="true" className="order-1 aspect-[16/10] w-full md:order-2" />
+              )}
             </div>
           );
         })}
