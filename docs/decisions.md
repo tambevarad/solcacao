@@ -46,5 +46,6 @@ D22 (2026-11-12, coordinator Varad Tambe): Phases 3 and 4 run together, one memb
 
 - Turn order: Student 2 (Varad), Student 4 (Krish), Student 3 (Reethika), Student 5 (Daniel), Student 1 (Aman), then a closing Student 2 turn for the final records, the release to main and the tags. Each turn is one PR covering both phases. The next turn starts after it merges and begins by merging development into the member's branch.
 - Krish reviews Student 2's PRs; Varad reviews the other members' PRs. Every PR still needs a visual review, passing checks and one approval.
+- Ownership exception under this decision: Student 2's production-serving mount in `server/src/app.ts` (Student 1's file) landed in PR #27, because Student 1's turn comes last. Student 1 reviews it in his turn; the exact change is proposal 1 in team/member-2/handoff.md.
 - `npm run agent -- --member N --phase 4` therefore shows an unfinished Phase 3 as a note citing this decision, not as a blocker. Each phase keeps its own evidence file and status entry. Branch mismatches still block.
 - Phase 3 evidence comes from a real MongoDB and Mailpit, and Phase 4 evidence from the deployed site; mocked runs count for neither. If Phase 3 is due before the sequence ends, the coordinator tags `phase-3-submission` on the latest merged commit that meets the Phase 3 checklist in docs/submissions.md.

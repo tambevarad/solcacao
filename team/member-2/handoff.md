@@ -53,7 +53,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
      );
    ```
 
-   Impact: no contract or API change. Nothing changes unless `CLIENT_DIST_DIR` is set, so development, CI and `tests/health.test.ts` behave as before. `/api` paths pass through the router untouched and keep their JSON 404; the router refuses to start if the client root overlaps `UPLOAD_DIR`. Behaviour is covered by `tests/member-2/client-serving.test.ts`. Because Student 1's turn comes last under D22, this lands in Student 2's first Phase 3/4 PR as a coordinator-approved ownership exception, once Student 1 has agreed in writing on the PR.
+   Impact: no contract or API change. Nothing changes unless `CLIENT_DIST_DIR` is set, so development, CI and `tests/health.test.ts` behave as before. `/api` paths pass through the router untouched and keep their JSON 404; the router refuses to start if the client root overlaps `UPLOAD_DIR`. Behaviour is covered by `tests/member-2/client-serving.test.ts`. Because Student 1's turn comes last under D22, it landed in PR #27 (merged as 62e52e4) as a coordinator-approved ownership exception, recorded in D22. Student 1 reviews it in his D22 turn.
 
 2. **Student 1 to Student 2, `.github/workflows/ci.yml`.** When Student 1 provides the Mongo service patch (`TEST_MONGODB_URI`), Student 2 adds it as a separate job. Typecheck, unit tests and build stay global. No change in this PR.
 

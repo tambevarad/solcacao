@@ -40,10 +40,11 @@
         "npm run check: pass (499 passed, 46 persistence tests skipped locally: Docker not running)",
         "tests/member-2/client-serving.test.ts + assets.test.ts: 21 passed",
         "Compiled app without a database: deep links, JSON 404s, error state with no mock fallback, no CSP errors (manual, 1280 px)",
-        "CI on PR #27 (934ea77): e2e-live (3 journeys on MongoDB + Mailpit), e2e-mock (15), image and verify passed; verify needed one rerun of a known member-3 timing flake"
+        "CI on PR #27 (934ea77): e2e-live (3 journeys on MongoDB; Mailpit ran but none of them sends mail), e2e-mock (15), image and verify passed; verify needed one rerun of a known member-3 timing flake",
+        "PR #27 approved by Krishr21 (545 tests passed against MongoDB, none skipped; live journeys run locally) and merged as 62e52e4 (2026-11-13); his four notes are fixed in the follow-up PR"
       ],
       "blockers": [
-        "server/src/app.ts mount is a coordinator-approved ownership exception; Student 1 has not reviewed it"
+        "server/src/app.ts mount: coordinator-approved ownership exception (D22); Student 1 reviews it in his turn"
       ]
     },
     "4": {
@@ -52,7 +53,8 @@
       "checks": [
         "Lazy routes: 555 kB single chunk split, no chunk-size warning (largest 252.88 kB)",
         "Photo library measured: 61 images, none over 250 kB, lazy with srcset; no change needed",
-        "Deployed on Railway 2026-11-13: https://solcacao-production.up.railway.app; health connected, deep links, guest order 201, sampler enquiry 201 with notification sent, data kept after redeploy (docs/deployment.md)"
+        "Deployed on Railway 2026-11-13: https://solcacao-production.up.railway.app; health connected, deep links, guest order 201, sampler enquiry 201 with notification sent, data kept after redeploy (docs/deployment.md)",
+        "PR #27 merged as 62e52e4; Railway now deploys development"
       ],
       "blockers": [
         "Quote upload surviving a redeploy is Student 4's check in his D22 turn",

@@ -95,6 +95,31 @@ test('a guest cart merges on sign-in and the saved cart survives a reload', asyn
   await expect(cartButton(page)).toHaveAccessibleName('Open cart. Items: 1');
 });
 
+test('a contact enquiry is saved and its email reaches the Mailpit inbox', async ({
+  page,
+  request,
+}) => {
+  const mailpit = process.env.MAILPIT_URL ?? 'http://127.0.0.1:8025';
+  const marker = `live${Date.now()}${Math.random().toString(36).slice(2, 8)}`;
+  await page.goto('/en/contact');
+  await page.getByLabel(/^name/i).fill('Live Test Contact');
+  await page.getByLabel(/^email/i).fill(`${marker}@example.test`);
+  await page.getByLabel(/^message/i).fill(`Live-API mail check ${marker}: do you ship gift boxes?`);
+  const saved = apiResponse(page, 'POST', '/api/inquiries');
+  await page.getByRole('button', { name: 'Send enquiry' }).click();
+  expect((await saved).status()).toBe(201);
+  await expect(page.getByText('The enquiry notification was sent.')).toBeVisible();
+  // The receipt only reports what SMTP accepted; the inbox shows the message actually arrived.
+  await expect
+    .poll(async () => {
+      const response = await request.get(
+        `${mailpit}/api/v1/search?query=${encodeURIComponent(marker)}`,
+      );
+      return response.ok() ? ((await response.json()).messages?.length ?? 0) : 0;
+    })
+    .toBeGreaterThan(0);
+});
+
 // Journeys of later D22 turns. Student 2 fills them in the closing turn from the owners' handoff
 // proposals, once their PRs have merged.
 test.fixme('a business buyer sends a quote with a PDF and the email reaches Mailpit', () => {});

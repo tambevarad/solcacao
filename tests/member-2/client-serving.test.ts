@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import express from 'express';
@@ -51,10 +51,28 @@ describe('production client serving', () => {
     expect(response.text).toContain('<div id="root">');
   });
 
-  it('serves the app with a 404 status outside the two locales', async () => {
-    const response = await request(appFor()).get('/fr/catalog').set('Accept', 'text/html');
-    expect(response.status).toBe(404);
-    expect(response.text).toContain('<div id="root">');
+  it.each(['/fr/catalog', '/en/nope', '/es/catalogue', '/en/products/a/b', '/en/wholesale/x'])(
+    'serves the app with a 404 status for %s, which is not an app route',
+    async (url) => {
+      const response = await request(appFor()).get(url).set('Accept', 'text/html');
+      expect(response.status).toBe(404);
+      expect(response.text).toContain('<div id="root">');
+    },
+  );
+
+  it('serves every route in client/src/routes.tsx with 200 in both locales', async () => {
+    const source = readFileSync(path.resolve('client/src/routes.tsx'), 'utf8');
+    const routes = [...source.matchAll(/path="([^"]+)"/g)]
+      .map((match) => match[1])
+      .filter((route) => !['/', '/:locale', '*'].includes(route))
+      .map((route) => route.replace(':slug', 'peru-85-dark-bar'));
+    expect(routes.length).toBeGreaterThan(10);
+    const app = appFor();
+    for (const locale of ['en', 'es'])
+      for (const route of routes) {
+        const response = await request(app).get(`/${locale}/${route}`).set('Accept', 'text/html');
+        expect(response.status, `/${locale}/${route}`).toBe(200);
+      }
   });
 
   it('keeps API routes and the JSON 404 for unknown API paths', async () => {

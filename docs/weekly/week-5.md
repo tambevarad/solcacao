@@ -1,12 +1,15 @@
 # Week 5 integration record
 
-State: recorded by the coordinator on 2026-11-12, while the first D22 turn is in progress.
+State: recorded by the coordinator on 2026-11-12, updated on 2026-11-13 after the first D22 turn merged.
 
 Each member: PR/commit, owned progress, tests, visual reviewer and peer approval.
 
-| PR  | Author     | Change                                                                                                               | Approved by | Merged                |
-| --- | ---------- | -------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------- |
-| #26 | tambevarad | Merges main into development after release #25 (no file changes), so development contains main before Phase 3 starts | Krishr21    | 2bdc09c (development) |
+| PR  | Author     | Change                                                                                                                                                                              | Approved by | Merged                |
+| --- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------- |
+| #26 | tambevarad | Merges main into development after release #25 (no file changes), so development contains main before Phase 3 starts                                                                | Krishr21    | 2bdc09c (development) |
+| #27 | tambevarad | Student 2's Phase 3 and 4 turn (D22): decision D22, pages loaded on demand, production serving, live-API CI journeys, production image, Railway deployment and its verified results | Krishr21    | 62e52e4 (development) |
+
+Krish approved #27 after running the full suite against MongoDB (545 passed, none skipped) and the live journeys locally, and after checking the deployed site. His four non-blocking notes are fixed in Student 2's follow-up PR.
 
 Plan change, decision D22 (docs/decisions.md): Phases 3 and 4 run together, one member at a time:
 
@@ -14,31 +17,27 @@ Plan change, decision D22 (docs/decisions.md): Phases 3 and 4 run together, one 
 - Each turn is one PR. Krish reviews Varad's PRs, and Varad reviews the others.
 - The prompts for every turn are in the team's shared "SolCacao Phase 3 and 4 Plan" document.
 
-In progress: Student 2's first turn on `varad-shell`:
+Integrated development commit: 62e52e4 (PR #27).
 
-- decision D22;
-- pages that load on demand;
-- production serving of the built client;
-- live-API browser tests in CI;
-- the production image and the Railway runbook.
+Demo observations: the deployed site (https://solcacao-production.up.railway.app) was checked on 2026-11-13; details are in docs/deployment.md:
 
-Evidence is in team/member-2/phase-3-evidence.md and phase-4-evidence.md. Not reviewed or merged yet.
-
-Integrated development commit: 2bdc09c (PR #26).
-
-Demo observations: none recorded for the live API yet. The compiled app without a database was checked by Student 2; see team/member-2/phase-3-evidence.md.
+- health reports the database connected;
+- deep links work, and unknown pages and API paths return 404s;
+- the catalog serves 14 active products;
+- a guest order and a sampler enquiry were saved;
+- the data survived a redeploy.
 
 Contract changes and affected owners: none (contractVersion 2). One shared-file change:
 
 - `server/src/app.ts` (Student 1) gains a conditional mount for production serving.
 - It is a coordinator-approved ownership exception under D22, because Student 1's turn comes last.
-- Student 1 has not reviewed it yet.
+- Student 1 reviews it in his turn.
 
 Blockers and next week:
 
-- Deployed on Railway on 2026-11-13 from `varad-shell`: https://solcacao-production.up.railway.app (results in docs/deployment.md). The trial's 500 MB volume made MongoDB refuse writes, so the project moved to the Hobby plan with a 5 GB database volume.
-- The live-API journeys and the image build get their first run in this PR's CI.
+- Railway deploys `development` since #27 merged. On the trial's 500 MB volume MongoDB refused writes, so the project moved to the Hobby plan with a 5 GB database volume.
+- The live-API journeys and the production image build run on every PR. They passed on #27.
 - Members without a working local MongoDB run the setup check before their turn.
-- Krish's turn starts after Student 2's PR merges.
+- Krish's turn starts now.
 
 Do not prefill a review, attendance, commit or success that did not occur.
