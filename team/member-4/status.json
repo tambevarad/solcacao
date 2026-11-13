@@ -25,16 +25,34 @@
       "blockers": ["Phase 1 status not yet recorded by member 4 (D21)"]
     },
     "3": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
+      "checks": [
+        "D22 turn 2 on krish-b2b: merged origin/development (fast-forward to 13a60a2) after PR #28 merged",
+        "Setup check on 13a60a2: npm run check with TEST_MONGODB_URI (mongo:8.0 via npm run services) 550/550, none skipped",
+        "npm run check with TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test_ci: 564/564 (46 files), none skipped, twice on the final code",
+        "npm run build: pass, no chunk-size warning; check:ownership --member 4: all changed files within Student 4 ownership",
+        "Live API (compiled server, MongoDB, Mailpit): tests/member-4 Playwright journeys 5 passed; with Mailpit stopped 4 passed, 1 skipped (notification failed, quote kept)",
+        "npm run test:e2e:live 4 passed + 2 placeholders skipped; npm run test:e2e (mock) 15 passed",
+        "Real restart: stored PDF downloads byte-identical after npm start restart; 9 static/guessed paths return 404 JSON",
+        "Fixed: draft and file lost when the one-hour session ended (RequireRole unmount); now kept per account in tab memory",
+        "Audits: no DB triggers (none specified); security sweep clean; EN/ES 172 keys each, same set and placeholders"
+      ],
       "blockers": []
     },
     "4": {
-      "state": "not_started",
+      "state": "in_progress",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "Homepage images before scrolling: 375 px @3x 704 KB -> 130 KB, 1440 px @1x 563 KB -> 266 KB (all images still load on scroll)",
+        "Wholesale images before scrolling at 375 px @3x: 442 KB -> 115 KB",
+        "42 screenshots (375/768/1440, EN/ES) on the live API locally: no overflow, no console errors",
+        "Feature README, server README notes, known limits and presentation draft written"
+      ],
+      "blockers": [
+        "Deployed-site journey and upload-after-redeploy check pending: needs a business sign-in by Krish, a Railway redeploy and the Mailpit inbox password from Varad",
+        "Team presentation rehearsal not yet held"
+      ]
     }
   }
 }

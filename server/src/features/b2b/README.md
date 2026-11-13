@@ -1,6 +1,7 @@
 # B2B backend
 
-Owner: Student 4. See `team/member-4/context.md` and the Phase 2 handoff in `team/member-4/handoff.md`.
+Owner: Student 4. See `team/member-4/context.md` and `team/member-4/handoff.md`. The client side is
+in `client/src/features/b2b/README.md`.
 
 ## Routes (docs/api.json)
 
@@ -39,3 +40,35 @@ against a real MongoDB when `TEST_MONGODB_URI` is set, for example with `npm run
 ```sh
 TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test npx vitest run tests/member-4
 ```
+
+## Private files in production
+
+- **Where they live:** `UPLOAD_DIR` must be on persistent disk; on Railway it is a volume mounted at
+  `/data`, with `UPLOAD_DIR=/data/uploads` (docs/deployment.md).
+- **Not public:** files sit in `<UPLOAD_DIR>/b2b` under generated names, with the folder at mode
+  0700 and each file at 0600.
+  - The production app serves the built client from `CLIENT_DIST_DIR`. Student 2's
+    `createClientRouter` refuses to start if that root overlaps `UPLOAD_DIR`, and nothing serves
+    `UPLOAD_DIR` statically.
+  - `tests/member-4/private-storage.test.ts` checks this against the real `server/src/app.ts`, and
+    the Phase 3 evidence records the same probes against the running server.
+- **After a restart:** a new process reads the same directory, so a saved file still downloads
+  (`quote-persistence.test.ts`, plus a real restart in the Phase 3 evidence).
+
+## Database triggers
+
+None. `docs/data-model.md` specifies no triggers, and none were added. The equivalent guarantees
+come from the service and indexes:
+
+- the unique `(userId, requestId)` index makes a retry or a concurrent duplicate one record;
+- the file is written before the record is created, and it is deleted if the save fails;
+- notification runs only after the save, and its result is stored on the record.
+
+## Known limits
+
+- Files are on the app's local disk. A host without a persistent volume loses them on redeploy.
+  More than one app instance would need shared storage (object storage would be a reviewed change).
+- Staff cannot retrieve quote files in the app; the email carries only the reference, company and
+  contact (`docs/contracts.md`). The owner downloads through the API.
+- The quote route has no rate limit of its own. It needs a signed-in business account, and
+  registration and sign-in are rate-limited by Student 1.
