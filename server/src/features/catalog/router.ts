@@ -26,7 +26,6 @@ import {
   mergeCart,
   persistCart,
 } from './service.js';
-import './types.js';
 
 export interface CatalogRouterDependencies {
   /** Student 1's requireAuth: 401 envelope for a missing, invalid or expired token. */

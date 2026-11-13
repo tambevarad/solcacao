@@ -41,9 +41,25 @@ const productSchema = new Schema(
   },
   { timestamps: true, collection: 'products', strict: 'throw' },
 );
-// Observed list shape: active + optional category/origin, sorted by price or localized name.
-productSchema.index({ active: 1, category: 1, priceCents: 1 });
-productSchema.index({ active: 1, origin: 1 });
+// GET /api/products indexes, chosen by measuring explain() plans on a 5,000-product catalog
+// (team/member-3/phase-3-evidence.md). Each serves a whole sort including the _id tie-breaker, so a
+// page stops after skip + limit keys instead of sorting every match in memory. Name sorts run with
+// the locale collation, so their indexes carry the same collation; price sorts use no collation.
+// priceDesc reads the price indexes backwards ({ priceCents: -1, _id: -1 }).
+for (const locale of ['en', 'es'] as const)
+  productSchema.index(
+    { active: 1, [`name.${locale}`]: 1, _id: 1 },
+    { name: `active_name_${locale}`, collation: { locale, strength: 1 } },
+  );
+productSchema.index({ active: 1, priceCents: 1, _id: 1 }, { name: 'active_price' });
+productSchema.index(
+  { active: 1, category: 1, priceCents: 1, _id: 1 },
+  { name: 'active_category_price' },
+);
+productSchema.index(
+  { active: 1, origin: 1, priceCents: 1, _id: 1 },
+  { name: 'active_origin_price' },
+);
 
 const inventorySchema = new Schema(
   {

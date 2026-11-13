@@ -1,7 +1,7 @@
 import { useEffect, useId, useState, type FormEvent } from 'react';
 import { Button, Field, Select } from '../../../shared/index.js';
 import { useLocale } from '../../shell/public.js';
-import { CATALOG_ORIGINS } from '../fixtures.js';
+import { CATALOG_ORIGINS } from '../rules.js';
 import { PRICE_UI_MAX_CENTS, type CatalogFilters } from '../filters.js';
 import { useMoney, useOriginLabel } from './format.js';
 

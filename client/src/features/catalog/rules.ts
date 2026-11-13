@@ -16,6 +16,18 @@ export const MAX_CART_LINES = 50;
 /** Retry horizon for repeated guest merges: the latest 100 mergeIds are kept per cart. */
 export const MERGE_MARKER_LIMIT = 100;
 export const CATEGORIES = ['bar', 'truffle', 'seasonal'] as const;
+/**
+ * Canonical origins (decision D11: English country names) offered by the origin filter; visible
+ * labels are translated. Kept here, not in fixtures.ts, so the HTTP-mode UI never imports fixtures.
+ */
+export const CATALOG_ORIGINS = [
+  'Dominican Republic',
+  'Ecuador',
+  'Ghana',
+  'Madagascar',
+  'Peru',
+  'Vietnam',
+] as const;
 export const SORTS = ['name', 'priceAsc', 'priceDesc'] as const;
 export const QUERY_KEYS = [
   'search',
@@ -203,7 +215,10 @@ export function matchesQuery(product: Product, query: NormalizedQuery): boolean 
   return true;
 }
 
-/** Localized name or price order, always with id as the tie-breaker. */
+/**
+ * Localized name or price order, always with id as the tie-breaker: ascending, except priceDesc,
+ * which is the exact reverse of priceAsc (matching the server's backwards index scan).
+ */
 export function compareProducts(sort: NormalizedQuery['sort'], locale: Locale) {
   const collator = new Intl.Collator(locale, { sensitivity: 'base' });
   return (a: Product, b: Product) => {
@@ -213,7 +228,8 @@ export function compareProducts(sort: NormalizedQuery['sort'], locale: Locale) {
         : sort === 'priceDesc'
           ? b.priceCents - a.priceCents
           : collator.compare(a.name[locale], b.name[locale]);
-    return primary || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+    const byId = a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+    return primary || (sort === 'priceDesc' ? -byId : byId);
   };
 }
 
