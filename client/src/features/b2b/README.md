@@ -32,7 +32,7 @@ says so on screen.
   the same `requestId` and file and the server returns the original receipt instead of a duplicate.
   Any edit starts a new request with a new `requestId`.
 - **Refused session (401):** the draft is kept and the page calls `logout()`, so the guard asks for
-  sign-in instead of retrying; the unsent attempt is sent unchanged afterwards.
+  sign-in instead of retrying (only while that session is still the current one); the unsent attempt is sent unchanged afterwards.
 - **A request that finishes after the page went away** (for example, the session ended during the
   upload) is applied to the kept draft, so the receipt shows when the page comes back. Results for a
   draft that was discarded meanwhile are ignored.

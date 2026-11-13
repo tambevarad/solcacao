@@ -36,23 +36,24 @@
         "npm run test:e2e:live 4 passed + 2 placeholders skipped; npm run test:e2e (mock) 15 passed",
         "Real restart: stored PDF downloads byte-identical after npm start restart; 9 static/guessed paths return 404 JSON",
         "Fixed: draft and file lost when the one-hour session ended (RequireRole unmount); now kept per account in tab memory",
-        "Audits: no DB triggers (none specified); security sweep clean; EN/ES 172 keys each, same set and placeholders"
+        "Audits: no DB triggers (none specified); security sweep clean; EN/ES 172 keys each, same set and placeholders",
+        "CI on PR #29 first run: verify failed 2 new tests (effects not yet run); fixed in the tests plus a session check before logout; local check 564/564 twice"
       ],
       "blockers": []
     },
     "4": {
-      "state": "in_progress",
+      "state": "ready_for_review",
       "commit": null,
       "checks": [
         "Homepage images before scrolling: 375 px @3x 704 KB -> 130 KB, 1440 px @1x 563 KB -> 266 KB (all images still load on scroll)",
         "Wholesale images before scrolling at 375 px @3x: 442 KB -> 115 KB",
         "42 screenshots (375/768/1440, EN/ES) on the live API locally: no overflow, no console errors",
-        "Feature README, server README notes, known limits and presentation draft written"
+        "Feature README, server README notes, known limits and presentation draft written",
+        "Deployed site (development 13a60a2): business quote 6af66ca09f84837d31262923 saved, notification sent, email in the demo Mailpit inbox (1 message, no attachment)",
+        "Upload survived a Railway redeploy (deployment success 2026-11-13T01:54:21Z): owner download 200, same 73,036 bytes and SHA-256 before and after; no token 401",
+        "Deployed site at 375/768/1440 in EN/ES: no overflow, no console errors; signed-in wizard step 1 by keyboard at 375 px in Spanish"
       ],
-      "blockers": [
-        "Deployed-site journey and upload-after-redeploy check pending: needs a business sign-in by Krish, a Railway redeploy and the Mailpit inbox password from Varad",
-        "Team presentation rehearsal not yet held"
-      ]
+      "blockers": ["Team presentation rehearsal not yet held"]
     }
   }
 }

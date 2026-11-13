@@ -1,13 +1,12 @@
 # Student 4 Phase 4 evidence
 
-State: in progress on `krish-b2b` (D22 turn 2, shared PR with Phase 3).
+State: ready for review on `krish-b2b` (D22 turn 2, shared PR with Phase 3).
 
-- **Done and verified locally:** steps 1 to 3 and 5. The local runs are on the compiled production
-  build, the same image Railway runs, against MongoDB and Mailpit.
-- **Pending, step 4 on the deployed site** (https://solcacao-production.up.railway.app):
-  - the journey on the live site and the upload surviving a redeploy;
-  - these need a business sign-in by Krish, plus a Railway redeploy and the Mailpit inbox password
-    from Varad. Results go in "Deployed site" below once they exist.
+- **Steps 1 to 3 and 5:** verified locally on the compiled production build (the same image Railway
+  runs), against MongoDB and Mailpit.
+- **Step 4:** verified on the deployed site (https://solcacao-production.up.railway.app), including
+  the upload surviving a Railway redeploy. See "Deployed site".
+- **Step 6** (the team rehearsal) has not happened yet.
 
 ## Implemented requirements and changed paths
 
@@ -35,9 +34,9 @@ State: in progress on `krish-b2b` (D22 turn 2, shared PR with Phase 3).
     then the hidden slides never load unless opened.
 - **Step 3:** phone, desktop, keyboard and focus, EN/ES, loading and error states, and console
   errors were checked on the live API (phase-3-evidence.md, "Manual demo observations").
-- **Step 4:** pending (above). The private upload directory is already set for this host:
+- **Step 4:** verified on the deployed site ("Deployed site" below). The private upload directory is
   `UPLOAD_DIR=/data/uploads` on the `solcacao-volume` volume, outside the client root
-  (docs/deployment.md).
+  (docs/deployment.md). A quote's PDF still downloads, byte-identical, after a redeploy.
 - **Step 5:**
   - feature notes and known limits in `client/src/features/b2b/README.md` (new) and
     `server/src/features/b2b/README.md` (private files in production, triggers, limits);
@@ -73,14 +72,47 @@ Measured with headless Chromium (`@playwright/test`):
 
 ## Deployed site
 
-Pending. This section is filled in from the real checks:
+https://solcacao-production.up.railway.app, which runs `development` (13a60a2, before this PR). This
+checks the host and the deployed code; this PR's changes reach the site after it merges.
 
-- the business journey on https://solcacao-production.up.railway.app: sign-in, four steps with a
-  synthetic PDF, receipt, notification status;
-- the email in the demo Mailpit inbox;
-- after Varad redeploys the `solcacao` service, the same PDF still downloads for its owner, with the
-  same SHA-256;
-- phone width, keyboard, EN/ES and console on the live site.
+On 2026-11-12 at 19:49 local time (2026-11-13T01:49:20Z), in the in-app browser at desktop width:
+
+- **The journey, done by Krish by hand:**
+  - a new business account with fictional details (`@example.test` address);
+  - all four steps with the synthetic one-page PDF `live-check/solcacao-live-brand.pdf` (616 bytes,
+    not committed).
+- **Network:** `POST /api/auth/register` 201, then `POST /api/b2b/quote` 201 with
+  `{"id":"6af66ca09f84837d31262923","status":"submitted","notificationStatus":"sent"}`.
+- **Receipt on screen:** "Quote request received", the same reference, "Email notification: Sent".
+  There were no console errors.
+- **Without a token:** `GET /api/b2b/quotes/6af66ca09f84837d31262923` and `/file` both return 401.
+  Guessed public paths (`/<id>.pdf`, `/uploads/b2b/…`, `/data/uploads/b2b/…`) return JSON 404s.
+- **Health:** `/api/health` reports the database connected.
+
+- **Owner download before the redeploy:** `.agent/live-check/check-live-quote.sh`, run by Krish in
+  his terminal, signs in through the API with the password typed there, not shown. It got:
+  - `GET /api/b2b/quotes/6af66ca09f84837d31262923` 200, the same receipt;
+  - `/file` 200: `application/pdf`, `attachment`, `nosniff`, `private, no-store`, 73,036 bytes,
+    SHA-256 `ec0de7a4daa21d4586132065f06a3151604d3f52a83cca288fdf93037df4cf64`;
+  - without a token, 401.
+  - The file is a PDF Krish chose by hand, not the synthetic test file, so the comparison is between
+    downloads.
+- **Demo Mailpit inbox** (Varad's password, typed by Krish into the same script): exactly one
+  message for the reference: "SolCacao: wholesale quote", to `support@example.test`, 0 attachments,
+  at 2026-11-13T01:49:20.175Z.
+- **Redeploy** of the `solcacao` service by Varad, at Krish's request. Railway's GitHub deployment for
+  `13a60a2` (environment `innovative-unity / production`) went `in_progress` at 01:53:56Z and
+  `success` at 01:54:21Z, after the upload at 01:49:20Z. Health was connected again at 01:55:07Z.
+- **Owner download after the redeploy** (same script, second run): 200 with the same 73,036 bytes
+  and the same SHA-256 `ec0de7a4…cf64`; without a token, 401. **The upload survived the redeploy.**
+- **Phone, keyboard, EN/ES and console, headless Chromium:**
+  - `/en`, `/es`, `/{en,es}/wholesale` and `/{en,es}/wholesale/request` at 375, 768 and 1440 px all
+    return 200 with the right `lang`, no horizontal overflow and no console errors;
+  - the wizard route shows the sign-in prompt to a signed-out visitor.
+- **Signed-in wizard on the live site, in Krish's tab, at 375 px in Spanish, keyboard only:**
+  - Space chose a cacao profile, 300 was typed, and Enter moved to step 2;
+  - focus went to the "Archivo de marca" heading, with no overflow and no console errors.
+  - Stopped before choosing a file, so no second quote was created.
 
 ## Manual demo observations
 
@@ -95,8 +127,8 @@ added under "Deployed site".
 
 ## Known limitations or blocked checks
 
-- **Blocked, deployed-site checks:** they need Krish's live sign-in and Varad's Railway redeploy and
-  Mailpit password; no one else has Railway access.
+- **The deployed site still runs `development`:** this PR's changes (the kept draft, deferred
+  photos) reach it after the merge. They were verified locally on the same production build.
 - **Hidden hero photos:** when the hero rotates, they still load about 2 s after the page loads.
   They are deferred, not removed, so they are ready before the first slide change.
 - **Photo bytes after scrolling are unchanged:** reducing those needs proposal 2.
