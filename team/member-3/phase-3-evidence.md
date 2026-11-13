@@ -152,5 +152,5 @@ only). Proposals for Students 2, 4 and 5 are in `handoff.md`.
 
 Proposed commit: see the PR (focused commits on `reethika-catalog`).
 Reviewer: requested from tambevarad (Student 2).
-PR: see `status.json` once opened.
+PR: https://github.com/tambevarad/solcacao/pull/30
 Integrated commit: (recorded by the reviewer after merge)

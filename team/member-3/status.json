@@ -44,7 +44,8 @@
         "tests/e2e/live (Student 2) on local API: 3 passed, 1 failed (contact needs Mailpit, unavailable), 2 fixme",
         "pages.test.tsx flake fix: 20/20 under 5 parallel copies",
         "Index benchmark (5,000 products): 4,500 keys + in-memory sort per list query -> 12-283 keys, no SORT stage",
-        "Full-suite stability: branch last 3 runs 572/572; untouched development 2 of 5 runs failed (timing), see phase-3-evidence.md"
+        "Full-suite stability: branch last 3 runs 572/572; untouched development 2 of 5 runs failed (timing), see phase-3-evidence.md",
+        "PR #30 opened into development; review requested from tambevarad"
       ],
       "blockers": [
         "tests/member-3 live journeys not yet in CI (handoff proposal 8, Student 2)",
@@ -60,7 +61,8 @@
         "Deployed: member-3 live spec 10 passed, 1 skipped (stale stock needs DB) with LIVE_EXPECT_FLOATING_NOTICE=0; without it the merge-notice journey fails on pre-PR code",
         "Deployed and local: 24/24 page audits (EN/ES x 375/768/1440 x catalog, filtered, product, checkout): no overflow, correct lang, no console errors",
         "Images: product WebP 13.7-112.7 KiB (no re-encode needed); first catalog row eager, rest lazy; at 375 px 8 of 12 photos load before scrolling",
-        "Presentation segment drafted in phase-4-evidence.md"
+        "Presentation segment drafted in phase-4-evidence.md",
+        "PR #30 opened into development; review requested from tambevarad"
       ],
       "blockers": [
         "After merge: Student 2 runs the seed once on Railway (drops Phase 2 indexes) and the live spec without LIVE_EXPECT_FLOATING_NOTICE=0 (handoff proposal 9)",

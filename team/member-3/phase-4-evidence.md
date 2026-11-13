@@ -98,5 +98,5 @@ database) and the recorded results above.
 
 Proposed commit: see the PR.
 Reviewer: requested from tambevarad (Student 2).
-PR: see `status.json` once opened.
+PR: https://github.com/tambevarad/solcacao/pull/30
 Integrated commit: (recorded by the reviewer after merge)
