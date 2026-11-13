@@ -1,7 +1,16 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  cleanup,
+  configure,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CatalogApi } from '../../contracts/index.js';
@@ -21,6 +30,11 @@ import { Layout } from '../../client/src/features/shell/Layout.js';
 import { LocaleProvider } from '../../client/src/features/shell/public.js';
 import { createAuthDouble, type AuthDouble } from './auth-double.js';
 import { memoryStorage } from './storage-double.js';
+
+// These tests render the real Layout, lazy dictionaries and routed pages. On a loaded CI runner the
+// first render alone can exceed Testing Library's 1 s default (PR #27), so every findBy/waitFor in
+// this file waits up to 3 s. Assertions are unchanged; only the patience is.
+configure({ asyncUtilTimeout: 3000 });
 
 const auth = vi.hoisted(() => ({ current: null as null | AuthDouble }));
 vi.mock('../../client/src/features/auth/public.js', async () => {
@@ -287,6 +301,116 @@ describe('ProductPage', () => {
   });
 });
 
+describe('adding to a signed-in cart whose save fails (PR #15 follow-up)', () => {
+  const failingThenWorking = () => {
+    const persist = vi
+      .fn<CatalogApi['persist']>()
+      .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      .mockImplementation((input) => catalog.persist(input));
+    return { api: { ...catalog, persist }, persist };
+  };
+  const results = () => screen.getByRole('region', { name: 'Results' });
+
+  it('keeps the card amount and says it was not saved, then adds on retry', async () => {
+    auth.current!.signIn();
+    const { api, persist } = failingThenWorking();
+    renderShop('/en/catalog', api);
+    await screen.findByText('14 chocolates');
+    const input = within(results()).getByLabelText('Quantity of Peru 85% Dark Bar');
+    fireEvent.change(input, { target: { value: '3' } });
+    const add = within(results()).getByRole('button', { name: 'Add to cart: Peru 85% Dark Bar' });
+    fireEvent.click(add);
+
+    expect(
+      await within(results()).findByText(/Your latest cart change could not be saved/),
+    ).toBeInTheDocument();
+    expect(persist).toHaveBeenCalledTimes(1);
+    expect(input).toHaveValue(3);
+    expect(screen.queryByText('Peru 85% Dark Bar was added to your cart.')).toBeNull();
+    // The unsaved line is rolled back to the saved cart, so adding again cannot count it twice.
+    expect(
+      within(screen.getByRole('banner')).getByRole('button', { name: 'Open cart. Items: 0' }),
+    ).toBeInTheDocument();
+
+    await waitFor(() => expect(input).toBeEnabled());
+    fireEvent.click(add);
+    expect(
+      await screen.findByText('Peru 85% Dark Bar was added to your cart.'),
+    ).toBeInTheDocument();
+    await waitFor(() => expect(input).toHaveValue(1));
+    expect(persist).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        items: [{ productId: bySlug('peru-85-dark-bar').id, quantity: 3 }],
+      }),
+    );
+    expect(screen.getByTestId('cart-count')).toHaveTextContent('3');
+  });
+
+  it('keeps the product page amount and offers the cart when the save fails', async () => {
+    auth.current!.signIn();
+    const { api } = failingThenWorking();
+    renderShop('/en/products/peru-85-dark-bar', api);
+    await screen.findByRole('heading', { level: 1, name: 'Peru 85% Dark Bar' });
+    const quantity = screen.getByLabelText(/^Quantity/);
+    fireEvent.change(quantity, { target: { value: '2' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Add to cart' }));
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(/Your latest cart change could not be saved/);
+    expect(within(alert).getByRole('button', { name: 'View cart' })).toBeInTheDocument();
+    expect(quantity).toHaveValue(2);
+    expect(screen.queryByText('Peru 85% Dark Bar was added to your cart.')).toBeNull();
+  });
+
+  it('explains an out-of-range card amount as soon as it is typed', async () => {
+    renderShop('/en/catalog');
+    await screen.findByText('14 chocolates');
+    const eggs = within(results()).getByLabelText('Quantity of Spring Chocolate Eggs');
+    fireEvent.change(eggs, { target: { value: '4' } });
+    // No blur or Enter: the disabled Add button is explained at once.
+    expect(within(results()).getByRole('alert')).toHaveTextContent(
+      'Choose a quantity from 1 to 3.',
+    );
+    expect(eggs).toHaveAttribute('aria-invalid', 'true');
+    expect(
+      within(results()).getByRole('button', { name: 'Add to cart: Spring Chocolate Eggs' }),
+    ).toBeDisabled();
+    fireEvent.change(eggs, { target: { value: '' } });
+    expect(within(results()).queryByRole('alert')).toBeNull();
+  });
+});
+
+describe('cart notices outside the drawer', () => {
+  it('shows the sign-in merge result over the page while the drawer is closed', async () => {
+    saveGuestCart(storage, [{ productId: bySlug('peru-85-dark-bar').id, quantity: 1 }]);
+    renderShop('/en/catalog');
+    await screen.findByText('14 chocolates');
+    act(() => auth.current!.signIn());
+    const notice = await screen.findByRole('complementary', { name: 'Cart update' });
+    expect(within(notice).getByRole('status')).toHaveTextContent(
+      'We added the items from your guest cart to your saved cart.',
+    );
+    fireEvent.click(within(notice).getByRole('button', { name: 'View cart' }));
+    const drawer = await screen.findByRole('dialog', { name: 'Your cart' });
+    // The same notice moves into the open drawer instead of showing twice.
+    expect(
+      within(drawer).getByText('We added the items from your guest cart to your saved cart.'),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('complementary', { name: 'Cart update' })).toBeNull();
+  });
+
+  it('leaves a failed save to the page where it happened', async () => {
+    auth.current!.signIn();
+    const persist = vi
+      .fn<CatalogApi['persist']>()
+      .mockRejectedValue(new TypeError('Failed to fetch'));
+    renderShop('/en/catalog', { ...catalog, persist });
+    await screen.findByText('14 chocolates');
+    fireEvent.click(screen.getByRole('button', { name: 'Add to cart: Peru 85% Dark Bar' }));
+    await screen.findByText(/Your latest cart change could not be saved/);
+    expect(screen.queryByRole('complementary', { name: 'Cart update' })).toBeNull();
+  });
+});
+
 describe('CartDrawer', () => {
   it('adds twice, updates, removes; traps focus, closes on Escape and restores focus', async () => {
     renderShop('/en/catalog');
@@ -357,6 +481,17 @@ describe('Checkout and confirmation', () => {
     'State, province or region': 'TX',
     'Postal code': '75001',
   };
+  /**
+   * The demo banner renders before the cart's products are resolved, and until then the submit
+   * button is disabled, so a click is ignored. Wait for the review line and the enabled button
+   * (generous timeout for slow CI runners) before submitting; this was the flake on PR #27.
+   */
+  const placeOrderWhenReady = async (line: string, name = 'Place demo order') => {
+    await screen.findByText(line, undefined, { timeout: 5000 });
+    const place = screen.getByRole('button', { name });
+    await waitFor(() => expect(place).toBeEnabled(), { timeout: 5000 });
+    return place;
+  };
 
   it('shows an empty state instead of a form when the cart is empty', async () => {
     renderShop('/en/checkout');
@@ -367,9 +502,10 @@ describe('Checkout and confirmation', () => {
     saveGuestCart(storage, [{ productId: bySlug('peru-85-dark-bar').id, quantity: 2 }]);
     renderShop('/en/checkout');
     await screen.findByText('Demo order — no payment collected');
+    const place = await placeOrderWhenReady('2 × Peru 85% Dark Bar');
     fill({ Email: 'not-an-email', City: 'Testville' });
-    fireEvent.click(screen.getByRole('button', { name: 'Place demo order' }));
-    const summary = await screen.findByRole('alert');
+    fireEvent.click(place);
+    const summary = await screen.findByRole('alert', undefined, { timeout: 3000 });
     expect(summary).toHaveTextContent('Please correct');
     expect(
       within(summary).getByRole('link', { name: /Email: Enter a valid email/ }),
@@ -415,11 +551,22 @@ describe('Checkout and confirmation', () => {
       .mockImplementation((input) => catalog.checkout(input));
     renderShop('/en/checkout', { ...catalog, checkout });
     await screen.findByText('Demo order — no payment collected');
+    const place = await placeOrderWhenReady('1 × Peru 85% Dark Bar');
     fill(validAddress);
-    fireEvent.click(screen.getByRole('button', { name: 'Place demo order' }));
-    expect(await screen.findByText(/The order could not be placed/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Place demo order' }));
-    await screen.findByRole('heading', { name: 'Thank you — demo order received' });
+    fireEvent.click(place);
+    await waitFor(() => expect(checkout).toHaveBeenCalledTimes(1), { timeout: 3000 });
+    expect(
+      await screen.findByText(/The order could not be placed/, undefined, { timeout: 3000 }),
+    ).toBeInTheDocument();
+    // The button is re-enabled once the failed request settles; then retry the same request.
+    await waitFor(() => expect(place).toBeEnabled(), { timeout: 3000 });
+    fireEvent.click(place);
+    await screen.findByRole(
+      'heading',
+      { name: 'Thank you — demo order received' },
+      { timeout: 3000 },
+    );
+    expect(checkout).toHaveBeenCalledTimes(2);
     expect(checkout.mock.calls[1][0].requestId).toBe(checkout.mock.calls[0][0].requestId);
   });
 
@@ -433,6 +580,10 @@ describe('Checkout and confirmation', () => {
     );
     renderShop('/es/checkout', { ...catalog, checkout });
     await screen.findByText('Pedido de demostración — no se cobra ningún pago');
+    const place = await placeOrderWhenReady(
+      '3 × Huevos de chocolate de primavera',
+      'Realizar pedido de demostración',
+    );
     fill({
       'Correo electrónico': 'a@example.test',
       'Nombre completo': 'Prueba',
@@ -441,9 +592,11 @@ describe('Checkout and confirmation', () => {
       'Estado, provincia o región': 'MD',
       'Código postal': '28001',
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Realizar pedido de demostración' }));
+    fireEvent.click(place);
     expect(
-      await screen.findByText(/no están disponibles en la cantidad pedida/),
+      await screen.findByText(/no están disponibles en la cantidad pedida/, undefined, {
+        timeout: 3000,
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByText('No está disponible en esta cantidad. Actualiza tu carrito.'),
