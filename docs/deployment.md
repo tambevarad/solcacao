@@ -52,7 +52,7 @@ Railway's Hobby plan ($5 a month including $5 of usage; check railway.com/pricin
 ## Fill after verification
 
 Host/service: Railway (Hobby plan), project `innovative-unity`, environment `production`. Services: `solcacao` (this repo's Dockerfile), `MongoDB` (Railway MongoDB template, mongo 8.0), `Mailpit` (`axllent/mailpit:v1.27`).
-Commit/tag: `934ea77` on `varad-shell` (PR #27). Switch the service to `development` after it merges, and to `main` for the final release.
+Commit/tag: Railway deploys the head of the service's branch. The checks below were run on `934ea77` (`varad-shell`, PR #27); the later commits on that PR changed docs only. Since #27 merged, the service deploys `development` (first `62e52e4`); switch it to `main` for the final release.
 Frontend URL: https://solcacao-production.up.railway.app (the API serves the client; public port 8080).
 API health URL: https://solcacao-production.up.railway.app/api/health → `{"data":{"status":"ok","database":"connected"}}`
 Mongo environment (name only): Railway `MongoDB` service, database `solcacao`, reached over the private network (`MONGODB_URI` references `MONGO_URL`). Volume `mongodb-volume`, 5 GB. On the trial plan's 500 MB volume, MongoDB refused every write: it requires 500 MiB free. Public TCP access is removed after seeding; re-enable it briefly only to re-seed.
@@ -67,7 +67,7 @@ Verified by/date: Varad Tambe (with Claude Code), 2026-11-13. Results:
 - `/api/i18n/es` returns 574 keys; `/api/products` returns 14 in total;
 - security headers (CSP, HSTS, nosniff) are present;
 - in the browser, a guest order gives `POST /api/orders` 201 (demo receipt, $9.99) and the cart empties;
-- a six-piece sampler enquiry gives `POST /api/inquiries` 201: "Your enquiry has been saved… The enquiry notification was sent." (SMTP to Mailpit);
+- a six-piece sampler enquiry gives `POST /api/inquiries` 201: "Your enquiry has been saved… The enquiry notification was sent." That is the app's report that Mailpit's SMTP accepted the message. The live inbox itself was not opened, because it needs the Mailpit password (runbook step 7); delivery to the inbox is checked in CI by the live contact-enquiry journey;
 - after a redeploy, health still reports the database connected and all 14 products remain.
 
 Known limitations:
