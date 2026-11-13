@@ -92,6 +92,8 @@
   "b2b.wizard.title": "Request a custom quote",
   "b2b.wizard.intro": "Four short steps. Your answers stay on this page while you move between steps or switch language.",
   "b2b.wizard.demoNotice": "Demo mode: requests are simulated in this browser tab. Nothing is saved on a server and no email is sent.",
+  "b2b.wizard.restored": "Your earlier answers in this browser tab are still here, so you can continue where you left off.",
+  "b2b.wizard.startOver": "Start over",
   "b2b.wizard.stepsLabel": "Quote request steps",
   "b2b.wizard.stepCount": "Step {current} of {total}",
   "b2b.wizard.stateCurrent": "current step",

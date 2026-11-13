@@ -1,6 +1,7 @@
-import { useEffect, useId, useReducer, useRef, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type FormEvent } from 'react';
 import type { QuoteInput, QuoteReceipt } from '../../../../../contracts/index.js';
 import { api } from '../../../api/index.js';
+import { ApiError } from '../../../api/http.js';
 import { useAuth } from '../../auth/public.js';
 import { Button } from '../../../shared/index.js';
 import { usePageMeta, useLocale } from '../../shell/public.js';
@@ -13,15 +14,17 @@ import {
 } from '../components/QuoteSteps.js';
 import { QuoteReceiptView } from '../components/QuoteReceiptView.js';
 import { WizardStepper } from '../components/WizardStepper.js';
+import { quoteDraftStore, type QuoteDraftStore } from '../draftStore.js';
 import { COMPANY_MAX, NOTES_MAX, QUANTITY_MAX, QUANTITY_MIN } from '../options.js';
 import {
   STEPS,
   buildQuoteInput,
   failureFromError,
   hasErrors,
+  hasProgress,
   initialWizardState,
   validateAll,
-  wizardReducer,
+  type WizardAction,
 } from '../wizard.js';
 
 export type SubmitQuote = (input: QuoteInput, file: File) => Promise<QuoteReceipt>;
@@ -30,34 +33,64 @@ const submitWithApi: SubmitQuote = (input, file) => api.b2b.submit(input, file);
 const newRequestId = () => crypto.randomUUID();
 /** Mirrors client/src/api/index.ts: anything but explicit HTTP mode is the in-browser mock. */
 const demoMode = (import.meta.env.VITE_API_MODE || 'mock') !== 'http';
+/** Shown for an account whose draft has not been claimed yet (identical to a new draft). */
+const FRESH = initialWizardState();
 
 /**
  * Four-step custom quote wizard. Access control is Student 1's RequireRole on this route; the page
- * adds no guard of its own. State lives in one reducer in this mounted page, so a language switch
- * (same route, new prefix) keeps the current step, answers and in-memory file.
+ * adds no guard of its own. State lives in this tab's draft store (draftStore.ts), not in the page:
+ * a language switch keeps the page mounted, and when the guard replaces the page because the
+ * session ended, signing in again with the same account brings back the step, answers and file.
  */
 export default function QuoteWizardPage({
   submitQuote = submitWithApi,
   createRequestId = newRequestId,
+  store = quoteDraftStore,
 }: {
   /** Test seam; the app always uses api.b2b.submit (mock or HTTP per VITE_API_MODE). */
   submitQuote?: SubmitQuote;
   createRequestId?: () => string;
+  /** Test seam; the app uses the tab's single draft store. */
+  store?: QuoteDraftStore;
 }) {
   const { t, locale } = useLocale();
-  const { user } = useAuth();
-  const [state, dispatch] = useReducer(wizardReducer, undefined, initialWizardState);
+  const { user, logout } = useAuth();
+  const owner = user?.id ?? null;
+  const entry = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
+  const state = entry.owner === owner ? entry.state : FRESH;
+  const dispatch = (action: WizardAction) => store.update(owner, action);
+  // A draft kept from earlier in this tab is announced once, with a way to start over.
+  const [restored, setRestored] = useState(() => state.status === 'editing' && hasProgress(state));
   const headingId = useId();
   const stepHeading = useRef<HTMLHeadingElement>(null);
   const summary = useRef<HTMLDivElement>(null);
   const shownStep = useRef(state.step);
   const submitting = state.status === 'submitting';
 
-  // Business accounts carry their company and email; prefill only fills empty fields.
+  // Claim the draft for this account before the effects below act on it. Another account's draft
+  // is discarded, never shown. Signing in again after a refused session resolves that message.
   useEffect(() => {
+    store.claim(owner);
+    store.update(owner, { type: 'resume' });
+  }, [store, owner]);
+
+  // Business accounts carry their company and email; prefill only fills empty fields.
+  function prefill() {
     if (user)
-      dispatch({ type: 'prefill', companyName: user.companyName, contactEmail: user.email });
-  }, [user]);
+      store.update(user.id, {
+        type: 'prefill',
+        companyName: user.companyName,
+        contactEmail: user.email,
+      });
+  }
+  // prefill reads only `store` and `user`.
+  useEffect(() => prefill(), [store, user]);
+
+  function startOver() {
+    setRestored(false);
+    dispatch({ type: 'reset' });
+    prefill();
+  }
 
   // A new step moves focus to its heading; blocked progress moves focus to the error summary.
   useEffect(() => {
@@ -93,11 +126,23 @@ export default function QuoteWizardPage({
       dispatch({ type: 'invalid', errors });
       return;
     }
-    dispatch({ type: 'submitStart', input });
+    // The outcome is applied to this draft even if the page unmounts while the upload runs (for
+    // example the session ends meanwhile), and never to a draft that has since been discarded.
+    const { generation } = entry;
+    store.settle(generation, { type: 'submitStart', input });
     try {
-      dispatch({ type: 'submitSuccess', receipt: await submitQuote(input, state.file) });
+      const receipt = await submitQuote(input, state.file);
+      store.settle(generation, { type: 'submitSuccess', receipt });
     } catch (error) {
-      dispatch({ type: 'submitFailure', failure: failureFromError(error) });
+      store.settle(generation, { type: 'submitFailure', failure: failureFromError(error) });
+      // A refused session is recoverable: signing out lets the guard ask for sign-in, and the
+      // draft (answers, file and the unsent attempt) waits in the store for the same account.
+      if (
+        error instanceof ApiError &&
+        error.status === 401 &&
+        store.getSnapshot().generation === generation
+      )
+        logout();
     }
   }
 
@@ -125,14 +170,21 @@ export default function QuoteWizardPage({
             {t('b2b.wizard.demoNotice')}
           </p>
         )}
+        {restored && state.status === 'editing' && (
+          <div
+            role="note"
+            className="mt-4 flex max-w-prose flex-wrap items-center justify-between gap-3 rounded border border-line bg-white/70 p-3 text-sm"
+          >
+            <p>{t('b2b.wizard.restored')}</p>
+            <Button variant="secondary" onClick={startOver}>
+              {t('b2b.wizard.startOver')}
+            </Button>
+          </div>
+        )}
       </header>
 
       {state.status === 'succeeded' && state.receipt ? (
-        <QuoteReceiptView
-          receipt={state.receipt}
-          demoMode={demoMode}
-          onReset={() => dispatch({ type: 'reset' })}
-        />
+        <QuoteReceiptView receipt={state.receipt} demoMode={demoMode} onReset={startOver} />
       ) : (
         <>
           <WizardStepper
