@@ -2,9 +2,18 @@
 import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, configure, fireEvent, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  cleanup,
+  configure,
+  fireEvent,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import type { QuoteInput, QuoteReceipt, User } from '../../contracts/index.js';
 import { ApiError } from '../../client/src/api/http.js';
+import { sessionToken } from '../../client/src/api/session.js';
 import QuoteWizardPage, {
   type SubmitQuote,
 } from '../../client/src/features/b2b/pages/QuoteWizardPage.js';
@@ -106,6 +115,7 @@ afterEach(() => {
   vi.restoreAllMocks();
   // The draft store outlives the page by design; each test starts from an empty wizard.
   quoteDraftStore.clear();
+  sessionToken.set(null);
 });
 
 describe('quote wizard steps', () => {
@@ -446,17 +456,21 @@ describe('draft kept while the page is away (session expiry, other pages)', () =
     const submitQuote = vi.fn<SubmitQuote>(
       () => new Promise<QuoteReceipt>((_, fail) => (reject = fail)),
     );
+    // Each account has its own session, as Student 1's AuthProvider sets it at sign-in.
+    sessionToken.set('session-of-first-account');
     setup(submitQuote);
     await reachReview();
     fireEvent.click(screen.getByRole('button', { name: 'Send quote request' }));
     await waitFor(() => expect(submitQuote).toHaveBeenCalledTimes(1));
     cleanup();
 
+    sessionToken.set('session-of-other-account');
     auth.user = { ...BUYER, id: '0000000000000000000000c4', email: 'other@example.test' };
     setup(submitQuote);
     await stepHeading('Cacao and quantity');
-    reject(new ApiError(401, 'UNAUTHORIZED', 'Authentication required'));
-    await new Promise((done) => setTimeout(done, 0));
+    await act(async () => {
+      reject(new ApiError(401, 'UNAUTHORIZED', 'Authentication required'));
+    });
     // The other account is not signed out and its new draft is untouched.
     expect(auth.logout).not.toHaveBeenCalled();
     expect(quoteDraftStore.getSnapshot().state).toMatchObject({ status: 'editing', step: 1 });

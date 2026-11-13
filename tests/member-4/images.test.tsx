@@ -103,6 +103,8 @@ describe('DeferredPhoto', () => {
     const box = await screen.findByRole('img', { name: photos.homeStory.alt.es });
     expect(box.tagName).toBe('DIV');
     expect(box).toHaveClass('aspect-[3/2]');
+    // The observer starts in an effect, after the first render.
+    await waitFor(() => expect(FakeIntersectionObserver.instances.length).toBeGreaterThan(0));
     expect(FakeIntersectionObserver.instances[0].options.rootMargin).toBe('600px 0px');
 
     act(() => FakeIntersectionObserver.bringAllNear());
@@ -137,6 +139,8 @@ describe('homepage image loading', () => {
     const images = () => [...container.querySelectorAll('main img')];
     expect(images().map((image) => image.getAttribute('src'))).toEqual([photos.heroSeasonal.src]);
     expect(images()[0]).toHaveAttribute('loading', 'eager');
+    // Six photos below the fold and four product images, each observed once its effect has run.
+    await waitFor(() => expect(FakeIntersectionObserver.instances).toHaveLength(10));
 
     act(() => FakeIntersectionObserver.bringAllNear());
     const sources = images().map((image) => image.getAttribute('src'));

@@ -1,6 +1,14 @@
-import { useEffect, useId, useRef, useState, useSyncExternalStore, type FormEvent } from 'react';
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type FormEvent,
+} from 'react';
 import type { QuoteInput, QuoteReceipt } from '../../../../../contracts/index.js';
-import { api } from '../../../api/index.js';
+import { api, sessionToken } from '../../../api/index.js';
 import { ApiError } from '../../../api/http.js';
 import { useAuth } from '../../auth/public.js';
 import { Button } from '../../../shared/index.js';
@@ -67,9 +75,10 @@ export default function QuoteWizardPage({
   const shownStep = useRef(state.step);
   const submitting = state.status === 'submitting';
 
-  // Claim the draft for this account before the effects below act on it. Another account's draft
-  // is discarded, never shown. Signing in again after a refused session resolves that message.
-  useEffect(() => {
+  // Claim the draft for this account before paint and before the effects below act on it. Another
+  // account's draft is discarded, never shown. Signing in again after a refused session resolves
+  // that message.
+  useLayoutEffect(() => {
     store.claim(owner);
     store.update(owner, { type: 'resume' });
   }, [store, owner]);
@@ -129,6 +138,7 @@ export default function QuoteWizardPage({
     // The outcome is applied to this draft even if the page unmounts while the upload runs (for
     // example the session ends meanwhile), and never to a draft that has since been discarded.
     const { generation } = entry;
+    const session = sessionToken.get();
     store.settle(generation, { type: 'submitStart', input });
     try {
       const receipt = await submitQuote(input, state.file);
@@ -137,9 +147,11 @@ export default function QuoteWizardPage({
       store.settle(generation, { type: 'submitFailure', failure: failureFromError(error) });
       // A refused session is recoverable: signing out lets the guard ask for sign-in, and the
       // draft (answers, file and the unsent attempt) waits in the store for the same account.
+      // Only the session that was refused is signed out, never one that started since.
       if (
         error instanceof ApiError &&
         error.status === 401 &&
+        sessionToken.get() === session &&
         store.getSnapshot().generation === generation
       )
         logout();
