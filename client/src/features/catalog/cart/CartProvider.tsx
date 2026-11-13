@@ -51,8 +51,17 @@ export type CartNotice =
   | { kind: 'saveFailed' }
   | { kind: 'loadFailed' };
 
+/**
+ * Outcome of one add, for catalog pages: `added`; `limited` (saved, but capped by stock or 99);
+ * `unchanged` (already at the cap, nothing to save); `failed` (not saved: a failed or refused save,
+ * or the session changed). The shopper's selection should be kept on `failed`.
+ */
+export type CartAddOutcome = 'added' | 'limited' | 'unchanged' | 'failed';
+
 /** Feature-internal view of the cart. Other features use only CartState through useCart(). */
 export interface CartDetails extends CartState {
+  /** Same as add(), but resolves with whether the change was actually stored or saved. */
+  addLine(productId: string, quantity?: number): Promise<CartAddOutcome>;
   mode: 'guest' | 'user';
   /** loading: the signed-in cart is being fetched or merged; saving: a persist is in flight. */
   status: 'loading' | 'ready' | 'saving';
@@ -78,6 +87,7 @@ const Context = createContext<CartDetails>({
   open: false,
   setOpen: missingProvider,
   add: missingProvider,
+  addLine: missingProvider,
   update: missingProvider,
   remove: missingProvider,
   clear: missingProvider,
@@ -117,7 +127,8 @@ export function mergeAdjustments(
  *   mergeId, replace the UI state with the server result, then clear guest storage (only after
  *   success) and report any quantity that was reduced.
  * - Signed in: edits are applied locally at once and saved one request at a time with the latest
- *   lines and the expected revision; a 409 refetches and asks the shopper to retry.
+ *   lines and the expected revision; a 409 refetches and asks the shopper to retry, and a lost or
+ *   failed save rolls back to the lines the server last confirmed.
  * - Every async step captures a session generation; anything that resolves after sign-out or an
  *   account switch is ignored. Sign-out clears the private cart and starts an empty guest cart.
  */
@@ -147,6 +158,8 @@ export function CartProvider({
   const productsRef = useRef(products);
   productsRef.current = products;
   const revision = useRef(0);
+  /** Lines the server last confirmed for the signed-in cart (load, merge, save or refetch). */
+  const confirmed = useRef<CartLine[]>([]);
   const session = useRef<{ generation: number; userId: string | null | undefined }>({
     generation: 0,
     userId: undefined,
@@ -154,7 +167,7 @@ export function CartProvider({
   /** Resolves once the signed-in cart is known; mutations wait for it. */
   const loaded = useRef<Promise<void>>(Promise.resolve());
   const dirty = useRef(false);
-  const flushing = useRef<Promise<void> | null>(null);
+  const flushing = useRef<Promise<boolean> | null>(null);
   const merging = useRef<string | null>(null);
 
   const apply = useCallback((next: CartLine[]) => {
@@ -170,6 +183,7 @@ export function CartProvider({
         const cart = await catalog.cart();
         if (!isCurrent(generation)) return;
         revision.current = cart.revision;
+        confirmed.current = cart.items;
         apply(cart.items);
       } catch {
         if (isCurrent(generation)) setNotice({ kind: 'loadFailed' });
@@ -178,11 +192,15 @@ export function CartProvider({
     [catalog, apply],
   );
 
-  /** Sends the latest lines until nothing is pending. One request at a time, newest state wins. */
-  const flush = useCallback((): Promise<void> => {
+  /**
+   * Sends the latest lines until nothing is pending. One request at a time, newest state wins.
+   * Resolves true only if every pending change reached the server in this session; every caller
+   * waiting on the same run gets the same answer.
+   */
+  const flush = useCallback((): Promise<boolean> => {
     if (flushing.current) return flushing.current;
     const generation = session.current.generation;
-    const run = async () => {
+    const run = async (): Promise<boolean> => {
       setStatus('saving');
       try {
         while (dirty.current && isCurrent(generation)) {
@@ -192,11 +210,12 @@ export function CartProvider({
               items: itemsRef.current,
               expectedRevision: revision.current,
             });
-            if (!isCurrent(generation)) return;
+            if (!isCurrent(generation)) return false;
             revision.current = cart.revision;
+            confirmed.current = cart.items;
             if (!dirty.current) apply(cart.items);
           } catch (error) {
-            if (!isCurrent(generation)) return;
+            if (!isCurrent(generation)) return false;
             const code = codeOf(error);
             if (
               code === 'CART_CONFLICT' ||
@@ -213,10 +232,17 @@ export function CartProvider({
                       : 'unavailable',
               });
               await refetch(generation);
-            } else setNotice({ kind: 'saveFailed' });
-            return;
+            } else {
+              // Lost or failed request: show what the server last confirmed, never unsaved lines,
+              // so repeating the change (for example from a product card) cannot count it twice.
+              dirty.current = false;
+              apply(confirmed.current);
+              setNotice({ kind: 'saveFailed' });
+            }
+            return false;
           }
         }
+        return isCurrent(generation);
       } finally {
         flushing.current = null;
         if (isCurrent(generation)) setStatus('ready');
@@ -234,6 +260,7 @@ export function CartProvider({
         const saved = await catalog.cart();
         if (!isCurrent(generation)) return;
         revision.current = saved.revision;
+        confirmed.current = saved.items;
         apply(saved.items);
         if (guest.items.length && merging.current !== guest.mergeId) {
           merging.current = guest.mergeId;
@@ -242,6 +269,7 @@ export function CartProvider({
             if (!isCurrent(generation)) return;
             clearGuestCart(storage);
             revision.current = merged.revision;
+            confirmed.current = merged.items;
             apply(merged.items);
             setNotice({
               kind: 'merged',
@@ -284,6 +312,7 @@ export function CartProvider({
     }
     modeRef.current = 'user';
     setMode('user');
+    confirmed.current = [];
     apply([]);
     loaded.current = signIn(generation);
   }, [userId, storage, apply, signIn]);
@@ -303,57 +332,77 @@ export function CartProvider({
     return Math.min(MAX_QUANTITY, product ? product.stock : MAX_QUANTITY);
   };
 
-  /** Applies one edit to the latest lines, then stores (guest) or saves (signed in). */
+  /**
+   * Applies one edit to the latest lines, then stores (guest) or saves (signed in). Resolves with
+   * `unchanged` when the edit changed nothing, `failed` when it was not saved in this session.
+   */
   const mutate = useCallback(
-    async (change: (current: CartLine[]) => CartLine[]) => {
+    async (
+      change: (current: CartLine[]) => CartLine[],
+    ): Promise<'saved' | 'unchanged' | 'failed'> => {
       const generation = session.current.generation;
       await loaded.current;
-      if (!isCurrent(generation)) return;
+      if (!isCurrent(generation)) return 'failed';
       const next = change(itemsRef.current);
-      if (next === itemsRef.current) return;
+      if (next === itemsRef.current) return 'unchanged';
       apply(next);
       if (modeRef.current === 'guest') {
         saveGuestCart(storage, next);
-        return;
+        return 'saved';
       }
       dirty.current = true;
-      await flush();
+      return (await flush()) ? 'saved' : 'failed';
     },
     [apply, flush, storage],
   );
 
-  const add = useCallback(
-    (productId: string, quantity = 1) =>
-      mutate((current) => {
+  const addLine = useCallback(
+    async (productId: string, quantity = 1): Promise<CartAddOutcome> => {
+      let limited = false;
+      const result = await mutate((current) => {
         const id = productId.toLowerCase();
         const cap = stockCap(id);
         const existing = current.find((line) => line.productId === id);
         const wanted = (existing?.quantity ?? 0) + Math.max(1, Math.floor(quantity));
         const next = Math.min(cap, wanted);
-        if (next < wanted) setNotice({ kind: 'limited', productId: id, max: cap });
+        limited = next < wanted;
+        if (limited) setNotice({ kind: 'limited', productId: id, max: cap });
         if (next < 1 || next === existing?.quantity) return current;
         return existing
           ? current.map((line) => (line.productId === id ? { ...line, quantity: next } : line))
           : [...current, { productId: id, quantity: next }];
-      }),
+      });
+      if (result !== 'saved') return result;
+      return limited ? 'limited' : 'added';
+    },
     [mutate],
   );
 
+  // Public port keeps its Promise<void> signature and never rejects for a failed save; the notice
+  // reports it. Catalog pages use addLine to learn the outcome.
+  const add = useCallback(
+    async (productId: string, quantity?: number) => {
+      await addLine(productId, quantity);
+    },
+    [addLine],
+  );
+
   const remove = useCallback(
-    (productId: string) =>
-      mutate((current) => {
+    async (productId: string) => {
+      await mutate((current) => {
         const id = productId.toLowerCase();
         return current.some((line) => line.productId === id)
           ? current.filter((line) => line.productId !== id)
           : current;
-      }),
+      });
+    },
     [mutate],
   );
 
   const update = useCallback(
-    (productId: string, quantity: number) => {
+    async (productId: string, quantity: number) => {
       if (!Number.isFinite(quantity) || quantity < 1) return remove(productId);
-      return mutate((current) => {
+      await mutate((current) => {
         const id = productId.toLowerCase();
         const cap = stockCap(id);
         const next = Math.min(cap, Math.floor(quantity));
@@ -365,7 +414,9 @@ export function CartProvider({
     [mutate, remove],
   );
 
-  const clear = useCallback(() => mutate((current) => (current.length ? [] : current)), [mutate]);
+  const clear = useCallback(async () => {
+    await mutate((current) => (current.length ? [] : current));
+  }, [mutate]);
 
   const remember = useCallback((list: Product[]) => {
     setProducts((previous) => {
@@ -408,17 +459,15 @@ export function CartProvider({
     })();
   }, [items, products, directoryFailed, catalog]);
 
+  // A failed save is rolled back, so the shopper repeats the change; only a failed load or merge
+  // is retried from the notice.
   const retry = useCallback(() => {
     const generation = session.current.generation;
-    if (notice?.kind === 'saveFailed') {
-      setNotice(null);
-      dirty.current = true;
-      void flush();
-    } else if (modeRef.current === 'user') {
+    if (modeRef.current === 'user') {
       setNotice(null);
       loaded.current = signIn(generation);
     }
-  }, [notice, flush, signIn]);
+  }, [signIn]);
 
   const value = useMemo<CartDetails>(() => {
     const count = items.reduce((sum, line) => sum + line.quantity, 0);
@@ -433,6 +482,7 @@ export function CartProvider({
       open,
       setOpen,
       add,
+      addLine,
       update,
       remove,
       clear,
@@ -451,6 +501,7 @@ export function CartProvider({
     products,
     open,
     add,
+    addLine,
     update,
     remove,
     clear,
