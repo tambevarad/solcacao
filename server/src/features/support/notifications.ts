@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
-import type { InquiryInput, Locale } from '../../../../contracts/index.js';
+import type { InquiryInput, Locale, LocalizedText } from '../../../../contracts/index.js';
 import { idSchema } from '../../../../contracts/validation.js';
 
 export interface NotificationMessage {
@@ -23,7 +23,10 @@ export interface QuoteNotificationInput {
 export type InquiryNotificationInput = Pick<
   InquiryInput,
   'name' | 'email' | 'category' | 'message' | 'locale'
-> & { inquiryId: string };
+> & {
+  inquiryId: string;
+  samplerSelection?: { productId: string; quantity: number; name: LocalizedText }[];
+};
 
 export const escapeHtml = (value: string) =>
   value.replace(
@@ -124,15 +127,68 @@ export function createNotifications(
       return send(
         input.contactEmail,
         input.locale === 'es' ? 'SolCacao: consulta mayorista' : 'SolCacao: wholesale quote',
-        `Quote: ${input.quoteId}\nCompany: ${input.companyName}\nContact: ${input.contactEmail}`,
+        input.locale === 'es'
+          ? `Consulta: ${input.quoteId}\nEmpresa: ${input.companyName}\nCorreo: ${input.contactEmail}\n\nSolicitud recibida; no confirma precio, producción ni entrega.`
+          : `Quote: ${input.quoteId}\nCompany: ${input.companyName}\nContact: ${input.contactEmail}\n\nRequest received; this does not confirm pricing, production or delivery.`,
       );
     },
     async notifyInquiry(input: InquiryNotificationInput): Promise<'sent' | 'failed'> {
-      if (!idSchema.safeParse(input.inquiryId).success) return 'failed';
+      if (!idSchema.safeParse(input.inquiryId).success || !['en', 'es'].includes(input.locale))
+        return 'failed';
+      const spanish = input.locale === 'es';
+      const selection = input.samplerSelection ?? [];
+      if (
+        input.category === 'sampler' &&
+        (!selection.length ||
+          selection.length > 6 ||
+          new Set(selection.map((item) => item.productId)).size !== selection.length ||
+          selection.some(
+            (item) =>
+              !idSchema.safeParse(item.productId).success ||
+              !Number.isInteger(item.quantity) ||
+              item.quantity < 1 ||
+              !item.name[input.locale]?.trim(),
+          ) ||
+          selection.reduce((total, item) => total + item.quantity, 0) !== 6)
+      )
+        return 'failed';
+      const categories = spanish
+        ? {
+            support: 'Atención general',
+            wholesale: 'Consulta mayorista',
+            feedback: 'Opinión',
+            sampler: 'Muestras',
+          }
+        : {
+            support: 'General support',
+            wholesale: 'Wholesale enquiry',
+            feedback: 'Feedback',
+            sampler: 'Sampler',
+          };
+      const body = [
+        `${spanish ? 'Consulta' : 'Inquiry'}: ${input.inquiryId}`,
+        `${spanish ? 'Tema' : 'Topic'}: ${categories[input.category]}`,
+        `${spanish ? 'Nombre' : 'Name'}: ${input.name}`,
+        `${spanish ? 'Correo' : 'Email'}: ${input.email}`,
+        '',
+        input.message,
+        ...(input.category === 'sampler'
+          ? [
+              '',
+              spanish ? 'Selección de seis piezas:' : 'Six-piece selection:',
+              ...selection.map(
+                (item) => `${item.quantity} × ${item.name[input.locale]} (${item.productId})`,
+              ),
+              spanish
+                ? 'Consulta recibida; no es un pedido ni confirma precio o entrega.'
+                : 'Enquiry received; this is not an order or a price or delivery confirmation.',
+            ]
+          : []),
+      ].join('\n');
       return send(
         input.email,
-        input.locale === 'es' ? 'SolCacao: nueva consulta' : 'SolCacao: new enquiry',
-        `Inquiry: ${input.inquiryId}\nCategory: ${input.category}\nName: ${input.name}\nEmail: ${input.email}\n\n${input.message}`,
+        spanish ? 'SolCacao: nueva consulta' : 'SolCacao: new enquiry',
+        body,
       );
     },
   };
