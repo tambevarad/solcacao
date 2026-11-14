@@ -140,5 +140,5 @@ handoff.md.
 
 Proposed commit: `feat(auth): complete phases 3 and 4 binding, security sweep and live verification`
 Reviewer: tambevarad (requested)
-PR: see status.json and the PR into `development`
+PR: https://github.com/tambevarad/solcacao/pull/32 (implementation commit `e192dfc`)
 Integrated commit: none yet (recorded by the reviewer after merge)

@@ -3,7 +3,7 @@
 Current turn: Phases 3 and 4 together (D22), the last member turn before Student 2's closing turn.
 Branch `aman-auth`. Evidence: `team/member-1/phase-3-evidence.md` and `phase-4-evidence.md`.
 Author: Aman Gulati, who authorized commit, push and the PR into `development` on 2026-11-14.
-Reviewer requested: tambevarad. No approval is claimed here.
+PR: https://github.com/tambevarad/solcacao/pull/32 (`e192dfc`). Reviewer requested: tambevarad. No approval is claimed here.
 
 ## Start of turn: merge and peer reports
 

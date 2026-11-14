@@ -155,5 +155,5 @@ Uploads (Student 4) and mail (Student 5) were exercised only as far as the acces
 
 Proposed commit: `feat(auth): complete phases 3 and 4 binding, security sweep and live verification`
 Reviewer: tambevarad (requested)
-PR: see status.json
+PR: https://github.com/tambevarad/solcacao/pull/32 (implementation commit `e192dfc`)
 Integrated commit: none yet
