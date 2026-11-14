@@ -94,3 +94,15 @@ it('checks a token already in memory before reporting ready, and clears an inval
   expect(latest.user).toBeNull();
   expect(sessionToken.get()).toBeNull();
 });
+
+it('ends an overdue session when the tab becomes visible again (timer delayed by sleep)', async () => {
+  vi.useFakeTimers({ toFake: ['Date'] }); // the clock moves; the expiry timer does not fire
+  mount(fastMockAuth());
+  await act(() => latest.login({ email: 'retail@solcacao.test', password: 'retail-demo-pass' }));
+  act(() => document.dispatchEvent(new Event('visibilitychange')));
+  expect(screen.getByTestId('user')).toHaveTextContent('retail@solcacao.test');
+  vi.setSystemTime(Date.now() + 60 * 60 * 1000 + 1000);
+  act(() => document.dispatchEvent(new Event('visibilitychange')));
+  expect(screen.getByTestId('user')).toHaveTextContent('guest');
+  expect(sessionToken.get()).toBeNull();
+});

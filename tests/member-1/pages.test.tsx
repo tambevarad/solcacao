@@ -1,13 +1,25 @@
 // @vitest-environment jsdom
 import '@testing-library/jest-dom/vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  cleanup,
+  configure,
+  fireEvent,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import type { AuthApi } from '../../contracts/index.js';
+import { ApiError } from '../../client/src/api/http.js';
 import { sessionToken } from '../../client/src/api/session.js';
 import { resetMockAuth } from '../../client/src/features/auth/mock.js';
 import { fastMockAuth, renderApp } from './harness.js';
 
 const PASSWORD = 'synthetic-pass-123';
+
+// Full-suite runs on a busy CI machine sometimes exceed the 1 s default (reported by Member 3).
+configure({ asyncUtilTimeout: 3000 });
 
 beforeEach(() => {
   resetMockAuth();
@@ -15,7 +27,12 @@ beforeEach(() => {
   localStorage.clear();
   vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
 });
-afterEach(() => {
+afterEach(async () => {
+  // Let the cart's sign-in load/merge (started when a test signs in) settle while jsdom still
+  // exists, then unmount; nothing from this file may run after its environment is torn down.
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
   cleanup();
   vi.restoreAllMocks();
 });
@@ -336,11 +353,40 @@ describe('account page and session lifecycle', () => {
   it('a 401 from an account action signs out into a recoverable sign-in prompt', async () => {
     const auth = fastMockAuth();
     await signIn('/en/login', auth);
-    sessionToken.set('mock:ffffffffffffffffffffffff'); // session no longer valid server-side
+    // The server no longer accepts this session (expired or account deactivated).
+    vi.spyOn(auth, 'updateProfile').mockRejectedValue(
+      new ApiError(401, 'UNAUTHORIZED', 'Authentication required'),
+    );
     type(/^Full name/, 'Someone');
     fireEvent.click(screen.getByRole('button', { name: 'Save profile' }));
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Sign in to continue' }),
     ).toBeInTheDocument();
+    expect(sessionToken.get()).toBeNull();
+  });
+
+  it('a late 401 for a signed-out session never signs out the account that signed in since', async () => {
+    const auth = fastMockAuth();
+    await signIn('/en/login', auth);
+    let reject: (error: unknown) => void = () => {};
+    vi.spyOn(auth, 'updateProfile').mockImplementationOnce(
+      () => new Promise((_resolve, fail) => (reject = fail)),
+    );
+    type(/^Full name/, 'Slow Save');
+    fireEvent.click(screen.getByRole('button', { name: 'Save profile' }));
+    fireEvent.click(main().getByRole('button', { name: 'Sign out' }));
+    await screen.findByRole('heading', { level: 1, name: 'Sign in to continue' });
+
+    fireEvent.click(main().getByRole('link', { name: /sign-in page/i }));
+    await screen.findByRole('heading', { level: 1, name: 'Sign in' });
+    type(/^Email/, 'retail@solcacao.test');
+    type(/^Password/, 'retail-demo-pass');
+    fireEvent.click(main().getByRole('button', { name: 'Sign in' }));
+    await screen.findByText('Retail account');
+    const current = sessionToken.get();
+
+    await act(async () => reject(new ApiError(401, 'UNAUTHORIZED', 'Authentication required')));
+    expect(screen.getByText('Retail account')).toBeInTheDocument();
+    expect(sessionToken.get()).toBe(current);
   });
 });

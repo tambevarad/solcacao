@@ -37,16 +37,39 @@
       ]
     },
     "3": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "2026-11-14 (D22 turn): git merge origin/development: already up to date at e8d2215, no conflicts",
+        "All checks with TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test_ci against Docker mongo:8.0.38 and Mailpit v1.27",
+        "npm run check: pass, 48 files, 594 passed, 0 skipped",
+        "npx vitest run tests/member-1 tests/health.test.ts: 141 passed, 0 skipped (was 131 before this turn, including the 10 real-Mongo persistence tests not run in Phase 2)",
+        "pages/provider tests 5 consecutive runs: 28/28 each, no 'window is not defined' (CI flake fixed in tests/member-1/harness.tsx and pages.test.tsx)",
+        "npm run build: pass; npm run check:ownership -- --member 1 --base origin/development: pass (15 files)",
+        "npm run test:e2e: 15 passed; npm run test:e2e:live (local compiled API, HTTP build, MongoDB, Mailpit): 4 passed, 2 fixme skipped (Student 2)",
+        "tests/member-1/auth-journey.live.spec.ts (Vite dev HTTP mode, StrictMode, real API/Mongo): 5 passed. Token set before the one merge call; one user and one cart in MongoDB; reload asks for sign-in; late response after logout ignored; guest/retail/business wizard entry; direct quote POST and file GET refused 401/403/404; expiry gives a recoverable sign-in with no retry; unsafe returnTo falls back",
+        "Security review: CORS allowlist and TRUST_PROXY added (server/src/shared/env.ts, app.ts); MongoDB errors logged by name/code only; findings for Students 2-5 with file:line in handoff.md",
+        "Trigger audit: none specified; unique indexes and service logic recorded. ES/EN parity passes check:structure",
+        "Review of Varad's PR #27 app.ts mount: agreed, no change (handoff.md)"
+      ],
+      "blockers": ["Peer review of this PR (requested from tambevarad)"]
     },
     "4": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "Deployed site (e8d2215, before this PR): health connected; CORS grants only https://solcacao-production.up.railway.app; 3 concurrent same-email registrations gave 201/409/409; JWT HS256, iss/aud set, 3600 s lifetime; login RateLimit 10-in-15min; CSP/HSTS/nosniff present",
+        "tests/member-1/deployed-journey.live.spec.ts on the live site: 2 passed (register with guest cart and token-before-merge, account, reload, late response after logout, wizard entry, ES error; quote/file 401/403/404, role escalation 400)",
+        "Live auth pages at 375/768/1440 px, EN/ES: overflow 0, html lang correct, keyboard order correct, 0 console errors",
+        "Secret scan: no secret names or URIs in the client build or the repository",
+        "Auth/API notes (server/src/features/auth/README.md), Mongo setup and failure states (server/src/shared/README.md), deployment checklist and 4-minute presentation draft (phase-4-evidence.md)"
+      ],
+      "blockers": [
+        "pending-Varad: set TRUST_PROXY=1 on Railway after this PR deploys, then redeploy",
+        "pending-Varad: confirm variable names (JWT_SECRET, MONGODB_URI, CLIENT_ORIGIN, UPLOAD_DIR), Railway logs (startup, no PII/tokens, no ERR_ERL warnings), live getIndexes, MongoDB TCP proxy disabled",
+        "pending-Varad: redeploy, then rerun npx playwright test -c tests/member-1/playwright.config.ts deployed",
+        "Presentation rehearsal not done yet (human action)"
+      ]
     }
   }
 }
