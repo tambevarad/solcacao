@@ -78,4 +78,5 @@ unconfigured WhatsApp link. Hand off to Varad for deployment and team workflow.
 - Actual WhatsApp destination is still missing; keep it hidden until supplied.
 - Keep unrelated .vscode/settings.json and all ignored environment files out of the commit. Ownership checker currently flags only that existing untracked editor file.
 
-Reviewer: proposed tambevarad. PR: none opened. Integrated commit: none.
+Reviewer requested: tambevarad. PR: https://github.com/tambevarad/solcacao/pull/31.
+Implementation commit: `29aaf06`. Integrated commit: none; approval and deployment pending.

@@ -46,5 +46,5 @@ The exact file list and staging scope are in commit-scope.md.
 - [ ] Required human visual review
 - [ ] At least one teammate reviewed this PR
 
-Daniel authorized publication on November 14. This text is the proposed PR description;
-publication links will be recorded after GitHub confirms them. No deployment or approval is claimed.
+Published November 14: https://github.com/tambevarad/solcacao/pull/31 into development.
+Implementation commit: `29aaf06`. Reviewer requested: tambevarad. No deployment or approval is claimed.

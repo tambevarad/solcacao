@@ -4,7 +4,8 @@
 
 Daniel authorized both phases under D22, building on preserved uncommitted Member 5 work.
 Daniel authorized commit, push and PR creation on November 14. Reviewer: **tambevarad**.
-Publication results will be recorded after GitHub confirms the PR; no approval is claimed.
+Published PR: https://github.com/tambevarad/solcacao/pull/31 into `development`.
+Implementation commit: `29aaf06`. Review requested from `tambevarad`; no approval is claimed.
 Branch `daniel-support` is synchronized with `origin/development` at `a1a8f9d`, including PR #26
 and Reethika's merged PR #30. No rebase, force push, deployment or primary-branch commit occurred.
 

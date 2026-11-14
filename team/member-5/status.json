@@ -38,7 +38,7 @@
     },
     "3": {
       "state": "ready_for_review",
-      "commit": null,
+      "commit": "29aaf06",
       "checks": [
         "2026-11-14: npm run setup -- --member 5 passed; daniel-support synchronized with origin/development a1a8f9d, including PR #26 and merged Reethika PR #30",
         "Node 24.19.0 and GitHub CLI authentication verified; Docker MongoDB 8 / Mailpit running; HTTP setup smoke 3 passed, 0 skipped, 0 failed",
@@ -50,7 +50,8 @@
         "Shared JSON parser error-code alignment blocker resolved by existing handler and real-app regression tests; no shared handler edited",
         "Story/Care, owned asset register, security/trigger audit, SMTP notes and demo draft complete; no public contract changes",
         "Ownership check flags only unrelated pre-existing untracked .vscode/settings.json; preserve it and exclude from Member 5 commit",
-        "2026-11-14 cleanup: error handling/types and current documentation simplified; full check 584 passed, 0 skipped/failed; HTTP build passed; official ownership check passes all 35 proposed files on isolated source tree; commit-scope.md excludes unrelated local editor settings"
+        "2026-11-14 cleanup: error handling/types and current documentation simplified; full check 584 passed, 0 skipped/failed; HTTP build passed; official ownership check passes all 35 proposed files on isolated source tree; commit-scope.md excludes unrelated local editor settings",
+        "2026-11-14: implementation committed as 29aaf06 and pushed on daniel-support; PR #31 opened into development (https://github.com/tambevarad/solcacao/pull/31); review requested from tambevarad, not approved or integrated"
       ],
       "blockers": [
         "Actual WhatsApp destination unavailable; link intentionally hidden",
@@ -59,7 +60,7 @@
     },
     "4": {
       "state": "ready_for_review",
-      "commit": null,
+      "commit": "29aaf06",
       "checks": [
         "2026-11-14: deployed Member 5 suite 5 passed, 0 skipped, 0 failed against documented Railway app and protected live Mailpit",
         "30 route/viewport visits: contact, feedback, sampler, Story, Care in EN/ES at 375/768/1440; keyboard checks, no horizontal overflow or page/console errors",
@@ -68,7 +69,8 @@
         "Existing approved WebP assets retained; sampler lazy images gain asynchronous decoding; no owner asset duplication",
         "Four-minute presentation segment drafted in phase-4-evidence.md; no rehearsal or human review claimed",
         "Build passed; full check 584 passed with real Mongo, 0 skips/failures on identical source copy; local/shared browser results in phase-3-evidence.md",
-        "2026-11-14 cleanup: presentation text encoding corrected, stale handoff removed; 35-file requirements scope documented; explicit HTTP-mode production build passed"
+        "2026-11-14 cleanup: presentation text encoding corrected, stale handoff removed; 35-file requirements scope documented; explicit HTTP-mode production build passed",
+        "2026-11-14: implementation committed as 29aaf06 and pushed on daniel-support; PR #31 opened into development (https://github.com/tambevarad/solcacao/pull/31); review requested from tambevarad, not approved or integrated"
       ],
       "blockers": [
         "Coordinator must deploy reviewed local changes after merge and rerun the live checks; current deployed evidence covers existing development version",

@@ -1,7 +1,8 @@
 # Member 5 commit scope
 
 This change covers Phases 3 and 4 together under D22 and the team lead's Member 5 instructions.
-There are no branch-only commits relative to origin/development; merged team changes are base history.
+Before publication there were no branch-only commits relative to origin/development; merged team
+changes are base history. PR #31 adds only the Member 5 implementation and publication records.
 
 | Requirement             | Included work                                                                           |
 | ----------------------- | --------------------------------------------------------------------------------------- |

@@ -80,7 +80,8 @@ executable-bit setting was matched to this Windows checkout to remove copy-only 
 no source ownership rule or ignore rule was changed. The full checkout still flags the preserved
 untracked editor file. `commit-scope.md` lists every proposed file and safe staging commands.
 
-Prepared for review by tambevarad; approval is not claimed. Commit/PR: none.
+Implementation commit: `29aaf06`. PR: https://github.com/tambevarad/solcacao/pull/31 into development.
+Review requested from tambevarad; approval and integration are not claimed.
 Proposed commit: feat(support): complete HTTP and live-mail verification for phases 3 and 4.
 Missing actual WhatsApp number remains documented and unexposed. Human visual approval and
 presentation rehearsal remain pending. Shared sampler test is an exact proposal in handoff.md;
