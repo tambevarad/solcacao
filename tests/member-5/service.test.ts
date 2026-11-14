@@ -93,10 +93,16 @@ describe('inquiry persistence and notifications', () => {
     };
     const { store, snapshots } = storeDouble();
     const products = vi.fn(async () => [product]);
-    const submit = createInquiryService({ store, products, notify: async () => 'sent' });
+    const notify = vi.fn(async () => 'sent' as const);
+    const submit = createInquiryService({ store, products, notify });
     await submit(sampler);
     expect(products).toHaveBeenCalledWith([product.id]);
     expect(snapshots).toEqual([[product]]);
+    expect(notify).toHaveBeenCalledWith(
+      expect.objectContaining({
+        samplerSelection: [{ productId: product.id, quantity: 6, name: product.name }],
+      }),
+    );
     for (const list of [[], [{ ...product, active: false }]]) {
       const other = createInquiryService({
         store: storeDouble().store,

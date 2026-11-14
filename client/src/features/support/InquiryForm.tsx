@@ -6,8 +6,19 @@ import { Button, Field, Select, TextArea } from '../../shared/index.js';
 import { useLocale } from '../shell/public.js';
 import { canonicalInquiry, supportInquirySchema } from './rules.js';
 import { simulateNextInquiryFailure } from './mock.js';
+import { InquiryTimeoutError } from './http.js';
 
 const isMock = (import.meta.env.VITE_API_MODE || 'mock') === 'mock';
+
+function inquiryFailureKey(error: unknown) {
+  if (error instanceof InquiryTimeoutError) return 'support.error.timeout';
+  if (error instanceof ApiError) {
+    if (error.status === 429) return 'support.error.rateLimited';
+    if (error.code === 'IDEMPOTENCY_CONFLICT') return 'support.error.conflict';
+    if (error.status === 503) return 'support.error.unavailable';
+  }
+  return 'support.error.request';
+}
 
 export function InquiryForm({
   category,
@@ -29,6 +40,7 @@ export function InquiryForm({
   const [topic, setTopic] = useState<'support' | 'wholesale'>('support');
   const [errors, setErrors] = useState<string[]>([]);
   const [failed, setFailed] = useState(false);
+  const [failureKey, setFailureKey] = useState('support.error.request');
   const [pending, setPending] = useState(false);
   const [receipt, setReceipt] = useState<InquiryReceipt | null>(null);
   const summary = useRef<HTMLDivElement>(null);
@@ -85,6 +97,7 @@ export function InquiryForm({
       clearDraft();
       onSuccess?.();
     } catch (error) {
+      setFailureKey(inquiryFailureKey(error));
       if (error instanceof ApiError && error.fieldErrors) {
         const fields = Object.keys(error.fieldErrors).map((field) => field.split('.')[0]);
         setErrors([...new Set(fields)]);
@@ -135,7 +148,7 @@ export function InquiryForm({
           tabIndex={-1}
           className="space-y-2 border border-error p-4 text-error focus:outline-error"
         >
-          <p>{t(failed ? 'support.error.request' : 'support.error.summary')}</p>
+          <p>{t(failed ? failureKey : 'support.error.summary')}</p>
           <ul className="list-inside list-disc">
             {errors.map((field) => (
               <li key={field}>

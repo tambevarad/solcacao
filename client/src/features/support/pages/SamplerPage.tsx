@@ -80,6 +80,7 @@ export default function SamplerPage() {
                       <img
                         className="aspect-square w-full object-cover"
                         loading="lazy"
+                        decoding="async"
                         src={product.images[0].url}
                         alt={product.images[0].alt[locale]}
                       />

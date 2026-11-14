@@ -16,6 +16,8 @@ import shellEs from '../../client/src/features/shell/locales/es.json';
 import { product } from './fixtures.js';
 import type { ReactNode } from 'react';
 import type { Locale } from '../../contracts/index.js';
+import { ApiError } from '../../client/src/api/http.js';
+import { InquiryTimeoutError } from '../../client/src/features/support/http.js';
 
 afterEach(() => {
   cleanup();
@@ -55,6 +57,48 @@ async function fill() {
 }
 
 describe('support forms', () => {
+  it.each([
+    [new ApiError(429, 'RATE_LIMITED', 'Untranslated server text'), 'support.error.rateLimited'],
+    [
+      new ApiError(503, 'SERVICE_UNAVAILABLE', 'Untranslated server text'),
+      'support.error.unavailable',
+    ],
+    [new InquiryTimeoutError(), 'support.error.timeout'],
+  ] as const)(
+    'preserves details and retry ID after %s and translates the error',
+    async (error, key) => {
+      const submit = vi
+        .spyOn(api.support, 'submit')
+        .mockRejectedValueOnce(error)
+        .mockResolvedValue({ id: product.id, status: 'received', notificationStatus: 'failed' });
+      mount(<ContactPage />);
+      await fill();
+      fireEvent.click(screen.getByRole('button', { name: 'Send enquiry' }));
+      await screen.findByText(en[key]);
+      await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('alert')));
+      expect((screen.getByLabelText(/^Message/) as HTMLTextAreaElement).value).toBe(
+        'A fictional support question.',
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Send enquiry' }));
+      await screen.findByText(en['support.receipt.mock']);
+      expect(submit.mock.calls[1][0].requestId).toBe(submit.mock.calls[0][0].requestId);
+    },
+  );
+
+  it('translates backend field errors and focuses the summary without exposing server text', async () => {
+    vi.spyOn(api.support, 'submit').mockRejectedValue(
+      new ApiError(400, 'VALIDATION_ERROR', 'raw error', { message: 'raw detail' }),
+    );
+    mount(<ContactPage />);
+    await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Send enquiry' }));
+    await screen.findByRole('alert');
+    expect(screen.queryByText('raw detail')).toBeNull();
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('alert')));
+    fireEvent.click(screen.getByRole('button', { name: 'Switch test locale' }));
+    await screen.findByText(es['support.error.request']);
+    expect(screen.getAllByText(es['support.error.message']).length).toBeGreaterThan(0);
+  });
   it('focuses invalid input summary and preserves values across failure, retry and locale change', async () => {
     const submit = vi
       .spyOn(api.support, 'submit')
@@ -63,7 +107,7 @@ describe('support forms', () => {
     mount(<ContactPage />);
     fireEvent.click(await screen.findByRole('button', { name: 'Send enquiry' }));
     expect(submit).not.toHaveBeenCalled();
-    expect(document.activeElement).toBe(screen.getByRole('alert'));
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('alert')));
     await fill();
     fireEvent.click(screen.getByRole('button', { name: 'Send enquiry' }));
     await screen.findByText(en['support.error.request']);

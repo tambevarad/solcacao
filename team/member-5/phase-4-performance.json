@@ -1,0 +1,450 @@
+{
+  "date": "2026-11-14",
+  "target": "existing deployed development build; unthrottled headless Chromium; warm network may affect timings",
+  "results": [
+    {
+      "width": 375,
+      "route": "story",
+      "reducedMotion": true,
+      "domContentLoadedMs": 380,
+      "images": [
+        {
+          "path": "/images/home-story-640.webp",
+          "loading": "eager",
+          "alt": "Pile of dried cacao beans",
+          "width": 375,
+          "height": 280
+        }
+      ],
+      "imageResources": [
+        {
+          "path": "/images/home-story-640.webp",
+          "bytes": 68692,
+          "durationMs": 72
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "route": "care",
+      "reducedMotion": true,
+      "domContentLoadedMs": 88,
+      "images": [
+        {
+          "path": "/images/product-dark-shards-640.webp",
+          "loading": "eager",
+          "alt": "Stack of dark chocolate pieces with shavings on a dark background",
+          "width": 375,
+          "height": 250
+        }
+      ],
+      "imageResources": [
+        {
+          "path": "/images/product-dark-shards-640.webp",
+          "bytes": 18816,
+          "durationMs": 66
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "route": "sampler",
+      "reducedMotion": true,
+      "domContentLoadedMs": 84,
+      "images": [
+        {
+          "path": "/images/products/assorted-pralines.webp",
+          "loading": "lazy",
+          "alt": "Assorted dark and white chocolate pralines on wood",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/sprinkled-chocolate-balls.webp",
+          "loading": "lazy",
+          "alt": "Chocolate balls rolled in chocolate sprinkles",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/dark-shards.webp",
+          "loading": "lazy",
+          "alt": "Stacked dark chocolate pieces with shavings",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/dark-bar-cocoa.webp",
+          "loading": "lazy",
+          "alt": "Dark chocolate bars resting on cocoa powder",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/chopped-chocolate.webp",
+          "loading": "lazy",
+          "alt": "Chopped dark chocolate on a white background",
+          "width": 768,
+          "height": 768
+        },
+        {
+          "path": "/images/products/hazelnut-pralines.webp",
+          "loading": "lazy",
+          "alt": "Chocolate pralines on a wooden board, one cut open to show a hazelnut center",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "path": "/images/products/heart-box.webp",
+          "loading": "lazy",
+          "alt": "Heart-shaped box of assorted chocolates beside roses",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/bars-with-shavings.webp",
+          "loading": "lazy",
+          "alt": "Chocolate bars with chocolate shavings on a white background",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/bark-tied-twine.webp",
+          "loading": "lazy",
+          "alt": "Peppermint and nut chocolate bark tied with red-and-white twine",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/dark-bar-close-up.webp",
+          "loading": "lazy",
+          "alt": "Close-up of stacked dark chocolate bars on cocoa",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/chocolate-eggs.webp",
+          "loading": "lazy",
+          "alt": "Three chocolate eggs on a white background",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/coffee-bean-pieces.webp",
+          "loading": "lazy",
+          "alt": "Dark chocolate pieces with roasted coffee beans",
+          "width": 682,
+          "height": 682
+        },
+        {
+          "path": "/images/products/walnut-truffles.webp",
+          "loading": "lazy",
+          "alt": "Dark chocolate truffles topped with walnut halves",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/white-truffle-trio.webp",
+          "loading": "lazy",
+          "alt": "White chocolate truffle beside two layered chocolate pralines",
+          "width": 719,
+          "height": 719
+        }
+      ],
+      "imageResources": [
+        {
+          "path": "/images/products/assorted-pralines.webp",
+          "bytes": 23486,
+          "durationMs": 478
+        },
+        {
+          "path": "/images/products/dark-shards.webp",
+          "bytes": 30358,
+          "durationMs": 249
+        },
+        {
+          "path": "/images/products/sprinkled-chocolate-balls.webp",
+          "bytes": 84914,
+          "durationMs": 651
+        },
+        {
+          "path": "/images/products/dark-bar-cocoa.webp",
+          "bytes": 48766,
+          "durationMs": 534
+        },
+        {
+          "path": "/images/products/chopped-chocolate.webp",
+          "bytes": 27874,
+          "durationMs": 650
+        },
+        {
+          "path": "/images/products/heart-box.webp",
+          "bytes": 40108,
+          "durationMs": 380
+        },
+        {
+          "path": "/images/products/hazelnut-pralines.webp",
+          "bytes": 43476,
+          "durationMs": 603
+        },
+        {
+          "path": "/images/products/bars-with-shavings.webp",
+          "bytes": 26420,
+          "durationMs": 455
+        },
+        {
+          "path": "/images/products/bark-tied-twine.webp",
+          "bytes": 20388,
+          "durationMs": 219
+        },
+        {
+          "path": "/images/products/dark-bar-close-up.webp",
+          "bytes": 50494,
+          "durationMs": 318
+        },
+        {
+          "path": "/images/products/chocolate-eggs.webp",
+          "bytes": 14048,
+          "durationMs": 218
+        },
+        {
+          "path": "/images/products/walnut-truffles.webp",
+          "bytes": 21690,
+          "durationMs": 379
+        },
+        {
+          "path": "/images/products/coffee-bean-pieces.webp",
+          "bytes": 21758,
+          "durationMs": 638
+        },
+        {
+          "path": "/images/products/white-truffle-trio.webp",
+          "bytes": 68064,
+          "durationMs": 583
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "story",
+      "reducedMotion": true,
+      "domContentLoadedMs": 312,
+      "images": [
+        {
+          "path": "/images/home-story-1024.webp",
+          "loading": "eager",
+          "alt": "Pile of dried cacao beans",
+          "width": 1440,
+          "height": 1075
+        }
+      ],
+      "imageResources": [
+        {
+          "path": "/images/home-story-1024.webp",
+          "bytes": 140596,
+          "durationMs": 92
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "care",
+      "reducedMotion": true,
+      "domContentLoadedMs": 99,
+      "images": [
+        {
+          "path": "/images/product-dark-shards-1024.webp",
+          "loading": "eager",
+          "alt": "Stack of dark chocolate pieces with shavings on a dark background",
+          "width": 1440,
+          "height": 960
+        }
+      ],
+      "imageResources": [
+        {
+          "path": "/images/product-dark-shards-1024.webp",
+          "bytes": 40678,
+          "durationMs": 251
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "sampler",
+      "reducedMotion": true,
+      "domContentLoadedMs": 91,
+      "images": [
+        {
+          "path": "/images/products/assorted-pralines.webp",
+          "loading": "lazy",
+          "alt": "Assorted dark and white chocolate pralines on wood",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/sprinkled-chocolate-balls.webp",
+          "loading": "lazy",
+          "alt": "Chocolate balls rolled in chocolate sprinkles",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/dark-shards.webp",
+          "loading": "lazy",
+          "alt": "Stacked dark chocolate pieces with shavings",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/dark-bar-cocoa.webp",
+          "loading": "lazy",
+          "alt": "Dark chocolate bars resting on cocoa powder",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/chopped-chocolate.webp",
+          "loading": "lazy",
+          "alt": "Chopped dark chocolate on a white background",
+          "width": 768,
+          "height": 768
+        },
+        {
+          "path": "/images/products/hazelnut-pralines.webp",
+          "loading": "lazy",
+          "alt": "Chocolate pralines on a wooden board, one cut open to show a hazelnut center",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "path": "/images/products/heart-box.webp",
+          "loading": "lazy",
+          "alt": "Heart-shaped box of assorted chocolates beside roses",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/bars-with-shavings.webp",
+          "loading": "lazy",
+          "alt": "Chocolate bars with chocolate shavings on a white background",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/bark-tied-twine.webp",
+          "loading": "lazy",
+          "alt": "Peppermint and nut chocolate bark tied with red-and-white twine",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/dark-bar-close-up.webp",
+          "loading": "lazy",
+          "alt": "Close-up of stacked dark chocolate bars on cocoa",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/chocolate-eggs.webp",
+          "loading": "lazy",
+          "alt": "Three chocolate eggs on a white background",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/coffee-bean-pieces.webp",
+          "loading": "lazy",
+          "alt": "Dark chocolate pieces with roasted coffee beans",
+          "width": 682,
+          "height": 682
+        },
+        {
+          "path": "/images/products/walnut-truffles.webp",
+          "loading": "lazy",
+          "alt": "Dark chocolate truffles topped with walnut halves",
+          "width": 683,
+          "height": 683
+        },
+        {
+          "path": "/images/products/white-truffle-trio.webp",
+          "loading": "lazy",
+          "alt": "White chocolate truffle beside two layered chocolate pralines",
+          "width": 719,
+          "height": 719
+        }
+      ],
+      "imageResources": [
+        {
+          "path": "/images/products/assorted-pralines.webp",
+          "bytes": 23486,
+          "durationMs": 111
+        },
+        {
+          "path": "/images/products/sprinkled-chocolate-balls.webp",
+          "bytes": 84914,
+          "durationMs": 302
+        },
+        {
+          "path": "/images/products/dark-shards.webp",
+          "bytes": 30358,
+          "durationMs": 151
+        },
+        {
+          "path": "/images/products/dark-bar-cocoa.webp",
+          "bytes": 48766,
+          "durationMs": 199
+        },
+        {
+          "path": "/images/products/chopped-chocolate.webp",
+          "bytes": 27874,
+          "durationMs": 127
+        },
+        {
+          "path": "/images/products/hazelnut-pralines.webp",
+          "bytes": 43476,
+          "durationMs": 272
+        },
+        {
+          "path": "/images/products/bars-with-shavings.webp",
+          "bytes": 26420,
+          "durationMs": 134
+        },
+        {
+          "path": "/images/products/heart-box.webp",
+          "bytes": 40108,
+          "durationMs": 154
+        },
+        {
+          "path": "/images/products/bark-tied-twine.webp",
+          "bytes": 20388,
+          "durationMs": 273
+        },
+        {
+          "path": "/images/products/chocolate-eggs.webp",
+          "bytes": 14048,
+          "durationMs": 182
+        },
+        {
+          "path": "/images/products/dark-bar-close-up.webp",
+          "bytes": 50494,
+          "durationMs": 241
+        },
+        {
+          "path": "/images/products/coffee-bean-pieces.webp",
+          "bytes": 21758,
+          "durationMs": 277
+        },
+        {
+          "path": "/images/products/walnut-truffles.webp",
+          "bytes": 21690,
+          "durationMs": 308
+        },
+        {
+          "path": "/images/products/white-truffle-trio.webp",
+          "bytes": 68064,
+          "durationMs": 271
+        }
+      ]
+    }
+  ]
+}

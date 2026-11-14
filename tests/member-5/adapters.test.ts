@@ -3,7 +3,7 @@ import {
   createMockSupport,
   simulateNextInquiryFailure,
 } from '../../client/src/features/support/mock.js';
-import { createHttpSupport } from '../../client/src/features/support/http.js';
+import { createHttpSupport, InquiryTimeoutError } from '../../client/src/features/support/http.js';
 import { supportInquirySchema, whatsappUrl } from '../../client/src/features/support/rules.js';
 import { input, product, unusedHttp } from './fixtures.js';
 
@@ -86,5 +86,27 @@ describe('support boundaries and adapters', () => {
     expect(whatsappUrl('15555555555', 'Hello & hola?')).toBe(
       'https://wa.me/15555555555?text=Hello%20%26%20hola%3F',
     );
+  });
+
+  it('bounds a lost HTTP response and permits retry with the original request identity', async () => {
+    vi.useFakeTimers();
+    try {
+      const request = vi
+        .fn()
+        .mockImplementationOnce(() => new Promise(() => {}))
+        .mockResolvedValue({ id: product.id, status: 'received', notificationStatus: 'sent' });
+      const adapter = createHttpSupport({ ...unusedHttp, request }, 20000);
+      const first = expect(adapter.submit(input)).rejects.toBeInstanceOf(InquiryTimeoutError);
+      await vi.advanceTimersByTimeAsync(20000);
+      await first;
+      expect((await adapter.submit(input)).id).toBe(product.id);
+      expect(request.mock.calls.map((call) => call[1].body.requestId)).toEqual([
+        input.requestId,
+        input.requestId,
+      ]);
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
