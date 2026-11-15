@@ -82,6 +82,10 @@ jobs:
           cat api.log
           exit 1
       - run: npm run test:e2e:live
+      - name: Catalog live journeys (Student 3)
+        run: npx playwright test --config tests/member-3/playwright.config.ts
+        env:
+          LIVE_MONGODB_URI: mongodb://127.0.0.1:27017/solcacao_e2e
       - name: API log
         if: failure()
         run: cat api.log

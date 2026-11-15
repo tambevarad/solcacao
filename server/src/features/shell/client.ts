@@ -11,11 +11,12 @@ export interface ClientAppOptions {
 }
 
 /**
- * The routes in client/src/routes.tsx, below /:locale (tests/member-2/client-serving.test.ts keeps
- * the two lists in step). They get index.html with 200. Any other extensionless path gets the same
- * page, which renders not-found, with a 404, so a mistyped address is never served as a success.
+ * The routes in client/src/routes.tsx, below /:locale, with each `:param` as `[^/]+`
+ * (tests/member-2/client-serving.test.ts checks that the two lists match). They get index.html with
+ * 200. Any other extensionless path gets the same page, which renders not-found, with a 404, so a
+ * mistyped address is never served as a success.
  */
-const APP_ROUTES = [
+export const APP_ROUTES = [
   'catalog',
   'products/[^/]+',
   'login',

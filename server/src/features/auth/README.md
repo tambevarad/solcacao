@@ -46,7 +46,7 @@ other than `retail`/`b2b`, or a `userId` are rejected. `User` never contains `pa
 - Login: 10 failed attempts per 15 minutes per client IP (successes are not counted).
 - Registration: 10 per hour per client IP.
 - Both return `429 RATE_LIMITED` with standard `RateLimit` headers. Behind a host proxy, set
-  `TRUST_PROXY` to the number of proxy hops (1 on Railway). Otherwise every visitor shares the
+  `TRUST_PROXY` to the number of proxy hops (2 on Railway, measured in `docs/deployment.md`). Otherwise every visitor shares the
   proxy's address and one bucket.
 - JSON bodies are limited to 100 kB (`413`). Passwords are 12–72 UTF-8 bytes. Login rejects longer
   ones with the same 401, so bcrypt never silently truncates them.

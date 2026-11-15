@@ -25,6 +25,9 @@ export function Layout() {
     main.current?.focus({ preventScroll: true });
   }, [page]);
 
+  // <main> is at least one screen tall, so the footer starts below the fold. Pages load on demand,
+  // and a footer painted beside the short loading state was pushed down when the page arrived
+  // (Lighthouse CLS 0.4–0.7 on the deployed site).
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -38,7 +41,7 @@ export function Layout() {
         id="main"
         ref={main}
         tabIndex={-1}
-        className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-8 focus-visible:outline-none md:px-6 lg:px-8"
+        className="mx-auto min-h-svh w-full max-w-[1200px] flex-1 px-4 py-8 focus-visible:outline-none md:px-6 lg:px-8"
       >
         {isLocale(prefix) ? (
           <Outlet />

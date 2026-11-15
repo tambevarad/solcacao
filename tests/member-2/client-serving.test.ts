@@ -4,7 +4,7 @@ import path from 'node:path';
 import express from 'express';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { createClientRouter } from '../../server/src/features/shell/client.js';
+import { APP_ROUTES, createClientRouter } from '../../server/src/features/shell/client.js';
 import { errorHandler, notFoundHandler } from '../../server/src/shared/errors.js';
 
 const html = '<!doctype html><title>SolCacao</title><div id="root"></div>';
@@ -24,6 +24,14 @@ beforeAll(() => {
   writeFileSync(path.join(uploadDir, 'quote.pdf'), '%PDF-1.4');
 });
 afterAll(() => rmSync(base, { recursive: true, force: true }));
+
+/** The paths below /:locale in client/src/routes.tsx, as written there (`products/:slug`). */
+function clientRoutes() {
+  const source = readFileSync(path.resolve('client/src/routes.tsx'), 'utf8');
+  return [...source.matchAll(/path="([^"]+)"/g)]
+    .map((match) => match[1])
+    .filter((route) => !['/', '/:locale', '*'].includes(route));
+}
 
 /** Same order as server/src/app.ts: API routers, then the client, then the JSON 404. */
 function appFor(root = clientDir) {
@@ -60,13 +68,16 @@ describe('production client serving', () => {
     },
   );
 
+  it('lists exactly the routes in client/src/routes.tsx, in both directions', () => {
+    const patterns = clientRoutes().map((route) => route.replace(/:[^/]+/g, '[^/]+'));
+    expect(patterns.length).toBeGreaterThan(10);
+    // A route missing from APP_ROUTES would 404 on refresh; an APP_ROUTES entry left over after a
+    // route is removed would answer 200 for a page that no longer exists.
+    expect([...APP_ROUTES].sort()).toEqual([...patterns].sort());
+  });
+
   it('serves every route in client/src/routes.tsx with 200 in both locales', async () => {
-    const source = readFileSync(path.resolve('client/src/routes.tsx'), 'utf8');
-    const routes = [...source.matchAll(/path="([^"]+)"/g)]
-      .map((match) => match[1])
-      .filter((route) => !['/', '/:locale', '*'].includes(route))
-      .map((route) => route.replace(':slug', 'peru-85-dark-bar'));
-    expect(routes.length).toBeGreaterThan(10);
+    const routes = clientRoutes().map((route) => route.replace(':slug', 'peru-85-dark-bar'));
     const app = appFor();
     for (const locale of ['en', 'es'])
       for (const route of routes) {
