@@ -1,6 +1,6 @@
 # Student 2 Phase 3 evidence
 
-State: ready for review on `varad-shell`, PR #27 (first D22 turn; Phases 3 and 4 share one PR). The live-API browser journeys pass in CI, and the app is deployed on Railway (phase-4-evidence.md).
+State: turn 1 integrated (PR #27 merged as 62e52e4, follow-up #28 as 13a60a2); closing turn ready for review in PR #33 (D22: Phases 3 and 4 share each PR). The live-API browser journeys pass in CI, and the app is deployed on Railway (phase-4-evidence.md).
 
 ## Implemented requirements and changed paths
 
@@ -56,15 +56,47 @@ Phone width and keyboard were not rechecked: no visible UI changed apart from th
 
 No DTO, route or `docs/api.json` change. `server/src/app.ts` gains one conditional mount (Student 1, exception above). The live journeys use Students 1 and 3's endpoints as published.
 
+## Closing turn (PR #33, 2026-11-14)
+
+All five member turns had merged (development at `3e0c1f1`, PR #32).
+
+### Changed paths
+
+- `tests/e2e/live/journeys.live.spec.ts`: the quote journey (Student 4's proposal 1) and the sampler journey (Student 5's proposal, plus a Mailpit inbox check by a unique message marker) replace the two `test.fixme` placeholders. The merge journey also checks the "Cart update" notice (Student 3's proposal 8). Mail checks accept `MAILPIT_AUTH` for the deployed inbox.
+- `.github/workflows/ci.yml`: `e2e-live` also runs `tests/member-3/playwright.config.ts` (Student 3's proposal 8).
+- `server/src/features/shell/client.ts` exports `APP_ROUTES`; `tests/member-2/client-serving.test.ts` checks it equals the routes in `client/src/routes.tsx` (with `:param` as `[^/]+`) in both directions (Krish's note on #28).
+- `client/src/styles.css`: the default focus ring moves into Tailwind's `base` layer. Unlayered, it beat every utility, so `focus-visible:outline-none` on `<main>` (focused after a page change) and on the quote headings never applied, and a copper frame surrounded the whole page after keyboard navigation.
+- `package.json`, `package-lock.json`: the npm audit triage (phase-4-evidence.md).
+
+### Commands actually run
+
+macOS, Node 24.19.0, 2026-11-14. Docker Desktop was not running, so no local MongoDB or Mailpit.
+
+| Command                                                                                                             | Result        | Relevant output or test count                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run typecheck`                                                                                                 | pass          |                                                                                                                                                 |
+| `npx vitest run`                                                                                                    | pass          | 540 passed, 55 skipped (persistence suites, no `TEST_MONGODB_URI`)                                                                              |
+| `npx vitest run tests/member-2` (after the layout change)                                                           | pass          | 143 passed, 4 skipped                                                                                                                           |
+| `npm run check:structure`, `npm run check:workflow`, `npx prettier --check` on changed files                        | pass          |                                                                                                                                                 |
+| `VITE_API_MODE=http npm run build`                                                                                  | pass          | no chunk-size warning                                                                                                                           |
+| `npx playwright test --config playwright.live.config.ts --list`                                                     | pass          | 6 journeys, no placeholders                                                                                                                     |
+| `npm run check:ownership -- --member 2 --base origin/development`                                                   | flags 2 files | Student 1's two READMEs: the recorded docs-only exception (handoff.md)                                                                          |
+| CI on PR #33, run 43665224227 (`0fc6b00`)                                                                           | pass          | `verify` 595/595 against MongoDB, none skipped; `e2e-live` 6/6 (`tests/e2e/live`) and 11/11 (`tests/member-3`); `e2e-mock` 15/15; `image` built |
+| `LIVE_BASE_URL=https://solcacao-production.up.railway.app`, the catalog and guest-order journeys (installed Chrome) | pass          | 2 passed against the deployed site                                                                                                              |
+
+### Manual demo observations
+
+- Mock build in the browser at 375 px and desktop: after pressing Enter on a nav link, `<main>` has focus with `outline-style: none`; a focused link keeps the 3px copper outline with a 3px offset.
+- The live journeys that sign in or read the inbox (merge, contact, quote, sampler) were not run by the agent against the deployed site: they register accounts and need the inbox password. They pass in CI against MongoDB and Mailpit; Varad runs them on the deployed site (docs/deployment.md).
+
 ## Known limitations or blocked checks
 
-- Persistence suites were skipped locally (no Docker); CI runs them on MongoDB.
-- `tests/member-3/pages.test.tsx` ("reuses the requestId for a retry…") can time out on slower runners; it is Student 3's to fix in her D22 turn.
-- Student 1 has not reviewed the `app.ts` change.
+- Persistence suites and the live journeys were not run locally (no Docker); CI ran them on MongoDB and Mailpit.
+- The two README lines in Student 1's files are a coordinator ownership exception (docs only), recorded in handoff.md and the PR.
 
 ## Review
 
-Proposed commit: `varad-shell` (PR #27)
+Proposed commit: `varad-shell` (PR #33; turn 1 was PR #27 and #28)
 Reviewer: Krishr21 (D22)
-PR: https://github.com/tambevarad/solcacao/pull/27
-Integrated commit:
+PR: https://github.com/tambevarad/solcacao/pull/33
+Integrated commit: turn 1 `62e52e4` and `13a60a2`; closing turn pending

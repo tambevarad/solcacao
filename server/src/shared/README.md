@@ -19,15 +19,15 @@ Student 4. Do not serve the private upload directory as static content.
 
 ## Environment (names only; values live in `.env` locally and in host variables in production)
 
-| Variable                                             | Required                       | Rule                                                                                                                          |
-| ---------------------------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| `MONGODB_URI`                                        | yes                            | `mongodb://` or `mongodb+srv://`                                                                                              |
-| `JWT_SECRET`                                         | yes                            | at least 32 characters, random, not a placeholder                                                                             |
-| `PORT`                                               | no (4000)                      | 1–65535; the host sets it                                                                                                     |
-| `CLIENT_ORIGIN`                                      | yes when `NODE_ENV=production` | CORS allowlist: one origin or a comma-separated list, each exactly `scheme://host[:port]`. Include the deployed site's origin |
-| `TRUST_PROXY`                                        | no (0)                         | number of reverse-proxy hops in front of the API (1 on Railway), so per-IP rate limits see the client                         |
-| `CLIENT_DIST_DIR`                                    | production only                | built client to serve (Student 2's router; must not overlap `UPLOAD_DIR`)                                                     |
-| `UPLOAD_DIR`, `SMTP_*`, `MAIL_FROM`, `SUPPORT_EMAIL` | per feature                    | Students 4 and 5                                                                                                              |
+| Variable                                             | Required                       | Rule                                                                                                                                    |
+| ---------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `MONGODB_URI`                                        | yes                            | `mongodb://` or `mongodb+srv://`                                                                                                        |
+| `JWT_SECRET`                                         | yes                            | at least 32 characters, random, not a placeholder                                                                                       |
+| `PORT`                                               | no (4000)                      | 1–65535; the host sets it                                                                                                               |
+| `CLIENT_ORIGIN`                                      | yes when `NODE_ENV=production` | CORS allowlist: one origin or a comma-separated list, each exactly `scheme://host[:port]`. Include the deployed site's origin           |
+| `TRUST_PROXY`                                        | no (0)                         | number of reverse-proxy hops in front of the API (2 on Railway, measured in `docs/deployment.md`), so per-IP rate limits see the client |
+| `CLIENT_DIST_DIR`                                    | production only                | built client to serve (Student 2's router; must not overlap `UPLOAD_DIR`)                                                               |
+| `UPLOAD_DIR`, `SMTP_*`, `MAIL_FROM`, `SUPPORT_EMAIL` | per feature                    | Students 4 and 5                                                                                                                        |
 
 ## Real MongoDB setup
 

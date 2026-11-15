@@ -116,10 +116,17 @@ test('a contact enquiry is saved and its email reaches the Mailpit inbox', async
   await expect.poll(() => mailpitCount(request, marker)).toBeGreaterThan(0);
 });
 
-// Messages in Mailpit's inbox that match a search, 0 while Mailpit is unreachable.
+// Messages in Mailpit's inbox that match a search, 0 while Mailpit is unreachable. For the deployed
+// inbox, set MAILPIT_URL and MAILPIT_AUTH ("user:password", Mailpit's MP_UI_AUTH).
 async function mailpitCount(request: APIRequestContext, query: string) {
   const mailpit = process.env.MAILPIT_URL ?? 'http://127.0.0.1:8025';
-  const found = await request.get(`${mailpit}/api/v1/search?query=${encodeURIComponent(query)}`);
+  const auth = process.env.MAILPIT_AUTH;
+  const headers: Record<string, string> = auth
+    ? { Authorization: `Basic ${Buffer.from(auth).toString('base64')}` }
+    : {};
+  const found = await request.get(`${mailpit}/api/v1/search?query=${encodeURIComponent(query)}`, {
+    headers,
+  });
   return found.ok() ? ((await found.json()).messages?.length ?? 0) : 0;
 }
 
