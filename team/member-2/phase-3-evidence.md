@@ -1,6 +1,6 @@
 # Student 2 Phase 3 evidence
 
-State: turn 1 integrated (PR #27 merged as 62e52e4, follow-up #28 as 13a60a2); closing turn ready for review in PR #33 (D22: Phases 3 and 4 share each PR). The live-API browser journeys pass in CI, and the app is deployed on Railway (phase-4-evidence.md).
+State: turn 1 integrated (PR #27 merged as 62e52e4, follow-up #28 as 13a60a2); closing turn integrated (PR #33 merged as e45e244), with Krish's review notes handled in follow-up PR #34.
 
 ## Implemented requirements and changed paths
 
@@ -72,17 +72,17 @@ All five member turns had merged (development at `3e0c1f1`, PR #32).
 
 macOS, Node 24.19.0, 2026-11-14. Docker Desktop was not running, so no local MongoDB or Mailpit.
 
-| Command                                                                                                             | Result        | Relevant output or test count                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run typecheck`                                                                                                 | pass          |                                                                                                                                                 |
-| `npx vitest run`                                                                                                    | pass          | 540 passed, 55 skipped (persistence suites, no `TEST_MONGODB_URI`)                                                                              |
-| `npx vitest run tests/member-2` (after the layout change)                                                           | pass          | 143 passed, 4 skipped                                                                                                                           |
-| `npm run check:structure`, `npm run check:workflow`, `npx prettier --check` on changed files                        | pass          |                                                                                                                                                 |
-| `VITE_API_MODE=http npm run build`                                                                                  | pass          | no chunk-size warning                                                                                                                           |
-| `npx playwright test --config playwright.live.config.ts --list`                                                     | pass          | 6 journeys, no placeholders                                                                                                                     |
-| `npm run check:ownership -- --member 2 --base origin/development`                                                   | flags 2 files | Student 1's two READMEs: the recorded docs-only exception (handoff.md)                                                                          |
-| CI on PR #33, run 43665224227 (`0fc6b00`)                                                                           | pass          | `verify` 595/595 against MongoDB, none skipped; `e2e-live` 6/6 (`tests/e2e/live`) and 11/11 (`tests/member-3`); `e2e-mock` 15/15; `image` built |
-| `LIVE_BASE_URL=https://solcacao-production.up.railway.app`, the catalog and guest-order journeys (installed Chrome) | pass          | 2 passed against the deployed site                                                                                                              |
+| Command                                                                                                                  | Result        | Relevant output or test count                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run typecheck`                                                                                                      | pass          |                                                                                                                                                 |
+| `npx vitest run`                                                                                                         | pass          | 540 passed, 55 skipped (persistence suites, no `TEST_MONGODB_URI`)                                                                              |
+| `npx vitest run tests/member-2` (after the layout change)                                                                | pass          | 143 passed, 4 skipped                                                                                                                           |
+| `npm run check:structure`, `npm run check:workflow`, `npx prettier --check` on changed files                             | pass          |                                                                                                                                                 |
+| `VITE_API_MODE=http npm run build`                                                                                       | pass          | no chunk-size warning                                                                                                                           |
+| `npx playwright test --config playwright.live.config.ts --list`                                                          | pass          | 6 journeys, no placeholders                                                                                                                     |
+| `npm run check:ownership -- --member 2 --base origin/development`                                                        | flags 2 files | Student 1's two READMEs: the recorded docs-only exception (handoff.md)                                                                          |
+| CI on PR #33, run 43666736454 (`e78a5ec`, the approved head; the first run 43665224227 on `0fc6b00` had the same counts) | pass          | `verify` 595/595 against MongoDB, none skipped; `e2e-live` 6/6 (`tests/e2e/live`) and 11/11 (`tests/member-3`); `e2e-mock` 15/15; `image` built |
+| `LIVE_BASE_URL=https://solcacao-production.up.railway.app`, the catalog and guest-order journeys (installed Chrome)      | pass          | 2 passed against the deployed site                                                                                                              |
 
 ### Manual demo observations
 
@@ -99,4 +99,4 @@ macOS, Node 24.19.0, 2026-11-14. Docker Desktop was not running, so no local Mon
 Proposed commit: `varad-shell` (PR #33; turn 1 was PR #27 and #28)
 Reviewer: Krishr21 (D22)
 PR: https://github.com/tambevarad/solcacao/pull/33
-Integrated commit: turn 1 `62e52e4` and `13a60a2`; closing turn pending
+Integrated commit: turn 1 `62e52e4` and `13a60a2`; closing turn `e45e244` (PR #33, approved by Krishr21 at `e78a5ec`); follow-up PR #34

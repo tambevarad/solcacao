@@ -39,10 +39,11 @@ Hand-offs: each speaker ends by naming the next one. If a slot runs long, the bu
 The day before, on the deployed site (Varad, with each member):
 
 - [ ] Health reports the database connected; the catalog shows 14 products.
-- [ ] Create the demo accounts the segments need, with fictional `@example.test` emails: Aman's retail account (and one he registers live), Reethika's account with 2 Spring Chocolate Eggs already saved, Krish's business account. Keep the passwords in a password manager, not on slides.
+- [ ] Create the demo accounts the segments need, with fictional `@example.test` emails: Aman's retail account (and one he registers live), Reethika's account with 2 Spring Chocolate Eggs already saved, Krish's business account, and a second business account for Krish's 404 (another business's quote). Keep the passwords in a password manager, not on slides.
 - [ ] Prepare Krish's synthetic one-page PDF and a non-PDF file for the refusal.
 - [ ] Sign in to the Mailpit inbox in a separate tab, so the password never appears on screen.
 - [ ] Daniel's failure demo runs on a local build (`npm run services`, `npm run seed:catalog`, `npm start`), never by stopping the deployed Mailpit.
+- [ ] Krish's "what can go wrong" part (mail server down, lost response) also runs on the local build, or Krish trims it from his segment (his note on #33).
 - [ ] Rate limits: login allows 10 failures per 15 minutes and registration 10 per hour, per network. Rehearse on another network or more than an hour before.
 - [ ] Close other tabs, turn off notifications, set the browser zoom so text is readable at the back of the room.
 

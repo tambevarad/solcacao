@@ -91,16 +91,16 @@ Each member then repeated their own journey on this host in their D22 turn (thei
 - **Live journeys on this host:** `tests/e2e/live` "the catalog comes from the live API…" and "a guest order is created…" pass against https://solcacao-production.up.railway.app (Chrome, `LIVE_BASE_URL`). The journeys that register accounts or read the password-protected inbox (cart merge, contact, quote, sampler) are run by Varad, with `MAILPIT_URL` and `MAILPIT_AUTH`; see "Run the live journeys on this host" below.
 - **Lighthouse 13.6** (local Chrome, default mobile and desktop presets) on six live pages: accessibility 100, SEO 100 and best practices 96 on every page. The 96 is one Chrome "Issues" entry: zod (client-side validation) probes once for `eval` with `Function('')` inside a `try`; the CSP's `script-src 'self'` blocks it, as intended, and zod uses its non-compiled path. Nothing fails and no console error is logged. Silencing it needs `z.config({ jitless: true })` before any schema is built, which the bundled chunk order does not allow without an alias for `zod`, so it is left as is. Performance and layout shift:
 
-  | Page                            | Mobile perf | Mobile CLS | Desktop perf | Desktop CLS |
-  | ------------------------------- | ----------- | ---------- | ------------ | ----------- |
-  | `/en`                           | 94          | 0          | 100          | 0           |
-  | `/en/catalog`                   | 94          | 0.14       | 90           | 0.213       |
-  | `/es/products/peru-85-dark-bar` | 71          | 0.529      | 96           | 0.123       |
-  | `/es/wholesale`                 | 69          | 0.576      | run failed   | —           |
-  | `/en/sampler`                   | 76          | 0.708      | 80           | 0.447       |
-  | `/es/contact`                   | 79          | 0.506      | 96           | 0.13        |
+  | Page                            | Mobile perf, before → after | Mobile CLS, before → after | Desktop perf, before → after | Desktop CLS, before → after |
+  | ------------------------------- | --------------------------- | -------------------------- | ---------------------------- | --------------------------- |
+  | `/en`                           | 94 → 100                    | 0 → 0                      | 100 → 100                    | 0 → 0                       |
+  | `/en/catalog`                   | 94 → 99                     | 0.14 → 0.001               | 90 → 100                     | 0.213 → 0                   |
+  | `/es/products/peru-85-dark-bar` | 71 → 100                    | 0.529 → 0                  | 96 → 100                     | 0.123 → 0                   |
+  | `/es/wholesale`                 | 69 → 99                     | 0.576 → 0                  | run failed → 100             | — → 0                       |
+  | `/en/sampler`                   | 76 → 94                     | 0.708 → 0.132              | 80 → 95                      | 0.447 → 0.138               |
+  | `/es/contact`                   | 79 → 100                    | 0.506 → 0                  | 96 → 100                     | 0.13 → 0                    |
 
-  The shifting element was the footer: pages load on demand, so it painted beside the short loading state and moved when the page arrived. The closing-turn PR makes `<main>` at least one screen tall. On a production build served locally, mobile CLS fell from 0.40–0.66 to 0–0.09 on the catalog, product, wholesale and sampler pages (performance +17 to +23), and desktop CLS from 0.15–0.44 to 0–0.12. The remaining 0.12 on the sampler is its product list growing after the products load (Student 5's proposal in `team/member-2/handoff.md`). Re-measure on this host after the release deploys.
+  "Before" is `3e0c1f1`; "after" is `e45e244` (PR #33 merged), both measured on this host. The shifting element was the footer: pages load on demand, so it painted beside the short loading state and moved when the page arrived. PR #33 keeps `<main>` at least one screen tall, so the footer starts below the fold. The sampler's remaining 0.13 is its product list growing after the products load (Student 5's proposal in `team/member-2/handoff.md`).
 
 ### Run the live journeys on this host
 

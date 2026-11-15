@@ -1,6 +1,6 @@
 # Student 2 handoff
 
-Current turn: the closing D22 turn for Phases 3 and 4 (PR #33, after all five member turns merged). Earlier D22 work: PR #27 (merged as 62e52e4) and its follow-up #28 (13a60a2). Records: `docs/weekly/week-5.md` and `week-6.md`; evidence in `phase-3-evidence.md` and `phase-4-evidence.md`. After #33 merges: the release PR from `development` to `main`, then, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
+Current turn: the closing D22 turn for Phases 3 and 4. PR #33 merged as e45e244 (approved by Krishr21); follow-up PR #34 handles his review notes and the post-merge records. Earlier D22 work: PR #27 (merged as 62e52e4) and its follow-up #28 (13a60a2). Records: `docs/weekly/week-5.md` and `week-6.md`; evidence in `phase-3-evidence.md` and `phase-4-evidence.md`. After #34 merges: the release PR from `development` to `main`, then, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
 
 ## Public exports delivered
 
@@ -8,7 +8,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
 
 - **`features/shell/public.tsx`:** `useLocale()` (`{ locale, setLocale, t(key, values?) }`), `LocaleProvider`, `localizePath(locale, path)`, `SUPPORTED_LOCALES`, `isLocale`, `usePageMeta({ title, description? })`.
 - **`client/src/shared/index.ts`:** Button, buttonStyles, Field, TextArea, Select, Dialog, Drawer, LoadingState, EmptyState, ErrorState, Placeholder, `photos`, `productPhotos` and `<Photo>` (sources in `docs/assets.md`).
-- **Routing:** `client/src/routes.tsx` loads every page except the homepage and not-found on demand, each inside `PageFrame` (title and description from `shell.meta.<id>.*`, an error boundary that resets on page change). `<main>` is at least one screen tall, so the footer never moves while a page loads.
+- **Routing:** `client/src/routes.tsx` loads every page except the homepage and not-found on demand, each inside `PageFrame` (title and description from `shell.meta.<id>.*`, an error boundary that resets on page change). `<main>` fills the screen below the header, so the footer starts at the fold and never moves while a page loads (Lighthouse CLS 0 on the deployed site).
 - **Production serving:** `createClientRouter({ root, privateDirs })` and `APP_ROUTES` in `server/src/features/shell/client.ts`, mounted in `server/src/app.ts` when `CLIENT_DIST_DIR` is set. `APP_ROUTES` must match `client/src/routes.tsx`; `tests/member-2/client-serving.test.ts` fails if either side gains a route the other lacks.
 - **Backend:** `GET /api/i18n/:locale` (200 for `en`/`es`, 400 otherwise).
 - **Tests and CI:** `tests/e2e/live/journeys.live.spec.ts` (`npm run test:e2e:live`): catalog with its error state, guest order, cart merge, contact email, business quote with a PDF, and the six-piece sampler, each checked through the real `/api` response and, for mail, the Mailpit inbox (`MAILPIT_URL`, optional `MAILPIT_AUTH` for the deployed inbox). CI job `e2e-live` also runs Student 3's `tests/member-3` live journeys.
@@ -18,7 +18,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
 
 Earlier proposals: 1 (the `server/src/app.ts` client mount) landed in #27 as a coordinator ownership exception; Student 1 reviewed it in #32 and agreed. 2 (the CI MongoDB job) landed in Phase 2.
 
-3. **Student 5, the sampler's product list (layout shift).** On `/en/sampler` the product list grows after the products load, which shifts the form below it: Lighthouse CLS 0.115 on desktop and 0.087 on mobile on a local production build, after #33's footer fix. Reserve the list's height while loading (for example a `min-h-[…]` on the list container, or six skeleton rows the size of a product row), then re-measure with Lighthouse. No contract change.
+3. **Student 5, the sampler's product list (layout shift).** On `/en/sampler` the product list grows after the products load, which shifts the form below it: Lighthouse CLS 0.138 on desktop and 0.132 on mobile on the deployed site after #33's footer fix, the only page above 0.001. Reserve the list's height while loading (for example a `min-h-[…]` on the list container, or six skeleton rows the size of a product row), then re-measure with Lighthouse. No contract change.
 4. **Student 4, `client/src/features/b2b/components/FeaturedProducts.tsx:142` (Student 3's proposal 7, still open).** On `/es` the featured cards show the English origin. Use `t(\`catalog.origin.${product.origin.replace(/\s+/g, '')}\`)` as Student 3 proposed.
 5. **Student 1, from my review of #32 (non-blocking).**
    - `server/src/app.ts:17`: `parseTrustProxy(process.env.TRUST_PROXY) || false` keeps express-rate-limit's warning when `TRUST_PROXY` is missing (it only warns when the setting is exactly `false`).
