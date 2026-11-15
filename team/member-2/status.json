@@ -2,9 +2,13 @@
   "member": 2,
   "phases": {
     "1": {
-      "state": "not_started",
-      "commit": null,
-      "checks": [],
+      "state": "integrated",
+      "commit": "304d76d",
+      "checks": [
+        "PR #1 (template aligned with the requirements) merged as fa61129 (2026-09-13)",
+        "PR #2 (Phase 1 database schema and ERD) merged as 304d76d (2026-09-24)",
+        "Phase 1 deliverables (ERD and schema, three-page overview, hosted prototype, MS Teams demo) submitted to the course separately, outside this repository (confirmed by Varad on 2026-11-14)"
+      ],
       "blockers": []
     },
     "2": {

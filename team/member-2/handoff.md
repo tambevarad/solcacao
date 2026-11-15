@@ -36,5 +36,5 @@ Not taken in this release (optional, from Student 4's handoff): proposal 2 (a 76
 - npm audit: 2 moderate findings remain, both react-router 6 and fixed only in 7. Neither is reachable here (docs/weekly/week-6.md).
 - The rollback in docs/deployment.md step 8 has not been rehearsed on Railway yet; it needs Varad in the dashboard.
 - The live journeys that sign in or read the inbox were not run against the deployed site by the agent (they need the inbox password and register accounts); Varad runs them with the command in docs/deployment.md.
-- `status.json` Phase 1 is still `not_started` for Students 2–5 (D21): the Phase 1 records must be filled in truthfully by each member.
+- Phase 1 was submitted to the course separately, outside this repository (confirmed by Varad on 2026-11-14), so the hosted prototype URL and the Teams demo are not recorded here. Students 3–5's `status.json` still say `not_started` for Phase 1; each member records their own.
 - The presentation rehearsal (docs/presentation.md) has not been held.

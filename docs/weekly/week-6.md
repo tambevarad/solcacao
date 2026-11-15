@@ -39,6 +39,7 @@ Blockers and next week:
 
 - #33 was approved by Krishr21 (595/595 against MongoDB, the live journeys, the layout and focus checks) and merged as `e45e244`; Railway deployed it. His three notes are handled in #34: the footer gap on short pages, the CI run cited in the evidence, and the presentation prep for his segment. #34 needs Krish's review; then the release PR from `development` to `main` (Krish reviews), and, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
 - Not done yet, by people: the presentation rehearsal (docs/presentation.md), the rollback rehearsal on Railway (runbook step 8), and the live journeys that sign in or read the inbox, run by Varad with the inbox password.
-- Still open from earlier phases: Phase 1 statuses for Students 2–5 (D21), and the WhatsApp number (the link stays hidden).
+- Phase 1 (ERD and schema, the three-page overview, the hosted prototype and the MS Teams demo) was submitted to the course separately, outside this repository (confirmed by Varad on 2026-11-14). The Phase 1 entries in Students 3–5's `status.json` were never updated; each member records their own.
+- Still open: the WhatsApp number (the link stays hidden).
 
 Do not prefill a review, attendance, commit or success that did not occur.
