@@ -27,8 +27,9 @@ export function Layout() {
 
   // <main> fills the screen below the header, so the footer (after its mt-16) starts exactly at the
   // fold. Pages load on demand, and a footer painted beside the short loading state was pushed down
-  // when the page arrived (Lighthouse CLS 0.4–0.7 on the deployed site). The header is 65 px tall
-  // (h-16 plus its border), and 114 px from md up, where the nav row (h-12 plus a border) is added.
+  // when the page arrived (Lighthouse CLS 0.4–0.7 on the deployed site). The header is 4rem plus a
+  // 1px border (h-16), and 7rem plus two borders from md up, where the nav row (h-12) is added.
+  // Written in rem, so it follows the browser's font size.
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -42,7 +43,7 @@ export function Layout() {
         id="main"
         ref={main}
         tabIndex={-1}
-        className="mx-auto min-h-[calc(100svh_-_65px_-_4rem)] w-full md:min-h-[calc(100svh_-_114px_-_4rem)] max-w-[1200px] flex-1 px-4 py-8 focus-visible:outline-none md:px-6 lg:px-8"
+        className="mx-auto min-h-[calc(100svh_-_4rem_-_1px_-_4rem)] w-full md:min-h-[calc(100svh_-_7rem_-_2px_-_4rem)] max-w-[1200px] flex-1 px-4 py-8 focus-visible:outline-none md:px-6 lg:px-8"
       >
         {isLocale(prefix) ? (
           <Outlet />

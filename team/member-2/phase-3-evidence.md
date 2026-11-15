@@ -1,6 +1,6 @@
 # Student 2 Phase 3 evidence
 
-State: turn 1 integrated (PR #27 merged as 62e52e4, follow-up #28 as 13a60a2); closing turn integrated (PR #33 merged as e45e244), with Krish's review notes handled in follow-up PR #34.
+State: turn 1 integrated (PR #27 merged as 62e52e4, follow-up #28 as 13a60a2); closing turn integrated (PR #33 merged as e45e244), with Krish's review notes handled in follow-up PR #34 (merged as 006b081) and #35.
 
 ## Implemented requirements and changed paths
 
@@ -99,4 +99,4 @@ macOS, Node 24.19.0, 2026-11-14. Docker Desktop was not running, so no local Mon
 Proposed commit: `varad-shell` (PR #33; turn 1 was PR #27 and #28)
 Reviewer: Krishr21 (D22)
 PR: https://github.com/tambevarad/solcacao/pull/33
-Integrated commit: turn 1 `62e52e4` and `13a60a2`; closing turn `e45e244` (PR #33, approved by Krishr21 at `e78a5ec`); follow-up PR #34
+Integrated commit: turn 1 `62e52e4` and `13a60a2`; closing turn `e45e244` (PR #33, approved by Krishr21 at `e78a5ec`); follow-up #34 `006b081`; #35 before the release

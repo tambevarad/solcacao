@@ -1,22 +1,23 @@
 # Week 6 integration record
 
-State: recorded by the coordinator on 2026-11-14, after the closing D22 turn (PR #33) merged; updated in its follow-up PR #34.
+State: recorded by the coordinator on 2026-11-14, after the closing D22 turn (PR #33) and its follow-up (#34) merged; last updated in #35, before the release to `main`.
 
 Each member: PR/commit, owned progress, tests, visual reviewer and peer approval.
 
-| PR  | Author             | Change                                                                                                                                              | Approved by                | Merged                |
-| --- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | --------------------- |
-| #28 | tambevarad         | Student 2's follow-up to Krish's review of #27: the contact-enquiry journey checks the Mailpit inbox, and unknown pages answer 404                  | Krishr21                   | 13a60a2 (development) |
-| #29 | Krishr21           | Student 4's D22 turn: the quote journey on the real API and the deployed site, uploads that survive a redeploy, lazy homepage photos                | tambevarad                 | 2e06236 (development) |
-| #30 | ReethikaGajulapati | Student 3's D22 turn: catalog, cart and checkout on the real API and the deployed site, measured indexes, the timing-flake fix                      | tambevarad                 | a1a8f9d (development) |
-| #31 | danielyglesias     | Student 5's D22 turn: contact, feedback and the sampler on the real API, the enquiry email arriving in the deployed inbox                           | tambevarad                 | e8d2215 (development) |
-| #32 | amang26            | Student 1's D22 turn: sign-in on the real API, the team security sweep, `CLIENT_ORIGIN` allowlist and `TRUST_PROXY`, the CI flake fix               | Krishr21, tambevarad       | 3e0c1f1 (development) |
-| #33 | tambevarad         | Student 2's closing turn: the quote and sampler live journeys, the footer layout-shift fix, the focus-ring fix, the dependency audit, final records | Krishr21                   | e45e244 (development) |
-| #34 | tambevarad         | Follow-up to Krish's review of #33: the footer starts exactly at the fold on short pages, and the post-merge records (this PR)                      | review requested: Krishr21 | not yet               |
+| PR  | Author             | Change                                                                                                                                                      | Approved by                | Merged                |
+| --- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | --------------------- |
+| #28 | tambevarad         | Student 2's follow-up to Krish's review of #27: the contact-enquiry journey checks the Mailpit inbox, and unknown pages answer 404                          | Krishr21                   | 13a60a2 (development) |
+| #29 | Krishr21           | Student 4's D22 turn: the quote journey on the real API and the deployed site, uploads that survive a redeploy, lazy homepage photos                        | tambevarad                 | 2e06236 (development) |
+| #30 | ReethikaGajulapati | Student 3's D22 turn: catalog, cart and checkout on the real API and the deployed site, measured indexes, the timing-flake fix                              | tambevarad                 | a1a8f9d (development) |
+| #31 | danielyglesias     | Student 5's D22 turn: contact, feedback and the sampler on the real API, the enquiry email arriving in the deployed inbox                                   | tambevarad                 | e8d2215 (development) |
+| #32 | amang26            | Student 1's D22 turn: sign-in on the real API, the team security sweep, `CLIENT_ORIGIN` allowlist and `TRUST_PROXY`, the CI flake fix                       | Krishr21, tambevarad       | 3e0c1f1 (development) |
+| #33 | tambevarad         | Student 2's closing turn: the quote and sampler live journeys, the footer layout-shift fix, the focus-ring fix, the dependency audit, final records         | Krishr21                   | e45e244 (development) |
+| #34 | tambevarad         | Follow-up to Krish's review of #33: the footer starts exactly at the fold on short pages, and the post-merge records                                        | Krishr21                   | 006b081 (development) |
+| #35 | tambevarad         | Krish's two notes on #34 (the footer calculation in rem; the live-journeys blocker back in Student 2's status) and the records before the release (this PR) | review requested: Krishr21 | not yet               |
 
 Every member's Phase 3 and 4 work is in one reviewed PR (#27 and #28 for Student 2), as D22 planned. Each was reviewed against the deployed site and merged with a merge commit after CI passed.
 
-Integrated development commit: e45e244 (PR #33: all five member turns and the closing turn).
+Integrated development commit: 006b081 (PR #34: all five member turns, the closing turn and its follow-up). Next: #35, then the release PR from `development` to `main`.
 
 Demo observations (deployed site, 2026-11-14; details in docs/deployment.md):
 
@@ -37,7 +38,7 @@ Dependency audit (#33): 31 npm audit findings (4 critical, 16 high) down to 2 mo
 
 Blockers and next week:
 
-- #33 was approved by Krishr21 (595/595 against MongoDB, the live journeys, the layout and focus checks) and merged as `e45e244`; Railway deployed it. His three notes are handled in #34: the footer gap on short pages, the CI run cited in the evidence, and the presentation prep for his segment. #34 needs Krish's review; then the release PR from `development` to `main` (Krish reviews), and, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
+- #33 was approved by Krishr21 (595/595 against MongoDB, the live journeys, the layout and focus checks) and merged as `e45e244`; Railway deployed it. His three notes are handled in #34: the footer gap on short pages, the CI run cited in the evidence, and the presentation prep for his segment. #34 was approved by Krishr21 and merged as `006b081` (Railway deployed it; health, pages and the JSON 404 checked); his two notes on it are in #35. After #35: the release PR from `development` to `main` (Krish reviews), and, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
 - Not done yet, by people: the presentation rehearsal (docs/presentation.md), the rollback rehearsal on Railway (runbook step 8), and the live journeys that sign in or read the inbox, run by Varad with the inbox password.
 - Phase 1 (ERD and schema, the three-page overview, the hosted prototype and the MS Teams demo) was submitted to the course separately, outside this repository (confirmed by Varad on 2026-11-14). The Phase 1 entries in Students 3–5's `status.json` were never updated; each member records their own.
 - Still open: the WhatsApp number (the link stays hidden).
