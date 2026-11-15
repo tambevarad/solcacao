@@ -1,0 +1,7 @@
+{
+  "date": "2026-11-14",
+  "sourceFiles": 243,
+  "sha256": "4cdf560d7df06c189c8603ec3c2400a711d7f586cb1cbd7f67e8d0cfe7f2f3f2",
+  "identical": true,
+  "note": "Current source, tests, contracts, scripts and root JSON/TS config match the Linux verification copy byte for byte. Dependencies installed from the same lockfile; ignored local environment/artifacts excluded."
+}

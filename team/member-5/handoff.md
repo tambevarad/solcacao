@@ -1,156 +1,107 @@
-# Member 5 handoff — Phase 2 follow-up
+# Member 5 handoff — Phases 3 and 4
 
-## Current publishing follow-up (2026-10-28)
+## Current handoff — November 14, 2026
 
-Branch: `daniel-support`, updated to `origin/development` at `e088f4b` after PR #12.
-This is a Phase 2 follow-up; Phase 3 has not started. Daniel explicitly authorized committing,
-pushing and opening the follow-up PRs. Both PRs target `development` and require peer review.
-The coordinator's original Phase 2 integration records are preserved in `status.json`;
-their integrated state refers to PR #10, not these new follow-ups.
+Daniel authorized both phases under D22, building on preserved uncommitted Member 5 work.
+Daniel authorized commit, push and PR creation on November 14. Reviewer: **tambevarad**.
+Published PR: https://github.com/tambevarad/solcacao/pull/31 into `development`.
+Implementation commit: `29aaf06`. Review requested from `tambevarad`; no approval is claimed.
+Branch `daniel-support` is synchronized with `origin/development` at `a1a8f9d`, including PR #26
+and Reethika's merged PR #30. No rebase, force push, deployment or primary-branch commit occurred.
 
-The sampler now clears its selected pieces and contact fields after a successful enquiry.
-"Start another enquiry" opens an empty form. A failed submission retains the selection,
-fields and retry request ID; a later new enquiry receives a new request ID.
+Contact, feedback and sampler use real HTTP with stable request IDs for unchanged retries.
+Twenty-second uncertain responses, 429, 503, conflicting IDs and field errors have localized
+messages; drafts survive failures. Sampler mail contains trusted server catalog names, quantities
+and IDs, escaped in HTML. Quote mail preserves the existing public signature and adds localized
+request-received wording without pricing, production or delivery promises. Mail status is separate
+from saved state. Server-derived snapshots and strict schemas reject browser-forged fields.
 
-Daniel also explicitly requested a quantity picker on regular shop product cards, similar
-to the sampler controls. The separate catalog draft offers minus/plus buttons and direct number entry
-before Add to cart, using existing English/Spanish catalog translations. It observes stock,
-the 99-per-product cap and quantities already in the cart, retains the chosen amount after
-failure, and resets to one after success. Existing queued quick-add behavior is preserved.
-Daniel confirmed the sampler translation marker is resolved; no translation files changed.
+The public DTOs, endpoints, provider signatures and dependency versions are unchanged. The only
+new notification shape is the owned internal `InquiryNotificationInput.samplerSelection?:
+{productId:string;quantity:number;name:LocalizedText}[]`, supplied by the owned service from the
+existing catalog port. Student 4's `notifyQuote` input and result are unchanged.
 
-### Member 3 review proposal for the requested catalog enhancement
+Real quote-route tests live under `tests/member-5/http-mongo.test.ts`: actual business registration,
+sent SMTP, duplicate replay without another email, failed SMTP with a persisted/readable receipt.
+The browser harness uses isolated local databases, real Docker Mailpit, and restarts Mailpit after
+its outage test. Its observation/control endpoints exist only in tests, never production.
 
-The catalog enhancement is isolated on `daniel-catalog-quantity`, also based on `e088f4b`.
-Its ownership checker flags exactly these two Member 3 files:
+The shared parser blocker is **resolved**: `server/src/shared/errors.ts` returns malformed JSON
+400 and oversized body 413, both `VALIDATION_ERROR`; owned real-app tests verify both. No shared
+handler was edited. Remote-auth and local Docker prerequisites are also resolved.
 
-- `client/src/features/catalog/components/ProductCard.tsx`
-- `client/src/features/catalog/pages/CatalogPage.tsx`
+Results, failure history and limitations are in the two phase evidence files. The final full
+check passes 584/584 with no skips on a Linux filesystem copy; `source-verification.json` proves
+243 current source/test/config files match byte for byte. Windows-mounted attempts timed out;
+no tests, types or assertions were suppressed. Both local and deployed real-mail checks passed.
+Deployed checks cover the existing deployed development version; coordinator must rerun after
+the reviewed local changes are deployed. Real WhatsApp destination is still unavailable and hidden.
 
-The private ProductCard prop changes from `onAdd(product: Product): void` to
-`onAdd(product: Product, quantity: number): Promise<void>` and adds optional
-`maxQuantity?: number`. Its sole production consumer, CatalogPage, passes the remaining
-available quantity and forwards the selected number to the existing `cart.add(product.id,
-quantity)` API. There is no DTO, HTTP schema, public provider, dependency or storage migration.
-Regression tests live under `tests/member-5`; existing Member 3 tests are unchanged.
+### Exact shared sampler test proposal for Varad (Member 2)
 
-This is a user-requested review proposal, not a coordinator-approved ownership exception.
-Member 3 must review and integrate the catalog portion through a separate reviewed PR as
-required by AGENTS.md. Its exact handoff is `team/member-5/catalog-quantity-handoff.md` on that
-branch. The sampler PR contains only Member 5 files; the two PRs can merge independently.
-
-### Suggested PR wording
-
-Sampler PR: **fix(support): reset the sampler after a successful enquiry**
-
-Clear selected chocolates, contact fields and request identity after a successful enquiry,
-so Start another enquiry begins empty. Preserve failed entries and the retry request ID.
-
-Member 3 catalog PR: **feat(catalog): choose quantities before adding chocolates to the cart**
-
-Add minus/plus controls and a quantity field to regular shop product cards, similar to the
-sampler controls. Shoppers can choose an amount before Add to cart. Respect remaining stock
-and cart limits, retain the amount on failure, and reset the field after success. This is an
-additional user-requested retail improvement, outside the original Member 5 assignment.
-
-Current validation and remaining limitations are recorded in `phase-2-evidence.md`.
-
-## Historical PR #10 handoff
-
-The following records the original pre-merge handoff. PR #10 has since been merged by the
-coordinator; its former pending-merge statements do not describe this new local follow-up.
-
-Phase 2: ready_for_review, not integrated.
-PR: https://github.com/tambevarad/solcacao/pull/10 (base development).
-Member: Daniel Yglesias / danielyglesias. Branch: daniel-phase2.
-
-## Coordinator-approved exceptions
-
-The coordinator approved keeping daniel-phase2 for this PR only. It is not renamed/deleted.
-Phase 3 will use the roster branch daniel-support, created through npm run setup -- --member 5
-when Phase 3 is authorized after integration. The playbook exactly matches origin/development;
-Phase 2 retains frontend AND backend scope from docs/roadmap.md. Useful frontend feature/demo
-checklists are preserved in checklist.md.
-
-The former Member 4 test proposal is APPLIED IN PR #10 with coordinator approval. Commit
-747bdbe changes only the specifically authorized lines in tests/member-4/quote-api.test.ts:
-empty inquiry input now asserts 400 and VALIDATION_ERROR, while B2B auth assertions remain
-unchanged. The commit body records coordinator approval. The ownership checker intentionally
-continues to flag this one file (exit 1). No other peer file, shared contract or owner rule changed.
-
-Other focused fixes: 74137d6 adds/test singular sampler wording; 47e5a86 makes phone cards
-use two columns, hides phone descriptions and retains accessible 44 px quantity controls.
-
-## Delivered public surface
-
-- Existing default ContactPage, FeedbackPage, SamplerPage, StoryPage and CarePage exports and routes.
-- createMockSupport(http) and createHttpSupport(http), unchanged SupportApi signatures.
-- supportRouter, already mounted by the shared app, implements POST /api/inquiries.
-- Existing shared dictionary assembly includes matching support EN/ES keys automatically.
-- Catalog products are consumed only through api.catalog and getActiveProductsByIds.
-- No DTO, HTTP path, public provider signature, dependency or database technology changed.
-
-## notifyQuote handoff for Member 4
-
-Import from server/src/features/support/notifications.ts:
+Append this test to `tests/e2e/live/journeys.live.spec.ts` in a separate owner-reviewed change.
+It uses that file's existing imports/helpers and the real live test harness. No schema, signature,
+migration or dependency change. Do not put it in the mock shared suite and call it persistence.
 
 ```ts
-notifyQuote(input: {
-  quoteId: string;
-  companyName: string;
-  contactEmail: string;
-  locale: 'en' | 'es';
-}): Promise<'sent' | 'failed'>
+test('a six-piece sampler posts real product IDs and replays one saved enquiry', async ({
+  page,
+  request,
+}) => {
+  const products = apiResponse(page, 'GET', '/api/products');
+  await page.goto('/en/sampler');
+  expect((await products).status()).toBe(200);
+  const add = page.getByRole('button', { name: /^Add one / }).first();
+  await expect(add).toBeVisible();
+  for (let piece = 0; piece < 6; piece++) await add.click();
+  await page.locator('#support-name').fill('Synthetic Sampler Shopper');
+  await page.locator('#support-email').fill(uniqueEmail());
+  await page.locator('#support-message').fill('A synthetic six-piece sampler enquiry.');
+  const saved = apiResponse(page, 'POST', '/api/inquiries');
+  await page.getByRole('button', { name: 'Send enquiry', exact: true }).click();
+  const response = await saved;
+  expect(response.status()).toBe(201);
+  const body = response.request().postDataJSON();
+  expect(body.category).toBe('sampler');
+  expect(
+    body.samplerItems.reduce((n: number, item: { quantity: number }) => n + item.quantity, 0),
+  ).toBe(6);
+  for (const item of body.samplerItems) {
+    expect(item.productId).toMatch(/^[a-f0-9]{24}$/i);
+    expect(Object.keys(item).sort()).toEqual(['productId', 'quantity']);
+  }
+  const receipt = (await response.json()).data;
+  expect(receipt).toMatchObject({ status: 'received', notificationStatus: 'sent' });
+  const replay = await request.post('/api/inquiries', { data: body });
+  expect(replay.status()).toBe(201);
+  expect((await replay.json()).data).toEqual(receipt);
+  await expect(page.getByText('Your enquiry has been saved.', { exact: true })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: receipt.id })).toBeFocused();
+});
 ```
 
-Save the quote first; call the helper and persist the returned notification status. SMTP outages
-resolve failed, never erase the saved quote and never attach the branding file. The transport
-fixes recipient/from/subject server-side, validates replyTo and escapes HTML. Configure SMTP_HOST,
-SMTP_PORT, SMTP_SECURE, optional paired SMTP_USER/SMTP_PASS, MAIL_FROM and SUPPORT_EMAIL.
-Development mail is restricted to the local sink; no real team email was sent by these tests.
+The deeper database/mail proof remains in Member 5's owned suite: one document, one captured mail,
+trusted names, tampered/unknown IDs rejected. Varad integrates only the shared proposal above.
 
-createNotifications({env,transport}) accepts a NotificationTransport with
-sendMail(message): Promise<{accepted:string[]}>. Only acknowledgement of the configured recipient
-means sent. The fake transport and actual Nodemailer loopback SMTP tests pass. This is not a
-claim of Mongo or deployed Mailpit integration. See the owned backend README for operational details.
+### Local-only files and review steps
 
-Inquiries save before notifying and use unique requestId/hash for retries. A failure to record
-notification status can leave pending; repeated inquiry requestIds do not resend automatically.
-Operational inspection/retry after a crash is outside the current UI.
+The unrelated untracked `.vscode/settings.json` is preserved. The repository-wide ownership
+command flags it; exclude it from the Member 5 commit. `.env`, `.agent` credentials, temporary
+dependencies and browser output remain ignored. Do not stage the whole working tree blindly.
+The existing preserved stashes are backups; no stash was dropped.
 
-## Checks and visual evidence
+Cleanup confirmed the official ownership check passes all 35 proposed files on the isolated
+source tree. `commit-scope.md` maps those files to requirements and lists the exact staging scope.
+No files were staged. The full test suite passed again (584/584, no skips) and the HTTP-mode build
+passed. The original `createHttpSupport(http)` call remains supported; its optional timeout
+argument is an owned test seam and does not change the `SupportApi` contract.
 
-- Full check PASS on resource-limited retry: 352 passed, 32 explicitly skipped Mongo-dependent
-  tests. Initial unrestricted WSL worker-start timeout attempt failed and is recorded in evidence.
-  No tests/assertions/type checks were removed or suppressed.
-- Build PASS; existing shared JS chunk advisory remains (535.99 kB >500 kB).
-- Member 4 targeted endpoint suite: 16 passed. Singular wording + dictionary suite: 29 passed.
-- Shared browser suite: 11 passed. Owned support suite: 5 passed at 375/768/1440 in EN/ES.
-- Interactive keyboard/screenshot review: 18 journeys with validation, retry, locale retention,
-  singular/plural selection, five/six-piece handling and no overflow/uncaught page errors.
-- Representative screenshots are committed under team/member-5/screenshots/.
-- Ownership: expected single approved Member 4 exception; all other changed paths are owned.
-- Real Mongo test NOT RUN: Docker unavailable. State stays explicitly blocked for database evidence.
-- Formal coordinator approval, merge and academic demo are not claimed by the agent.
+Proposed commit: `feat(support): complete HTTP and live-mail verification for phases 3 and 4`.
+Publish one PR into `development` under D22, requesting `tambevarad`, under Daniel's authorization.
+Human visual approval, presentation rehearsal, and post-merge deployment remain
+human/coordinator actions. Current results do not claim integration or a new deployment.
 
-See phase-2-evidence.md for exact commands, counts, initial infrastructure failure and artifacts.
-CI is watched after push; the final result is reported on the PR, not inferred from local tests.
+## Earlier phases
 
-## Remaining integration proposals for owners
-
-Student 1: implement the existing connectDb(uri:string):Promise<void> port, await DB connectivity
-and InquiryModel.init() before accepting traffic, and align global malformed/oversized JSON errors
-with the contract envelope (400/413 VALIDATION_ERROR). The owned router handles its own limit/errors,
-but cannot fix an earlier shared app parser. No shared infrastructure was changed here.
-
-Student 2 / schema coordinator: docs/data-model.md calls for flat InquiryInput fields, while the
-Phase 1 schema-design table uses an input object. The implementation follows docs/data-model.md's
-flat name/email/category/message/locale fields, plus requestId/hash, snapshots and statuses.
-Proposed documentation correction: replace that table's input row with those scalar rows and
-shared validation limits. No public DTO/API migration is needed; shared docs remain unchanged.
-
-WhatsApp: Daniel has no business number yet; the intended format is country code 1 plus ten digits.
-The link stays hidden until a real WhatsApp-enabled destination is provided. Setup is documented
-in client/src/features/support/README.md. No fake live destination or account was created.
-
-Proposed final documentation commit: docs(member-5): restore playbook, update evidence.
+Phase 2 results remain in phase-2-evidence.md and Git history. This handoff describes only
+the current Member 5 Phases 3 and 4 work; prior catalog enhancements are outside this change.

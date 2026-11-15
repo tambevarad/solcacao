@@ -1,5 +1,6 @@
 import type { LocalizedText, Product } from '../../../../contracts/index.js';
 import { productPhotos, type ProductPhotoName } from '../../shared/photos.js';
+import { CATALOG_ORIGINS } from './rules.js';
 
 /**
  * Catalog-owned fixture set for the Phase 2 mock adapter and the explicit seed command
@@ -11,16 +12,6 @@ import { productPhotos, type ProductPhotoName } from '../../shared/photos.js';
  * product (`vietnam-78-coffee-bar`), one low-stock product (`spring-chocolate-eggs`, 3 units) and
  * one inactive product (`foil-heart-duo`), which never appears in lists or by slug.
  */
-
-/** Canonical origins (decision D11: English country names). Visible labels are translated. */
-export const CATALOG_ORIGINS = [
-  'Dominican Republic',
-  'Ecuador',
-  'Ghana',
-  'Madagascar',
-  'Peru',
-  'Vietnam',
-] as const;
 
 const DEMO_LABEL: { ingredients: LocalizedText; allergens: LocalizedText } = {
   ingredients: {

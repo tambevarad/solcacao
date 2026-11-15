@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import type { CartLine, Product } from '../../../../../contracts/index.js';
@@ -48,7 +48,7 @@ export function CartDrawer() {
     </div>
   ) : undefined;
 
-  return (
+  const drawer = (
     <Drawer
       open={cart.open}
       onClose={close}
@@ -100,6 +100,35 @@ export function CartDrawer() {
       )}
     </Drawer>
   );
+
+  // While the drawer is closed, cart news that no page reports (a merge after sign-in, a reload
+  // after a conflict, a failed load) floats over the page, so the shopper sees it wherever they
+  // are. `limited` and `saveFailed` follow an action and are shown where it happened.
+  const floating =
+    !cart.open &&
+    cart.notice &&
+    cart.notice.kind !== 'limited' &&
+    cart.notice.kind !== 'saveFailed';
+  return (
+    <>
+      {drawer}
+      {floating && (
+        <aside
+          aria-label={t('catalog.cart.noticeLabel')}
+          className="fixed inset-x-4 bottom-4 z-40 shadow-lg sm:left-auto sm:w-96"
+        >
+          <CartNoticeView
+            className="mb-0"
+            action={
+              <Button variant="secondary" onClick={() => cart.setOpen(true)}>
+                {t('catalog.product.viewCart')}
+              </Button>
+            }
+          />
+        </aside>
+      )}
+    </>
+  );
 }
 
 function CartLineRow({
@@ -141,6 +170,8 @@ function CartLineRow({
           alt=""
           width={64}
           height={64}
+          loading="lazy"
+          decoding="async"
           className="aspect-square w-16 rounded border border-line bg-white object-cover"
         />
       ) : (
@@ -203,7 +234,13 @@ export function QuantityStepper({
 }) {
   const { t } = useLocale();
   const [draft, setDraft] = useState(String(quantity));
-  useEffect(() => setDraft(String(quantity)), [quantity]);
+  // Follow a new saved quantity during render, not in an effect: an effect runs after the new value
+  // is on screen and could overwrite what the shopper typed in between (as fixed in PR #17).
+  const [syncedFor, setSyncedFor] = useState(quantity);
+  if (syncedFor !== quantity) {
+    setSyncedFor(quantity);
+    setDraft(String(quantity));
+  }
   const commit = () => {
     const value = Number(draft);
     if (Number.isInteger(value) && value >= 1 && value !== quantity) onChange(Math.min(max, value));

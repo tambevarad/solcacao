@@ -124,6 +124,10 @@ describe('catalog mock: list', () => {
     const ids = (await api.list({ sort: 'priceAsc' })).items.map((p) => p.id);
     expect(ids).toEqual([...ids].sort());
     expect((await api.list({ sort: 'name' })).items.map((p) => p.id)).toEqual(ids);
+    // priceDesc is the exact reverse of priceAsc, ties included (as the server's index scan).
+    expect((await api.list({ sort: 'priceDesc' })).items.map((p) => p.id)).toEqual(
+      [...ids].reverse(),
+    );
 
     const all = mock();
     const es = await all.api.list({ sort: 'name', locale: 'es', limit: 48 });

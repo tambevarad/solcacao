@@ -78,7 +78,9 @@ async function withStock(records: ProductRecord[]): Promise<Product[]> {
 export function productFilter(query: NormalizedQuery): Record<string, unknown> {
   const filter: Record<string, unknown> = { active: true };
   if (query.category) filter.category = String(query.category);
-  if (query.origin) filter.origin = String(query.origin);
+  // Exact, case-sensitive match even under the name sort's case-insensitive collation: an anchored
+  // regex ignores collation, so the count (no collation) and the page apply the same predicate.
+  if (query.origin) filter.origin = { $regex: `^${escapeRegex(String(query.origin))}$` };
   if (query.cacaoPct !== undefined) filter.cacaoPct = Number(query.cacaoPct);
   else if (query.cacaoMin !== undefined || query.cacaoMax !== undefined)
     filter.cacaoPct = {
@@ -108,23 +110,28 @@ export interface ProductListResult {
   totalPages: number;
 }
 
-/** GET /api/products. Count and page use the identical filter; id is always the tie-breaker. */
+/**
+ * GET /api/products. Count and page use the identical filter; id is always the tie-breaker (in the
+ * price direction for priceDesc, so the price indexes serve it backwards). Only the name sort needs
+ * the locale collation; with it on price sorts no simple index could bound category or origin.
+ */
 export async function listProducts(query: NormalizedQuery): Promise<ProductListResult> {
   const filter = productFilter(query);
+  const byName = query.sort !== 'priceAsc' && query.sort !== 'priceDesc';
   const sort: Record<string, 1 | -1> =
     query.sort === 'priceAsc'
       ? { priceCents: 1, _id: 1 }
       : query.sort === 'priceDesc'
-        ? { priceCents: -1, _id: 1 }
+        ? { priceCents: -1, _id: -1 }
         : { [`name.${query.locale}`]: 1, _id: 1 };
+  const page = ProductModel.find(filter)
+    .sort(sort)
+    .skip((query.page - 1) * query.limit)
+    .limit(query.limit);
+  if (byName) page.collation({ locale: query.locale, strength: 1 });
   const [total, records] = await Promise.all([
     ProductModel.countDocuments(filter),
-    ProductModel.find(filter)
-      .collation({ locale: query.locale, strength: 1 })
-      .sort(sort)
-      .skip((query.page - 1) * query.limit)
-      .limit(query.limit)
-      .lean<ProductRecord[]>(),
+    page.lean<ProductRecord[]>(),
   ]);
   return {
     items: await withStock(records),

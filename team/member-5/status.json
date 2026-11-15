@@ -13,7 +13,7 @@
       "checks": [
         "npm run check: PASS on retry via taskset -c 0-3 (352 passed, 32 explicitly skipped DB tests); initial unrestricted WSL run failed on worker-start timeouts",
         "Member 5 tests inside the full check: 26 passed, 1 Mongo test skipped without TEST_MONGODB_URI",
-        "npm run build: PASS; shared JS chunk advisory 535.99 kB >500 kB",
+        "npm run build: PASS; shared JS chunk advisory 535.99 kB \u003e500 kB",
         "npm run check:ownership -- --member 5 --base origin/development: expected exit 1 ONLY for tests/member-4/quote-api.test.ts, coordinator-approved PR #10 exception",
         "npx vitest run tests/member-4/quote-api.test.ts --reporter=dot: 16 passed; exact approved patch committed separately in 747bdbe",
         "npx vitest run tests/member-5/pages.test.tsx tests/member-2/i18n.test.ts --reporter=dot: 29 passed including singular/plural EN/ES",
@@ -24,7 +24,7 @@
         "PR #10 retargeted from main to development; daniel-phase2 retained with coordinator agreement for this PR only",
         "Docker unavailable; real Mongo test NOT RUN (not counted as passing)",
         "Coordinator review: PR #10 approved by tambevarad and merged into development as 88c9a0d (2026-10-28)",
-        "Coordinator verification 2026-10-28: full suite against a real MongoDB (Docker mongo:8.0, TEST_MONGODB_URI) passed 518/518, including this member's persistence tests; CI now runs them on every PR (PR #12)",
+        "Coordinator verification 2026-10-28: full suite against a real MongoDB (Docker mongo:8.0, TEST_MONGODB_URI) passed 518/518, including this member\u0027s persistence tests; CI now runs them on every PR (PR #12)",
         "Coordinator integration PR #12: startup builds the Inquiry requestId index before serving; notifyQuote wired into the B2B router",
         "2026-10-28 sampler follow-up on daniel-support: ready_for_review, not yet merged. Full project check: 474 passed, 46 database tests explicitly skipped; typecheck, structure and workflow passed. Build passed. Owned browser suite: 5 passed; shared journeys: 14 passed. Ownership check passes for all 8 files. Original Phase 2 integrated state/commit above refer to PR #10; coordinator records are preserved. Catalog quantity enhancement is a separate Member 3 review PR.",
         "Coordinator review: follow-up PR #14 (sampler reset) approved by tambevarad and merged into development as 4fc8a22 (2026-10-28); the \"not yet merged\" note above predates the merge",
@@ -33,21 +33,50 @@
       ],
       "blockers": [
         "Phase 1 status not yet recorded by member 5 (D21)",
-        "A real WhatsApp destination is not yet configured",
-        "Shared JSON parser error-code alignment (Student 1 proposal) open for Phase 3"
+        "A real WhatsApp destination is not yet configured"
       ]
     },
     "3": {
-      "state": "not_started",
-      "commit": null,
-      "checks": [],
-      "blockers": []
+      "state": "ready_for_review",
+      "commit": "29aaf06",
+      "checks": [
+        "2026-11-14: npm run setup -- --member 5 passed; daniel-support synchronized with origin/development a1a8f9d, including PR #26 and merged Reethika PR #30",
+        "Node 24.19.0 and GitHub CLI authentication verified; Docker MongoDB 8 / Mailpit running; HTTP setup smoke 3 passed, 0 skipped, 0 failed",
+        "Final full npm run check on an identical Linux-filesystem source copy: 584 passed, 0 skipped, 0 failed; typecheck, structure and workflow passed; 52 Member 5 tests included",
+        "243 source/config/test files verified byte for byte against the successful Linux copy; see source-verification.json",
+        "Real-app HTTP/Mongo/SMTP suite: 5 passed, including authenticated merged quote route sent/duplicate/failed SMTP and parser 400/413 VALIDATION_ERROR",
+        "Owned HTTP browser suite: 8 passed; owned mock visual suite: 7 passed; shared mock browser suite: 15 passed; no skips/failures on successful runs",
+        "Build and Chromium installation passed; earlier mounted-filesystem and focus-test failures retained in phase-3-evidence.md",
+        "Shared JSON parser error-code alignment blocker resolved by existing handler and real-app regression tests; no shared handler edited",
+        "Story/Care, owned asset register, security/trigger audit, SMTP notes and demo draft complete; no public contract changes",
+        "Ownership check flags only unrelated pre-existing untracked .vscode/settings.json; preserve it and exclude from Member 5 commit",
+        "2026-11-14 cleanup: error handling/types and current documentation simplified; full check 584 passed, 0 skipped/failed; HTTP build passed; official ownership check passes all 35 proposed files on isolated source tree; commit-scope.md excludes unrelated local editor settings",
+        "2026-11-14: implementation committed as 29aaf06 and pushed on daniel-support; PR #31 opened into development (https://github.com/tambevarad/solcacao/pull/31); review requested from tambevarad, not approved or integrated"
+      ],
+      "blockers": [
+        "Actual WhatsApp destination unavailable; link intentionally hidden",
+        "Human visual review and approval by tambevarad pending; Daniel authorized commit/push/PR publication on 2026-11-14"
+      ]
     },
     "4": {
-      "state": "not_started",
-      "commit": null,
-      "checks": [],
-      "blockers": []
+      "state": "ready_for_review",
+      "commit": "29aaf06",
+      "checks": [
+        "2026-11-14: deployed Member 5 suite 5 passed, 0 skipped, 0 failed against documented Railway app and protected live Mailpit",
+        "30 route/viewport visits: contact, feedback, sampler, Story, Care in EN/ES at 375/768/1440; keyboard checks, no horizontal overflow or page/console errors",
+        "Six synthetic live enquiries (contact, feedback, sampler in EN/ES) returned 201 and each matching receipt ID/message was independently verified in the protected live inbox",
+        "Existing deployed image/loading behavior measured at 375/1440 with reduced motion; see phase-4-performance.json and asset-register.md",
+        "Existing approved WebP assets retained; sampler lazy images gain asynchronous decoding; no owner asset duplication",
+        "Four-minute presentation segment drafted in phase-4-evidence.md; no rehearsal or human review claimed",
+        "Build passed; full check 584 passed with real Mongo, 0 skips/failures on identical source copy; local/shared browser results in phase-3-evidence.md",
+        "2026-11-14 cleanup: presentation text encoding corrected, stale handoff removed; 35-file requirements scope documented; explicit HTTP-mode production build passed",
+        "2026-11-14: implementation committed as 29aaf06 and pushed on daniel-support; PR #31 opened into development (https://github.com/tambevarad/solcacao/pull/31); review requested from tambevarad, not approved or integrated"
+      ],
+      "blockers": [
+        "Coordinator must deploy reviewed local changes after merge and rerun the live checks; current deployed evidence covers existing development version",
+        "Human review/approval and presentation rehearsal pending",
+        "Actual WhatsApp destination unavailable; link intentionally hidden"
+      ]
     }
   }
 }

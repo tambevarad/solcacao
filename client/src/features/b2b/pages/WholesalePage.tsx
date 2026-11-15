@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import type { User } from '../../../../../contracts/index.js';
 import { useAuth } from '../../auth/public.js';
 import { buttonStyles, Photo, photos, type PhotoAsset } from '../../../shared/index.js';
+import { DeferredPhoto } from '../components/DeferredPhoto.js';
 import { localizePath, useLocale } from '../../shell/public.js';
 import { PACKAGING_OPTIONS, PACKAGING_PHOTOS, QUANTITY_MAX, QUANTITY_MIN } from '../options.js';
 
@@ -56,7 +57,7 @@ export default function WholesalePage() {
         <ul className="grid gap-8 md:grid-cols-3">
           {SERVICES.map((service) => (
             <li key={service} className="flex flex-col gap-3">
-              <Photo
+              <DeferredPhoto
                 image={SERVICE_PHOTOS[service]}
                 sizes="(min-width: 1200px) 370px, (min-width: 768px) 33vw, 100vw"
               />
@@ -77,7 +78,7 @@ export default function WholesalePage() {
         <ul className="grid gap-8 sm:grid-cols-3">
           {PACKAGING_OPTIONS.map((option) => (
             <li key={option} className="flex flex-col gap-3">
-              <Photo
+              <DeferredPhoto
                 image={PACKAGING_PHOTOS[option]}
                 ratio="aspect-square"
                 sizes="(min-width: 1200px) 370px, (min-width: 640px) 33vw, 100vw"

@@ -113,6 +113,14 @@ export function createInquiryService(
       notificationStatus = await (options.notify ?? createNotifications().notifyInquiry)({
         ...input,
         inquiryId: saved.id,
+        ...(input.samplerItems
+          ? {
+              samplerSelection: input.samplerItems.map((item) => ({
+                ...item,
+                name: products.find((product) => product.id === item.productId)!.name,
+              })),
+            }
+          : {}),
       });
     } catch {
       notificationStatus = 'failed';

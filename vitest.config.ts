@@ -7,5 +7,8 @@ export default defineConfig({
       'server/src/**/*.test.ts',
     ],
     environment: 'node',
+    // Unit tests use the mock adapters whatever a developer's .env says; the live-API checks run
+    // separately (persistence suites and the live browser tests).
+    env: { VITE_API_MODE: 'mock' },
   },
 });

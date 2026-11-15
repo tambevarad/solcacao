@@ -6,14 +6,20 @@ import { shellRouter } from './features/shell/router.js';
 import { catalogRouter } from './features/catalog/router.js';
 import { b2bRouter } from './features/b2b/router.js';
 import { supportRouter } from './features/support/router.js';
+import { createClientRouter } from './features/shell/client.js';
 import { isDatabaseReady } from './shared/db.js';
 import { errorHandler, notFoundHandler } from './shared/errors.js';
+import { parseClientOrigins, parseTrustProxy } from './shared/env.js';
 export const app = express();
 app.disable('x-powered-by');
+// Behind a host proxy (TRUST_PROXY=1 on Railway) req.ip must be the client, or every per-IP rate
+// limit would count all visitors as one. 0 (the default) ignores X-Forwarded-For.
+app.set('trust proxy', parseTrustProxy(process.env.TRUST_PROXY));
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    // Allowlist from CLIENT_ORIGIN (validated at startup); other origins get no CORS grant.
+    origin: parseClientOrigins(process.env.CLIENT_ORIGIN),
     exposedHeaders: ['X-Page', 'X-Limit', 'X-Total-Count', 'X-Total-Pages'],
   }),
 );
@@ -36,6 +42,15 @@ app.use('/api', shellRouter);
 app.use('/api', catalogRouter);
 app.use('/api', b2bRouter);
 app.use('/api', supportRouter);
+// Production only: serves the built client with the deep-link fallback (Student 2, D22). Unset in
+// development, where Vite serves the client.
+if (process.env.CLIENT_DIST_DIR)
+  app.use(
+    createClientRouter({
+      root: process.env.CLIENT_DIST_DIR,
+      privateDirs: process.env.UPLOAD_DIR ? [process.env.UPLOAD_DIR] : [],
+    }),
+  );
 
 app.use(notFoundHandler);
 app.use(errorHandler);

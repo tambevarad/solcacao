@@ -78,9 +78,22 @@ export default function CatalogPage({ catalog = api.catalog }: { catalog?: Catal
   const clearAll = () => setParams(writeFilters({ sort: filters.sort }));
   const count = activeFilterCount(filters);
 
+  /** Rejects when nothing was saved, so the card keeps the chosen amount and shows its alert. */
   async function addToCart(product: Product, quantity: number) {
-    await cart.add(product.id, quantity);
-    setAnnouncement(t('catalog.product.added', { name: product.name[locale] }));
+    const name = product.name[locale];
+    const outcome = await cart.addLine(product.id, quantity);
+    if (outcome === 'failed') {
+      setAnnouncement('');
+      throw new Error('The cart change was not saved');
+    }
+    setAnnouncement(
+      outcome === 'added'
+        ? t('catalog.product.added', { name })
+        : t('catalog.cart.limited', {
+            name,
+            max: Math.min(MAX_QUANTITY, product.stock),
+          }),
+    );
   }
 
   const shown =
@@ -169,11 +182,12 @@ export default function CatalogPage({ catalog = api.catalog }: { catalog?: Catal
                 aria-busy={load.status === 'loading' || undefined}
                 className={`grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-3 ${load.status === 'loading' ? 'opacity-60' : ''}`}
               >
-                {shown.items.map((product) => (
+                {shown.items.map((product, index) => (
                   <ProductCard
                     key={product.id}
                     product={product}
                     onAdd={addToCart}
+                    eagerImage={index < 3}
                     maxQuantity={Math.max(
                       0,
                       Math.min(MAX_QUANTITY, product.stock) -

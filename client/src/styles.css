@@ -24,9 +24,14 @@ select,
 textarea {
   font: inherit;
 }
-:focus-visible {
-  outline: 3px solid #875334;
-  outline-offset: 3px;
+/* The default focus ring. It sits in Tailwind's base layer so that utilities such as
+   focus-visible:outline-none on <main> (focused after navigation) can override it; unlayered, it
+   would beat every utility and frame the whole page. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid #875334;
+    outline-offset: 3px;
+  }
 }
 /* Boot "Loading" text appears only if loading is slow, avoiding a flash on fast loads. */
 @keyframes shell-fade-in {

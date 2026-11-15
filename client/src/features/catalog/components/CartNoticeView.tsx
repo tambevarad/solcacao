@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useLocale } from '../../shell/public.js';
 import { Button } from '../../../shared/index.js';
 import { useCartDetails } from '../cart/CartProvider.js';
@@ -6,7 +7,14 @@ import { useCartDetails } from '../cart/CartProvider.js';
  * Visible status for merge adjustments, revision conflicts and failed saves (docs/design.md:
  * "Visible status for merge/stock adjustments"). Problems are alerts; a clean merge is polite.
  */
-export function CartNoticeView() {
+export function CartNoticeView({
+  action,
+  className = 'mb-4',
+}: {
+  /** Extra button next to Retry/Dismiss (the floating notice adds "View cart"). */
+  action?: ReactNode;
+  className?: string;
+} = {}) {
   const cart = useCartDetails();
   const { t, locale } = useLocale();
   const notice = cart.notice;
@@ -56,14 +64,13 @@ export function CartNoticeView() {
       break;
     case 'saveFailed':
       message = t('catalog.cart.saveFailed');
-      retry = true;
       break;
   }
   const problem = notice.kind !== 'merged' || details.length > 0;
   return (
     <div
       role={problem ? 'alert' : 'status'}
-      className={`mb-4 rounded border p-3 text-sm ${problem ? 'border-error' : 'border-line'} bg-white`}
+      className={`${className} rounded border p-3 text-sm ${problem ? 'border-error' : 'border-line'} bg-white`}
     >
       <p>{message}</p>
       {details.length > 0 && (
@@ -74,6 +81,7 @@ export function CartNoticeView() {
         </ul>
       )}
       <div className="mt-2 flex flex-wrap gap-2">
+        {action}
         {retry && (
           <Button variant="secondary" onClick={cart.retry}>
             {t('catalog.cart.retry')}

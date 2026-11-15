@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SolCacao: AI Usage Log</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <header class="doc">
+      <div class="kicker">CSE 5335 · Phase 3 submission · Team SolCacao</div>
+      <h1>AI Usage Log</h1>
+      <div class="meta">
+        Phase 3 (back-end development), run together with Phase 4 under decision D22 · 12–14
+        November 2026 · Aman Gulati, Varad Tambe, Reethika Gajulapati, Krish Ruparel, Daniel
+        Yglesias
+      </div>
+    </header>
+
+    <h2>1. Summary</h2>
+    <p>
+      As in Phase 2, we used AI coding assistants as pair programmers. Four members used Claude Code
+      (Anthropic) and one used Codex (OpenAI). The team set the plan and the turn order, chose the
+      host, made every design decision and decided every review. Each member directed an assistant
+      within their own files. The assistants drafted most of the code, tests and evidence text from
+      those instructions and ran the checks. Every change was run and checked by its author,
+      reviewed and approved by a second member, and passed CI against a real MongoDB before it was
+      merged. We are responsible for all submitted work.
+    </p>
+
+    <h2>2. Tools</h2>
+    <table>
+      <tr>
+        <th>Tool</th>
+        <th>Used by</th>
+        <th>Commits in Phases 3 and 4</th>
+      </tr>
+      <tr>
+        <td>Claude Code (Anthropic)</td>
+        <td>Varad, Krish, Reethika, Aman</td>
+        <td>
+          29 commits carry the assistant's co-author line: Varad 16, Krish 6, Reethika 5, Aman 2
+        </td>
+      </tr>
+      <tr>
+        <td>Codex (OpenAI)</td>
+        <td>Daniel</td>
+        <td>2 commits (Codex adds no co-author line)</td>
+      </tr>
+    </table>
+
+    <h2>3. Log by pull request</h2>
+    <table>
+      <tr>
+        <th>PR</th>
+        <th>Member and tool</th>
+        <th>What the assistant did</th>
+        <th>What the member decided and verified</th>
+      </tr>
+      <tr>
+        <td>#27, #28</td>
+        <td>Varad · Claude Code</td>
+        <td>
+          Drafted decision D22, pages loaded on demand, the API serving the built site, the live-API
+          browser journeys and CI jobs, and the Dockerfile; compared hosting options
+        </td>
+        <td>
+          Chose Railway and paid for it; created the accounts and typed every secret himself (the
+          assistant never saw them); approved the one-line change in Aman's file as a recorded
+          exception. Krish reviewed (545 tests against MongoDB) and left four notes, fixed in #28.
+        </td>
+      </tr>
+      <tr>
+        <td>#29</td>
+        <td>Krish · Claude Code</td>
+        <td>
+          The quote journey on the real API with a business sign-in, the mail outcomes and session
+          expiry; lazy homepage photos; the shared quote test proposed for Varad's file
+        </td>
+        <td>
+          Checked uploads on the deployed site, including a PDF that still downloads after a
+          redeploy (Varad redeployed on request). Varad reviewed and approved.
+        </td>
+      </tr>
+      <tr>
+        <td>#30</td>
+        <td>Reethika · Claude Code</td>
+        <td>
+          Catalog, cart and checkout through the HTTP adapters; measured the catalog queries and
+          proposed indexes; fixed a timing flake in her tests
+        </td>
+        <td>
+          Reviewed two teammates' earlier changes to her files and recorded her decision; checked
+          the journey on the deployed site. Varad reviewed and approved.
+        </td>
+      </tr>
+      <tr>
+        <td>#31</td>
+        <td>Daniel · Codex</td>
+        <td>
+          Contact, feedback and sampler on the real API; tests for timeouts, rate limits, invalid
+          input, duplicates and the mail server down; live email checks
+        </td>
+        <td>
+          Authorized the commit and PR himself; confirmed real email delivery to the deployed inbox.
+          Varad reviewed and approved.
+        </td>
+      </tr>
+      <tr>
+        <td>#32</td>
+        <td>Aman · Claude Code</td>
+        <td>
+          Sign-in on the real API, a security review of everyone's finished code (findings sent to
+          each owner with the file and line), stricter startup configuration, and a CI flake fix
+        </td>
+        <td>
+          Decided which findings to fix in his own files and which to hand to their owners. Krish
+          and Varad each reviewed and approved; Varad's review added two notes.
+        </td>
+      </tr>
+      <tr>
+        <td>#33, #34</td>
+        <td>Varad · Claude Code</td>
+        <td>
+          The quote and sampler journeys from Krish's and Daniel's proposals; measured the deployed
+          site (proxy setting, Lighthouse, an EN/ES sweep); found and fixed a footer layout shift;
+          triaged <code>npm audit</code>, taking only patched versions at least two weeks old;
+          drafted the records
+        </td>
+        <td>
+          Kept the new proxy setting after seeing the measurement, and confirmed that Phase 1 had
+          been submitted separately. Krish reviewed and approved both, with notes fixed in the next
+          PR.
+        </td>
+      </tr>
+    </table>
+
+    <h2>4. What stayed with people</h2>
+    <ul>
+      <li>
+        The plan and turn order (D22), the hosting provider and its cost, and every secret: Varad
+        generated the token secret and chose the inbox password on his own machine and entered them
+        in Railway, which generates the database password itself. None was shown to an assistant or
+        committed.
+      </li>
+      <li>
+        Every review decision and merge. Assistants ran the checks and summarized pull requests; the
+        reviewer chose to approve or request changes.
+      </li>
+      <li>
+        Production sign-ins and anything outward-facing. The assistants' own safety checks blocked a
+        production rollback and a direct database tunnel, which Varad handles in the Railway
+        dashboard. Live journeys that sign in or read the password-protected inbox are run by Varad.
+      </li>
+    </ul>
+
+    <h2>5. How we checked AI output</h2>
+    <ul>
+      <li>
+        CI on every pull request: type checks, 595 unit, API and database tests against MongoDB with
+        none skipped, live-API browser journeys with a Mailpit inbox, the mock checks and a
+        production image build.
+      </li>
+      <li>
+        Each reviewer re-ran the checks before approving (Krish against a local MongoDB; Varad
+        without one, relying on CI for the database tests) and checked the author's journey on the
+        deployed site.
+      </li>
+      <li>
+        Evidence files record only commands that were actually run, with their real counts, and say
+        plainly what was not run. Weekly records end with "Do not prefill a review, attendance,
+        commit or success that did not occur."
+      </li>
+      <li>
+        When an assistant's first answer was wrong, the measurement decided. For example, the proxy
+        setting suggested in #32 (1) was measured on the host and changed to 2, and an attempted fix
+        for a browser warning that did not work was reverted and documented instead.
+      </li>
+    </ul>
+  </body>
+</html>

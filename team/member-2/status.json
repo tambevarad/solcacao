@@ -2,9 +2,13 @@
   "member": 2,
   "phases": {
     "1": {
-      "state": "not_started",
-      "commit": null,
-      "checks": [],
+      "state": "integrated",
+      "commit": "304d76d",
+      "checks": [
+        "PR #1 (template aligned with the requirements) merged as fa61129 (2026-09-13)",
+        "PR #2 (Phase 1 database schema and ERD) merged as 304d76d (2026-09-24)",
+        "Phase 1 deliverables (ERD and schema, three-page overview, hosted prototype, MS Teams demo) submitted to the course separately, outside this repository (confirmed by Varad on 2026-11-14)"
+      ],
       "blockers": []
     },
     "2": {
@@ -33,16 +37,54 @@
       ]
     },
     "3": {
-      "state": "not_started",
-      "commit": null,
-      "checks": [],
-      "blockers": []
+      "state": "integrated",
+      "commit": "e45e244",
+      "checks": [
+        "D22 turn 1 on varad-shell (2026-11-12); PR #26 merged as 2bdc09c first (approved by Krishr21)",
+        "npm run check: pass (499 passed, 46 persistence tests skipped locally: Docker not running)",
+        "tests/member-2/client-serving.test.ts + assets.test.ts: 21 passed",
+        "Compiled app without a database: deep links, JSON 404s, error state with no mock fallback, no CSP errors (manual, 1280 px)",
+        "CI on PR #27 (934ea77): e2e-live (3 journeys on MongoDB; Mailpit ran but none of them sends mail), e2e-mock (15), image and verify passed; verify needed one rerun of a known member-3 timing flake",
+        "PR #27 approved by Krishr21 (545 tests passed against MongoDB, none skipped; live journeys run locally) and merged as 62e52e4 (2026-11-13); his four notes are fixed in the follow-up PR",
+        "Turn 1 follow-up PR #28 approved by Krishr21 and merged as 13a60a2 (2026-11-13)",
+        "Closing turn, PR #33 (draft opened 2026-11-14): quote and sampler live journeys from Students 4 and 5 replace the placeholders; Student 3 catalog live journeys added to CI e2e-live; APP_ROUTES checked against routes.tsx in both directions",
+        "CI on PR #33 (0fc6b00): verify 595/595 against MongoDB, none skipped; e2e-live 6/6 (tests/e2e/live) and 11/11 (tests/member-3); e2e-mock 15/15; production image built",
+        "Locally (no Docker): npm run check 540 passed, 55 persistence tests skipped; npm run build (HTTP mode) passed; check:structure, check:workflow and prettier passed",
+        "Deployed site: catalog and guest-order live journeys passed (LIVE_BASE_URL, installed Chrome)",
+        "Reviewed and merged peer turns #29 (Krishr21), #30 (ReethikaGajulapati), #31 (danielyglesias) and #32 (amang26, also approved by Krishr21)",
+        "CI on PR #33 final commit e78a5ec (run 43666736454): verify 595/595, e2e-live 6/6 and 11/11, e2e-mock 15/15, image built",
+        "PR #33 approved by Krishr21 at e78a5ec (595/595 against local mongo:8.0, live journeys 6/6, 11/11 and his 5 quote journeys, layout and focus checks at 375 and 1440 px) and merged as e45e244 (2026-11-14); Railway deployed it (SUCCESS, health connected)"
+      ],
+      "blockers": [
+        "Release to main and the phase-3-submission tag on Varad's go-ahead",
+        "Live journeys that sign in or read the inbox on the deployed site: run by Varad with MAILPIT_AUTH (docs/deployment.md)"
+      ]
     },
     "4": {
-      "state": "not_started",
+      "state": "ready_for_review",
       "commit": null,
-      "checks": [],
-      "blockers": []
+      "checks": [
+        "Lazy routes: 555 kB single chunk split, no chunk-size warning (largest 252.88 kB)",
+        "Photo library measured: 61 images, none over 250 kB, lazy with srcset; no change needed",
+        "Deployed on Railway 2026-11-13: https://solcacao-production.up.railway.app; health connected, deep links, guest order 201, sampler enquiry 201 with notification sent, data kept after redeploy (docs/deployment.md)",
+        "PR #27 merged as 62e52e4; Railway now deploys development",
+        "Closing turn (PR #33): TRUST_PROXY=2 measured on Railway with the registration rate limit (1 split one visitor across changing proxy buckets); variables, logs (no emails or tokens) and TCP proxies checked (docs/deployment.md)",
+        "Read-only sweep of the deployed site: every route EN/ES at 1440 and 375 px, 68 page loads: no overflow, missing keys, wrong lang, extra h1 or failed request; only the intended not-found 404 message",
+        "Lighthouse 13.6 on six live pages: accessibility 100, SEO 100, best practices 96 (zod eval probe blocked by the CSP); mobile CLS 0.4-0.7 from the footer moving: fixed in Layout.tsx (local production build: CLS 0-0.09 mobile, 0-0.12 desktop)",
+        "Focus ring moved into the Tailwind base layer: <main> no longer outlined after keyboard navigation (checked in the browser)",
+        "npm audit: 31 findings (4 critical, 16 high) to 2 moderate (react-router 6, not reachable); patched releases from before 2026-10-31 only",
+        "Secrets scan of all 124 commits: no .env, keys or tokens; matches are test fixtures, placeholders and checksums",
+        "docs/presentation.md: 25-minute plan from each member segment draft; docs/weekly/week-6.md recorded",
+        "Lighthouse on the deployed e45e244 (six pages): mobile performance 94-100 (was 69-94), CLS 0-0.001 on five pages and 0.132 on the sampler (was up to 0.708); accessibility 100, SEO 100",
+        "Follow-up PR #34 (Krish's note 1): the footer starts exactly at the fold on short pages (not-found: 812 of 812 at 375 px, 900 of 900 at 1440 px); local Lighthouse CLS stays 0-0.001 on five pages",
+        "Follow-up PR #34 approved by Krishr21 at 88e0559 (595/595, header heights 65 and 114 px at 320-1440 px, footer at the fold, CLS 0) and merged as 006b081; Railway deployed it (health, pages, JSON 404, 14 products)",
+        "PR #35: the footer calculation in rem (follows the browser font size; same position at the default size: 812 of 812 and 900 of 900), Krish's notes on #34"
+      ],
+      "blockers": [
+        "Peer review of PR #35 and the release PR by Krishr21; then the phase-3-submission and phase-4-final tags, Railway on main and the submission zip (authorized by Varad on 2026-11-14)",
+        "Rollback rehearsal on Railway (runbook step 8): needs Varad in the dashboard",
+        "Presentation rehearsal not held yet (human)"
+      ]
     }
   }
 }

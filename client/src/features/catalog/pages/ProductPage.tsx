@@ -104,6 +104,7 @@ function ProductDetails({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState('1');
   const [error, setError] = useState('');
   const [added, setAdded] = useState('');
+  const [saveFailed, setSaveFailed] = useState(false);
   const image = product.images[selected] ?? product.images[0];
 
   async function submit(event: FormEvent) {
@@ -114,8 +115,19 @@ function ProductDetails({ product }: { product: Product }) {
       return;
     }
     setError('');
-    await cart.add(product.id, value);
-    setAdded(t('catalog.product.added', { name }));
+    setAdded('');
+    setSaveFailed(false);
+    const outcome = await cart.addLine(product.id, value);
+    if (outcome === 'failed') {
+      // Nothing was saved: keep the chosen amount so the shopper can try again.
+      setSaveFailed(true);
+      return;
+    }
+    setAdded(
+      outcome === 'added'
+        ? t('catalog.product.added', { name })
+        : t('catalog.cart.limited', { name, max: Math.min(MAX_QUANTITY, product.stock) }),
+    );
     setQuantity('1');
   }
 
@@ -212,6 +224,18 @@ function ProductDetails({ product }: { product: Product }) {
         )}
         {max === 0 && !soldOut && (
           <p className="mt-2 text-sm text-cacao/80">{t('catalog.product.maxInCart')}</p>
+        )}
+        {saveFailed && (
+          <p role="alert" className="mt-2 flex flex-wrap items-center gap-3 text-sm text-error">
+            {t('catalog.cart.saveFailed')}
+            <button
+              type="button"
+              onClick={() => cart.setOpen(true)}
+              className="font-medium underline underline-offset-4"
+            >
+              {t('catalog.product.viewCart')}
+            </button>
+          </p>
         )}
         <div role="status" className="mt-3 min-h-6">
           {added && (

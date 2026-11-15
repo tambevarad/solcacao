@@ -38,7 +38,8 @@ describe.skipIf(!uri)('catalog persistence (real MongoDB)', () => {
   beforeAll(async () => {
     await mongoose.connect(uri);
     await Promise.all([
-      ProductModel.init(),
+      // syncIndexes also drops indexes the schema no longer declares (the Phase 2 ones).
+      ProductModel.syncIndexes(),
       InventoryModel.init(),
       CartModel.init(),
       OrderModel.init(),
@@ -96,6 +97,49 @@ describe.skipIf(!uri)('catalog persistence (real MongoDB)', () => {
         'walnut-dark-truffles',
       ]);
       expect(response.headers['x-total-count']).toBe('2');
+    });
+
+    it('matches origin exactly in both the items and the total, for every sort', async () => {
+      for (const sort of ['name', 'priceAsc', 'priceDesc']) {
+        const exact = await request(app).get(`/api/products?origin=Peru&sort=${sort}`);
+        expect(Number(exact.headers['x-total-count'])).toBe(exact.body.length);
+        expect(exact.body.length).toBeGreaterThan(0);
+        // The name sort runs under a case-insensitive collation; origin must still be exact.
+        const lower = await request(app).get(`/api/products?origin=peru&sort=${sort}`);
+        expect(lower.body).toEqual([]);
+        expect(lower.headers['x-total-count']).toBe('0');
+      }
+    });
+
+    it('orders priceDesc as the exact reverse of priceAsc, ties included', async () => {
+      await ProductModel.updateMany({}, { $set: { priceCents: 1000 } });
+      const asc = await request(app).get('/api/products?sort=priceAsc&limit=48');
+      const desc = await request(app).get('/api/products?sort=priceDesc&limit=48');
+      const ids = (body: { id: string }[]) => body.map((p) => p.id);
+      expect(ids(desc.body)).toEqual(ids(asc.body).reverse());
+    });
+
+    it('serves each list sort from an index without an in-memory sort', async () => {
+      // Plans measured in team/member-3/phase-3-evidence.md; this guards against a regression to
+      // a blocking SORT stage (the Phase 2 indexes could not serve the collated or _id sort).
+      const plans = [
+        ProductModel.find({ active: true })
+          .collation({ locale: 'es', strength: 1 })
+          .sort({ 'name.es': 1, _id: 1 })
+          .limit(12),
+        ProductModel.find({ active: true, category: 'bar' })
+          .sort({ priceCents: 1, _id: 1 })
+          .limit(12),
+        ProductModel.find({ active: true }).sort({ priceCents: -1, _id: -1 }).limit(12),
+      ];
+      for (const query of plans) {
+        const explained = (await query.explain('queryPlanner')) as unknown as {
+          queryPlanner: { winningPlan: unknown };
+        };
+        const winning = JSON.stringify(explained.queryPlanner.winningPlan);
+        expect(winning).toContain('"stage":"IXSCAN"');
+        expect(winning).not.toContain('"stage":"SORT"');
+      }
     });
 
     it('searches the chosen locale literally and ignores regex syntax', async () => {
@@ -260,7 +304,9 @@ describe.skipIf(!uri)('catalog persistence (real MongoDB)', () => {
       expect(stored?.mergeIds).toHaveLength(100);
       expect(stored?.mergeIds[0]).toBe('00000000-0000-4000-8000-000000000001');
       expect(stored?.revision).toBe(101);
-    });
+      // 101 sequential HTTP merges against a real MongoDB: over the 5 s default when the full suite
+      // runs in parallel (6.9 s measured on Windows), so this test gets its own budget.
+    }, 30_000);
   });
 
   describe('orders', () => {

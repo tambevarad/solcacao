@@ -24,6 +24,19 @@ Owner: Student 2. See `team/member-2/context.md`.
 - sets `nosniff`;
 - throws at startup if `root` overlaps any private directory such as `UPLOAD_DIR`.
 
-It is **not mounted yet**. `server/src/app.ts` belongs to Student 1. The proposed mount is in
-`team/member-2/handoff.md`; production SPA serving is Phase 3. Student 4's private uploads are never
-passed as a public root.
+It is **not mounted**: production serving of the whole built client (below) covers these files.
+Student 4's private uploads are never passed as a public root.
+
+## Production client serving (`client.ts`)
+
+`createClientRouter({ root, privateDirs })` serves the built client from Express in production
+(docs/deployment.md, D22). `server/src/app.ts` mounts it after the `/api` routers, and only when
+`CLIENT_DIST_DIR` is set (for example `CLIENT_DIST_DIR=dist/client npm start`):
+
+- `/api` paths pass straight through, so unknown API routes keep their JSON 404;
+- hashed files under `/assets` are cached for a year (`immutable`), other static files for an hour;
+- any other `GET` for an extensionless path that accepts HTML gets `index.html` with `no-cache`, so
+  `/en/...` and `/es/...` deep links survive a refresh. Other paths get the same page, which renders
+  not-found, with status `404`;
+- missing files and non-HTML requests keep the JSON 404;
+- startup fails if `index.html` is missing or the client root overlaps a private directory.

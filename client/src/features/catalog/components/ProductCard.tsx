@@ -7,15 +7,25 @@ import { localizePath, useLocale } from '../../shell/public.js';
 import { useMoney, useOriginLabel } from './format.js';
 import { MAX_QUANTITY } from '../rules.js';
 
+/** A whole number from 1 to max, typed as text. */
+function isQuantityIn(text: string, max: number): boolean {
+  const value = Number(text);
+  return text.trim() !== '' && Number.isInteger(value) && value >= 1 && value <= max;
+}
+
 /** Grid card: square image, name, origin and cacao, price, stock cue and a quick add. */
 export function ProductCard({
   product,
   onAdd,
   maxQuantity = Math.min(MAX_QUANTITY, product.stock),
+  eagerImage = false,
 }: {
   product: Product;
+  /** Rejects when the add was not saved; the card then keeps the amount and shows an alert. */
   onAdd(product: Product, quantity: number): Promise<void>;
   maxQuantity?: number;
+  /** First row of the grid: load the photo at once instead of lazily (it is above the fold). */
+  eagerImage?: boolean;
 }) {
   const { t, locale } = useLocale();
   const money = useMoney();
@@ -31,8 +41,7 @@ export function ProductCard({
   const pending = pendingAdds > 0;
   const quantityId = useId();
   const quantity = Number(draft);
-  const valid =
-    draft.trim() !== '' && Number.isInteger(quantity) && quantity >= 1 && quantity <= max;
+  const valid = isQuantityIn(draft, max);
   const disabled = pending || max === 0;
   const step = valid ? quantity : 1;
   const stepStyles =
@@ -80,7 +89,7 @@ export function ProductCard({
             alt=""
             width={480}
             height={480}
-            loading="lazy"
+            loading={eagerImage ? 'eager' : 'lazy'}
             decoding="async"
             className="aspect-square w-full rounded border border-line bg-white object-cover"
           />
@@ -134,8 +143,11 @@ export function ProductCard({
               aria-describedby={quantityError ? `${quantityId}-error` : undefined}
               className="h-11 w-11 min-w-0 rounded border border-line bg-white px-1 text-center text-cacao disabled:opacity-50"
               onChange={(event) => {
-                setDraft(event.target.value);
-                setQuantityError(false);
+                const value = event.target.value;
+                setDraft(value);
+                // Explain an out-of-range amount at once, since it also disables Add to cart. An
+                // empty box is mid-edit; it is reported on blur or Enter instead.
+                setQuantityError(value.trim() !== '' && !isQuantityIn(value, max));
               }}
               onBlur={() => setQuantityError(!valid && max > 0)}
               onKeyDown={(event) => {

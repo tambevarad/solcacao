@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SolCacao: Phase 3 Submission</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <header class="doc">
+      <div class="kicker">CSE 5335 · Phase 3 submission · Team SolCacao</div>
+      <h1>Back-end Development</h1>
+      <div class="meta">
+        Phase 3 (15%) · Prepared 14 November 2026 · Aman Gulati, Varad Tambe, Reethika Gajulapati,
+        Krish Ruparel, Daniel Yglesias
+      </div>
+    </header>
+
+    <h2>1. Where to find it</h2>
+    <table>
+      <tr>
+        <th>Item</th>
+        <th>Location</th>
+      </tr>
+      <tr>
+        <td>Code</td>
+        <td>
+          https://github.com/tambevarad/solcacao, tag <code>phase-3-submission</code> (the attached
+          zip is a <code>git archive</code> of that tag)
+        </td>
+      </tr>
+      <tr>
+        <td>Live application</td>
+        <td>
+          https://solcacao-production.up.railway.app: the Express API serving the React build, with
+          MongoDB, private storage for quote PDFs and a Mailpit test inbox, on Railway
+        </td>
+      </tr>
+      <tr>
+        <td>API map</td>
+        <td><code>docs/api.json</code> (18 endpoints, contractVersion 2)</td>
+      </tr>
+      <tr>
+        <td>Data model</td>
+        <td><code>docs/data-model.md</code> and <code>docs/phase1/erd.svg</code></td>
+      </tr>
+      <tr>
+        <td>Run it</td>
+        <td>
+          <code>README.md</code> ("Run it" and "Checks"); deployment runbook and verified results in
+          <code>docs/deployment.md</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Evidence and records</td>
+        <td>
+          <code>team/member-N/phase-3-evidence.md</code> for each member;
+          <code>docs/weekly/week-5.md</code> and <code>week-6.md</code>
+        </td>
+      </tr>
+      <tr>
+        <td>AI usage log</td>
+        <td>
+          The attached <code>ai-usage-log.pdf</code> (source in <code>docs/phase3/submission</code>)
+        </td>
+      </tr>
+    </table>
+
+    <h2>2. Deliverables</h2>
+    <table>
+      <tr>
+        <th>Deliverable</th>
+        <th>What we built</th>
+        <th>Where</th>
+      </tr>
+      <tr>
+        <td>RESTful API using Node.js/Express</td>
+        <td>
+          Express 5 API with 18 endpoints for accounts, addresses, translations, products, carts,
+          orders, business quotes with a PDF upload, and enquiries. One JSON envelope for success
+          and errors, typed error codes, a JSON 404 for unknown paths, strict request validation
+          (zod), a 100 kB body limit, CORS allowlist, Helmet security headers and per-client rate
+          limits.
+        </td>
+        <td><code>server/src</code>, <code>docs/api.json</code></td>
+      </tr>
+      <tr>
+        <td>Database integration</td>
+        <td>
+          MongoDB through Mongoose: User, CorporatePartner, Address, Product, Inventory, Cart,
+          Order, B2bRequest and Inquiry. Unique and query indexes are built at startup; the catalog
+          indexes were added after measuring the queries. A seed script loads the fictional catalog.
+        </td>
+        <td>
+          <code>server/src/features/*/model*.ts</code>, <code>server/src/shared/db.ts</code>,
+          <code>docs/data-model.md</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Server-side business logic</td>
+        <td>
+          Password hashing (bcrypt) and signed one-hour tokens with roles re-read from the database;
+          cart merge on sign-in capped by stock and safe to retry; order totals computed on the
+          server from database prices (the browser never sends a price); business quotes stored
+          privately with owner-only file download; enquiries with server-side product snapshots;
+          email notifications that report "saved" separately from "sent".
+        </td>
+        <td>
+          <code>server/src/features/{auth,catalog,b2b,support}</code>,
+          <code>server/src/shared</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Front-end connected to the API using fetch()</td>
+        <td>
+          One shared <code>fetch()</code> client adds the sign-in token and turns the API's error
+          envelope into one typed error. Each feature has an HTTP adapter behind the same interface
+          as its Phase 2 mock, chosen by <code>VITE_API_MODE=http</code>. Failures show an error
+          state; nothing falls back to mock data.
+        </td>
+        <td><code>client/src/api/http.ts</code>, <code>client/src/features/*/http.ts</code></td>
+      </tr>
+      <tr>
+        <td>AI Usage Log</td>
+        <td>Tools, who used them, for what, and what the team decided and verified</td>
+        <td><code>ai-usage-log.pdf</code></td>
+      </tr>
+    </table>
+
+    <h2>3. Testing</h2>
+    <p>
+      Continuous integration runs on every pull request: type checks and 595 unit, API and database
+      tests against a real MongoDB with none skipped; 6 cross-feature browser journeys against the
+      live API with MongoDB and a Mailpit inbox (catalog, guest order, cart merge on sign-in,
+      contact email, business quote with a PDF, six-piece sampler) plus 11 catalog journeys; the
+      Phase 2 mock checks; and a production image build. Each member also ran their journeys against
+      the deployed site (their <code>phase-3-evidence.md</code> and
+      <code>phase-4-evidence.md</code>).
+    </p>
+
+    <h2>4. Team roles</h2>
+    <p>
+      The team is organized by feature ownership (<code>docs/ownership.json</code>): every member
+      built the routes, database models and queries, fetch adapter, tests and documentation for
+      their own feature. The five course roles map to who led each cross-cutting part:
+    </p>
+    <table>
+      <tr>
+        <th>Role</th>
+        <th>Member</th>
+        <th>What they did</th>
+      </tr>
+      <tr>
+        <td>API Lead (Express routes and middleware)</td>
+        <td>Aman Gulati</td>
+        <td>
+          The Express app and shared middleware: authentication and roles, validation, errors, body
+          limits, CORS allowlist, trusted-proxy handling, login and registration throttling; the
+          auth and account routes; the team security review
+        </td>
+      </tr>
+      <tr>
+        <td>Database Developer (schema and CRUD queries)</td>
+        <td>Reethika Gajulapati</td>
+        <td>
+          Product, inventory, cart and order schemas and queries; indexes added after measuring
+          (from 4,500 keys scanned per catalog page to 12–283); the catalog seed and demo reset
+        </td>
+      </tr>
+      <tr>
+        <td>Integration Programmer (fetch calls from React)</td>
+        <td>Varad Tambe</td>
+        <td>
+          The shared <code>fetch()</code> client and the switch to the HTTP adapters; the API
+          serving the built site; cross-feature browser journeys; deployment on Railway
+        </td>
+      </tr>
+      <tr>
+        <td>Tester/Logger (API tests and debug logs)</td>
+        <td>Daniel Yglesias</td>
+        <td>
+          HTTP and MongoDB tests for enquiries and the sampler, including timeouts, rate limits,
+          invalid input, duplicate submissions and the mail server down; live email delivery checks
+          on the deployed inbox
+        </td>
+      </tr>
+      <tr>
+        <td>Reviewer (issue tracking and back-end documentation)</td>
+        <td>Krish Ruparel</td>
+        <td>
+          Reviewed and approved the coordinator's pull requests (#27, #28, #32, #33, #34) with
+          written findings; the business-quote back-end documentation
+        </td>
+      </tr>
+    </table>
+
+    <h2>5. Pull requests (Phases 3 and 4, decision D22)</h2>
+    <p>
+      Phases 3 and 4 ran together, one member at a time (<code>docs/decisions.md</code>, D22). Each
+      pull request needed passing CI and a teammate's approval and was merged with a merge commit:
+      #27 and #28 (Varad, approved by Krish), #29 (Krish), #30 (Reethika), #31 (Daniel) and #32
+      (Aman), each approved by Varad (#32 also by Krish), then #33 and #34 (Varad, approved by
+      Krish). The record is in <code>docs/weekly/week-5.md</code> and <code>week-6.md</code>.
+    </p>
+  </body>
+</html>

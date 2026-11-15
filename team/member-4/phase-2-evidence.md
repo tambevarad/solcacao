@@ -140,7 +140,7 @@ Mock-mode dev server, reviewed in the desktop app's browser pane:
   company, email or file data is written to browser storage.
 - Real photography and copy are not supplied; image slots are labeled. No prices, lead times,
   certifications or contact details are claimed.
-- `context.md` says Phase 2 uses no MongoDB, while `team/member-4/phase-2.md`, `docs/roadmap.md` and
+- `docs/context.md` (then `context.md`) said Phase 2 uses no MongoDB, while `team/member-4/phase-2.md`, `docs/roadmap.md` and
   `docs/integration.md` place the backend track in Phase 2. This work follows the phase file.
 
 ## Review

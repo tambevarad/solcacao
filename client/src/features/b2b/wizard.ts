@@ -91,7 +91,12 @@ export type WizardAction =
   | { type: 'submitStart'; input: QuoteInput }
   | { type: 'submitSuccess'; receipt: QuoteReceipt }
   | { type: 'submitFailure'; failure: SubmitFailure }
+  /** The shopper signed in again after the server refused an ended session. */
+  | { type: 'resume' }
   | { type: 'reset' };
+
+/** Message for a submission the server refused because the session had ended (401). */
+export const SESSION_ENDED_KEY = 'b2b.submit.errorUnauthorized';
 
 export const emptyDraft: QuoteDraft = {
   cacaoProfile: '',
@@ -116,6 +121,20 @@ export function initialWizardState(): WizardState {
     failure: null,
     receipt: null,
   };
+}
+
+/**
+ * True when the wizard holds something the shopper entered: a later step, a choice, a quantity,
+ * notes or a file. Company and email alone don't count, because they are prefilled from the account.
+ */
+export function hasProgress(state: WizardState): boolean {
+  const { cacaoProfile, quantity, packaging, notes } = state.draft;
+  return (
+    state.status !== 'succeeded' &&
+    (state.furthest > 1 ||
+      state.file !== null ||
+      [cacaoProfile, quantity, packaging, notes].some((value) => value !== ''))
+  );
 }
 
 export function isCacaoProfile(value: string): value is CacaoProfile {
@@ -313,6 +332,9 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
         errorRound: errorStep ? state.errorRound + 1 : state.errorRound,
       };
     }
+    case 'resume':
+      // The "session ended" message no longer applies; the kept attempt can be sent as it is.
+      return state.failure?.messageKey === SESSION_ENDED_KEY ? { ...state, failure: null } : state;
     case 'reset':
       return initialWizardState();
   }
@@ -329,7 +351,7 @@ export function failureFromError(error: unknown): SubmitFailure {
   if (error instanceof ApiError) {
     switch (error.code) {
       case 'UNAUTHORIZED':
-        return { messageKey: 'b2b.submit.errorUnauthorized', retrySame: true };
+        return { messageKey: SESSION_ENDED_KEY, retrySame: true };
       case 'FORBIDDEN':
         return { messageKey: 'b2b.submit.errorForbidden', retrySame: false };
       case 'FILE_TOO_LARGE':

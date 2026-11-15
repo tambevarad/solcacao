@@ -23,7 +23,7 @@ export interface PublicAssetsOptions {
   maxAge?: string | number;
 }
 
-function isWithin(child: string, parent: string) {
+export function isWithin(child: string, parent: string) {
   const relative = path.relative(parent, child);
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }

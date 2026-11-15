@@ -47,9 +47,14 @@ export const validInput = (overrides: Partial<QuoteInput> = {}): QuoteInput => (
 export const pdfBytes = (marker = 'a') => Buffer.from(`%PDF-1.4\n% synthetic ${marker}\n%%EOF\n`);
 
 export async function createQuoteTestApp(
-  options: { notifyQuote?: NotifyQuote; isDatabaseReady?: () => boolean } = {},
+  options: {
+    notifyQuote?: NotifyQuote;
+    isDatabaseReady?: () => boolean;
+    /** Reuse an existing upload directory, e.g. to model a server restart. */
+    uploadRoot?: string;
+  } = {},
 ) {
-  const uploadRoot = await mkdtemp(path.join(tmpdir(), 'solcacao-b2b-'));
+  const uploadRoot = options.uploadRoot ?? (await mkdtemp(path.join(tmpdir(), 'solcacao-b2b-')));
   const notifyQuote = vi.fn<NotifyQuote>(options.notifyQuote ?? (async () => 'sent'));
   const app = express();
   app.use(express.json());
