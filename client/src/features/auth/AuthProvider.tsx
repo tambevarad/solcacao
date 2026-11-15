@@ -55,7 +55,8 @@ const MAX_TIMER_MS = 2 ** 31 - 1;
  * sessionToken store (decision D09: never localStorage). A full reload therefore starts signed
  * out. Successful login/register sets the token first, then the user, so CartProvider (which
  * observes `user`) can call authenticated endpoints immediately. A generation counter drops
- * responses that arrive after logout or a newer sign-in. The session ends itself at expiresAt.
+ * responses that arrive after logout or a newer sign-in. The session ends itself at expiresAt,
+ * re-checked when the tab becomes visible again.
  */
 export function AuthProvider({
   children,
@@ -69,10 +70,12 @@ export function AuthProvider({
   const [ready, setReady] = useState(() => sessionToken.get() === null);
   const generation = useRef(0);
   const expiryTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const expiresAt = useRef(Number.POSITIVE_INFINITY);
 
   const logout = useCallback(() => {
     generation.current += 1;
     clearTimeout(expiryTimer.current);
+    expiresAt.current = Number.POSITIVE_INFINITY;
     sessionToken.set(null);
     setUser(null);
     setReady(true);
@@ -83,7 +86,8 @@ export function AuthProvider({
       clearTimeout(expiryTimer.current);
       sessionToken.set(session.token);
       setUser(session.user);
-      const remaining = new Date(session.expiresAt).getTime() - Date.now();
+      expiresAt.current = new Date(session.expiresAt).getTime();
+      const remaining = expiresAt.current - Date.now();
       if (Number.isFinite(remaining))
         expiryTimer.current = setTimeout(logout, Math.min(Math.max(remaining, 0), MAX_TIMER_MS));
     },
@@ -115,6 +119,23 @@ export function AuthProvider({
   }, [auth, logout]);
 
   useEffect(() => () => clearTimeout(expiryTimer.current), []);
+
+  // Timers pause while a laptop sleeps or a background tab is throttled, so the expiry timer can
+  // fire late. Re-check when the page becomes visible or focused again.
+  useEffect(() => {
+    const check = () => {
+      if (Date.now() >= expiresAt.current) logout();
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') check();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('focus', check);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('focus', check);
+    };
+  }, [logout]);
 
   const state = useMemo<AuthState>(
     () => ({

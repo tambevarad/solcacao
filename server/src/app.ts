@@ -9,12 +9,17 @@ import { supportRouter } from './features/support/router.js';
 import { createClientRouter } from './features/shell/client.js';
 import { isDatabaseReady } from './shared/db.js';
 import { errorHandler, notFoundHandler } from './shared/errors.js';
+import { parseClientOrigins, parseTrustProxy } from './shared/env.js';
 export const app = express();
 app.disable('x-powered-by');
+// Behind a host proxy (TRUST_PROXY=1 on Railway) req.ip must be the client, or every per-IP rate
+// limit would count all visitors as one. 0 (the default) ignores X-Forwarded-For.
+app.set('trust proxy', parseTrustProxy(process.env.TRUST_PROXY));
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    // Allowlist from CLIENT_ORIGIN (validated at startup); other origins get no CORS grant.
+    origin: parseClientOrigins(process.env.CLIENT_ORIGIN),
     exposedHeaders: ['X-Page', 'X-Limit', 'X-Total-Count', 'X-Total-Pages'],
   }),
 );

@@ -1,146 +1,152 @@
 # Student 1 handoff
 
-Current phase: 2 (Core Development), ready for review on `aman-auth`. Evidence:
-`team/member-1/phase-2-evidence.md`. Phase 1 status is recorded as `ready_for_review` (decision
-D21). It is member-reported, and the hosted prototype URL and demo evidence are still missing; see
-`team/member-1/phase-1-evidence.md`.
+Current turn: Phases 3 and 4 together (D22), the last member turn before Student 2's closing turn.
+Branch `aman-auth`. Evidence: `team/member-1/phase-3-evidence.md` and `phase-4-evidence.md`.
+Author: Aman Gulati, who authorized commit, push and the PR into `development` on 2026-11-14.
+PR: https://github.com/tambevarad/solcacao/pull/32 (`e192dfc`). Reviewer requested: tambevarad. No approval is claimed here.
 
-## Public exports delivered
+## Start of turn: merge and peer reports
 
-**Client**
+- `git fetch origin` then `git merge origin/development`: "Already up to date". `aman-auth` was
+  already at `e8d2215` (PR #31 merged), so there were **no merge conflicts** and nothing was
+  resolved by judgement.
+- Sign-in problems reported by teammates, and what changed in my files:
+  - **CI flake, `window is not defined`** (`docs/weekly/week-4.md:78`,
+    `team/member-2/phase-2-evidence.md:134`). Cause: `tests/member-1/harness.tsx` mounted
+    `CartProvider` with the default catalog mock, which has 250 ms of demo latency. A test that
+    signs in ends while the cart's sign-in load and merge are still waiting. When that was the
+    file's last test, the timer fired after jsdom was torn down. Fix (my test files only): the
+    harness passes `createMockCatalog(unusedHttp, { delayMs: 0 })` through `CartProvider`'s
+    documented `catalog` test seam. `pages.test.tsx`'s `afterEach` lets pending work settle inside
+    `act` before `cleanup()`. No change to Student 3's `CartProvider`; as Student 2 noted, an unmount
+    guard there would break the StrictMode remount.
+  - **Timing flake in `pages.test.tsx › registration`** (Student 3, `team/member-3/handoff.md:114`):
+    `configure({ asyncUtilTimeout: 3000 })`, the remedy Student 3 suggested. Assertions unchanged.
+  - **Session end unmounts the quote wizard** (Student 4, `team/member-4/phase-3-evidence.md:20`).
+    Student 4 fixed it in his own files. On my side I found two related gaps and fixed them in my
+    files:
+    1. A late 401 from the account page could sign out an account that signed in since.
+       `AccountPage` now signs out only the session it was opened for.
+    2. The one-hour expiry timer can fire late after a laptop sleeps. `AuthProvider` now also
+       re-checks `expiresAt` when the tab becomes visible or focused.
+  - Students 3 and 5 reported no sign-in failure.
 
-- `client/src/features/auth/public.tsx`: `useAuth(): AuthState` (`user`, `ready`, `login`,
-  `register`, `logout`, as specified), `AuthProvider` (already mounted in main.tsx; optional `auth`
-  test-seam prop), `RequireAuth`, `RequireRole` (same signatures).
-  - Guest → sign-in prompt (modal + `/:locale/login?returnTo=<current path>`).
-  - Wrong role → explanation; for `b2b` there is a link to
-    `/:locale/register?returnTo=…&role=b2b` plus `/wholesale`.
-  - Protected children never render for guests or the wrong role.
-- Session behavior:
-  - On success the token is written to `sessionToken` **before** `user` changes.
-  - `logout()` clears both, with no redirect.
-  - The session ends at `expiresAt` (1 h).
-  - A reload starts signed out, because the token is memory-only. Mock accounts also reset on reload.
-- Auth mock (`client/src/features/auth/mock.ts`):
-  - One shared registry for every `createMockAuth()` call.
-  - `me()` reads `sessionToken` at call time and throws `ApiError(401,'UNAUTHORIZED')` when signed
-    out.
-  - Tokens are `mock:<24-hex>`.
-  - `resetMockAuth()` is for tests.
-  - Fictional demo accounts: `retail@solcacao.test` / `retail-demo-pass` and
-    `business@solcacao.test` / `business-demo-pass` (company "Fictional Demo Company").
+## Review of the coordinator-approved change to my `server/src/app.ts` (PR #27, proposal 1 in team/member-2/handoff.md)
 
-**Server**
+**I agree with it as merged; no change requested.** Checked:
 
-- `server/src/shared/auth.ts`: `requireAuth`, `optionalAuth`, `requireRole(role)`, the `req.user?:
-User` augmentation, `signAccessToken`, `createAuthMiddleware({ loadUser, secret, isDatabaseReady })`.
-  - `requireRole` authenticates on its own if `requireAuth` did not run.
-  - Status codes: 401 for missing/invalid/expired tokens; 403 for the wrong role; 503 when the user
-    store is down.
-  - Mock tokens are always 401.
-- `server/src/shared/db.ts`: `connectDb(uri)`, `disconnectDb()`, `isDatabaseReady()`.
-- `server/src/shared/errors.ts`: `AppError`, `ErrorCode`, `invalid`, `sendError`,
-  `isDatabaseOutage`, `errorHandler`, `notFoundHandler`.
-- `server/src/shared/validation.ts`: `parseBody`.
-- `server/src/shared/env.ts`: `loadServerEnv`, `jwtSecretProblems`.
-- Routes: `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`,
-  `PATCH /api/users/me`, `GET|POST /api/users/me/addresses` (`createAuthRouter(deps)`).
-- `/api/health` now reports `{status, database}`: 200 when connected, 503 otherwise.
+- It mounts `createClientRouter` after all five `/api` routers and before `notFoundHandler`, only
+  when `CLIENT_DIST_DIR` is set. Development, CI unit tests and `tests/health.test.ts` are unchanged.
+- Unknown `/api` paths still reach my JSON 404 (`next('router')` in
+  `server/src/features/shell/client.ts`). Verified locally and on the live site: `/api/nope` → JSON 404.
+- Refusing to start when the client root overlaps `UPLOAD_DIR` keeps private uploads out of static
+  serving.
+- Note only, not a change request: a missing build throws while `app.ts` is imported, so it prints a
+  stack trace instead of my "Invalid server configuration" message. It still exits non-zero, which
+  is what matters for the host.
 
-## Required peer exports and PRs
+In this turn I edited the lines around it (trust proxy, CORS allowlist). The mount itself is
+untouched.
 
-- **Student 3 (catalog):** follow-up in your own files, as your handoff describes:
-  `createCatalogRouter({ requireAuth, optionalAuth })` from `../../shared/auth.js`, then delete
-  `server/src/features/catalog/types.ts`. The CORS `exposedHeaders` change (your proposal 2) is
-  included in this PR's `app.ts`, and so is your `tests/health.test.ts` change.
-- **Student 4 (b2b):** `createB2bRouter({ requireAuth, requireB2b: requireRole('b2b'), … })`, then
-  delete the duplicate augmentation in `server/src/features/b2b/types.ts`. Your tests need the
-  patch in proposal 1 below.
-- **Student 5 (support):** `optionalAuth` is available if inquiries ever need the signed-in user.
-- **Student 2:** proposals 1–4 below. The shell's account link and sign-out already work against the
-  real `useAuth()`.
+## Public exports (unchanged signatures)
+
+Client: `useAuth`, `AuthProvider`, `RequireAuth`, `RequireRole` (`client/src/features/auth/public.tsx`).
+Server: `requireAuth`, `optionalAuth`, `requireRole`, `signAccessToken`, `connectDb`,
+`isDatabaseReady`, `ensureIndexes`, `AppError`, `sendError`, `errorHandler`, `parseBody`,
+`loadServerEnv`. Added: `describeForLog(error)` in `server/src/shared/errors.ts` (safe log line),
+and `parseClientOrigins` / `parseTrustProxy` in `server/src/shared/env.ts`. No DTO, route or
+`docs/api.json` change.
+
+New server configuration (names only):
+
+- `CLIENT_ORIGIN` now accepts a comma-separated allowlist and is required when
+  `NODE_ENV=production`. The live server already sends
+  `Access-Control-Allow-Origin: https://solcacao-production.up.railway.app`, so it is set there.
+- `TRUST_PROXY` (new, default 0) is the number of proxy hops.
+
+## Security review findings for other owners (review only; I did not edit their code)
+
+Each finding names the file:line and the fix. Severity is mine.
+
+1. **Student 2 (Varad), Railway variable: pending-Varad, medium.** The API sits behind Railway's
+   proxy without `trust proxy`, so the per-IP limits (login and registration in my router,
+   `/inquiries` in Student 5's) can treat every visitor as one address. Ten failed logins anywhere
+   would then lock everyone out for 15 minutes. Fix: after this PR deploys, set `TRUST_PROXY=1` on
+   the `solcacao` service. Then check the logs for express-rate-limit
+   `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR` warnings, before and after.
+2. **Student 2, `docs/deployment.md:45` and `.env.example:3` (proposal A below), low.** Document
+   `TRUST_PROXY=1` and the CLIENT_ORIGIN list format.
+3. **Student 3 (Reethika), `server/src/features/catalog/router.ts:165`, low.**
+   `console.error('[catalog] Unexpected error', error)` logs the whole error: the stack, plus
+   MongoDB messages that can quote stored values. Fix:
+   `import { describeForLog } from '../../shared/errors.js';` then
+   `console.error('[catalog] Unexpected error:', describeForLog(error));`.
+4. **Student 3, `server/src/features/catalog/router.ts:148`, low.** `POST /api/orders` (guest
+   checkout) has no rate limit, so anyone can create unlimited simulated orders and grow the
+   database. Fix: `authRateLimit({ windowMs: 15 * 60 * 1000, limit: 20 })` from
+   `../auth/router.js`, or an equivalent `rateLimit` before `optionalAuth`.
+5. **Student 4 (Krish), `server/src/features/b2b/router.ts:151` and
+   `server/src/features/b2b/service.ts:116`, low.** The same full-error logging; at `service.ts:116`
+   it can include SMTP transport details. Fix: `describeForLog(error)` as in finding 3.
+6. **Student 4, `server/src/features/b2b/router.ts:107`, low.** `POST /api/b2b/quote` has no throttle.
+   Every request buffers up to 5 MiB in memory before validation, so one business account can send
+   many in parallel. Fix: a per-user limiter after `requireB2b`, for example
+   `rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, keyGenerator: (req) => req.user!.id })`.
+   Keep it before `parseUpload`.
+7. **Student 5 (Daniel), `server/src/features/support/router.ts:25`, nit.** The route-level
+   `express.json({ limit: '16kb' })` never runs, because `app.ts` has already parsed the body with
+   its 100 kB limit. The 16 KiB rule still holds through the explicit check at line 28, so behaviour
+   is correct. Fix: drop the route parser, or note in `server/src/features/support/README.md` that
+   line 28 enforces the limit.
+
+Checked with no finding:
+
+- JWT handling: HS256 only, `iss`/`aud`/`exp` verified, role from the database, `alg: none`
+  rejected (live: 401).
+- Quote and file ownership (live: 401/403/404 as specified). Download headers: attachment,
+  `nosniff`, `private, no-store`.
+- No other `returnTo` consumers. No tokens in `localStorage`.
+- Error envelopes carry no stack traces. Helmet CSP and HSTS are live. No secrets in the client
+  bundle or the repository.
 
 ## Shared change proposals
 
-1. **Student 4, `tests/member-4` (blocks `npm run check` on this branch).** Two tests assert the
-   auth stubs. With this exact patch applied, the full suite passes (446 passed, 41 skipped).
-   Consumers: tests only; migration: none.
+A. **Student 2, `.env.example` and `docs/deployment.md` (docs only; no contract change).**
 
-   ```diff
-   --- a/tests/member-4/adapters.test.ts
-   +++ b/tests/member-4/adapters.test.ts
-   @@ -1,7 +1,8 @@
-   -import { NotImplementedError } from '../../client/src/api/notImplemented.js';
-   +import { sessionToken } from '../../client/src/api/session.js';
-   +import { createMockAuth, resetMockAuth } from '../../client/src/features/auth/mock.js';
-   @@ -71,9 +72,18 @@
-   -  it('asks the auth mock at call time by default (still a template stub)', async () => {
-   +  it('asks the auth mock at call time by default', async () => {
-   +    resetMockAuth();
-   +    sessionToken.set(null);
-        const api = createMockB2B(unusedHttp, { delayMs: 0 });
-   -    await expect(api.submit(input, pdf())).rejects.toBeInstanceOf(NotImplementedError);
-   +    await expect(api.submit(input, pdf())).rejects.toMatchObject({ status: 401 });
-   +    const session = await createMockAuth(unusedHttp, { delayMs: 0 }).login({
-   +      email: 'business@solcacao.test',
-   +      password: 'business-demo-pass',
-   +    });
-   +    sessionToken.set(session.token);
-   +    await expect(api.submit(input, pdf())).resolves.toMatchObject({ status: 'submitted' });
-   +    sessionToken.set(null);
-      });
-   --- a/tests/member-4/fail-closed.test.tsx
-   +++ b/tests/member-4/fail-closed.test.tsx
-   -// With the template auth (no Student 1 implementation yet) the wizard route must stay closed.
-   -it('keeps the wizard closed until real authentication exists', async () => {
-   +// With the real RequireRole, a guest gets Student 1's sign-in prompt instead of the wizard.
-   +it('keeps the wizard closed for a guest', async () => {
-      renderApp('/en/wholesale/request');
-   -  expect(await screen.findByText(/role guard implementation pending/)).toBeInTheDocument();
-   +  expect(
-   +    await screen.findByRole('heading', { level: 1, name: 'Sign in to continue' }),
-   +  ).toBeInTheDocument();
-   ```
+```diff
+--- a/.env.example
+-CLIENT_ORIGIN=http://localhost:5173
++# CORS allowlist: one origin or a comma-separated list (scheme://host[:port], no path). Required in production.
++CLIENT_ORIGIN=http://localhost:5173
++# Reverse-proxy hops in front of the API (1 on Railway) so per-IP rate limits see the client. 0 locally.
++# TRUST_PROXY=0
+--- a/docs/deployment.md (Railway runbook step 4)
+    - `CLIENT_ORIGIN=https://<the app's public domain>`
++   - `TRUST_PROXY=1` (Railway's edge proxy; without it every visitor shares one rate-limit bucket)
+```
 
-2. **Student 2, `.github/workflows/ci.yml`: MongoDB service for persistence tests.** Add it to the
-   test job (members 1, 3 and 4 skip their Mongo suites without it). My suite accepts only a local
-   host and uses its own `solcacao_test_member1_<pid>` database. Members 3 and 4 delete their own
-   collections, so give them distinct database names if their files run in parallel.
+Earlier proposals: 1, 2 and 4 landed in PR #12. Proposal 3 (auth schemas into
+`contracts/validation.ts`) is still deferred by the coordinator, with no behaviour change.
 
-   ```yaml
-   services:
-     mongo:
-       image: mongo:8.0
-       ports: ['27017:27017']
-       options: >-
-         --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1}).ok'"
-         --health-interval 5s --health-timeout 5s --health-retries 20
-   env:
-     TEST_MONGODB_URI: mongodb://localhost:27017/solcacao_test
-   ```
+## Pending Varad (Railway access only)
 
-3. **Student 2, `contracts/validation.ts` (contract proposal, no behavior change for consumers).**
-   Move `loginSchema`, `profileSchema` and `addressSchema` from `client/src/features/auth/rules.ts`
-   into contracts so every endpoint validator lives there (docs/contracts.md asks to "expand runtime
-   validators to cover every endpoint in Phase 2"). Old: absent. New: the same exports, unchanged.
-   After that, auth/rules.ts re-exports them. Also decide whether `registerSchema.password.min(12)`
-   should count bytes (contract text: "12–72 UTF-8 bytes"); today it counts UTF-16 units, which is
-   stricter. Tests: tests/member-1/rules.test.ts already covers these.
+1. Set `TRUST_PROXY=1` on the `solcacao` service once this PR is merged and deployed. Then redeploy
+   and confirm that `/api/health` still reports `connected`.
+2. Confirm in the dashboard (names only) that `JWT_SECRET`, `MONGODB_URI`, `CLIENT_ORIGIN` and
+   `UPLOAD_DIR` are set as host variables. The running server shows indirectly that `JWT_SECRET`
+   passed my startup validation: 32 or more characters, not a placeholder.
+3. Railway logs: the startup line `SolCacao API listening`, no `Could not connect to MongoDB`, no
+   rate-limit `ERR_ERL_*` warnings, and no email addresses or tokens in any log line.
+4. MongoDB indexes on the live database (`users.email` unique, `corporatePartners.userId` unique,
+   `addresses.{userId,_id}`). Use `db.users.getIndexes()` and the others through Railway's data tab
+   or a short-lived TCP proxy, then disable the proxy again. Indirect evidence already: three
+   concurrent registrations with one email gave one 201 and two 409.
+5. After the redeploy, rerun
+   `npx playwright test -c tests/member-1/playwright.config.ts deployed`.
 
-4. **Student 2, docs (README / `.env.example`) — server start prerequisites.** The API now refuses to
-   start without a reachable MongoDB and a real secret. Suggested `.env.example` comment:
-   `# JWT_SECRET: at least 32 random characters, e.g. node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`.
-   README "Run the API": `npm run services`, set `MONGODB_URI` and `JWT_SECRET` in `.env`,
-   then `npm run dev`. `npm run dev:client` (mock mode) needs neither.
+## Known limitations
 
-## Known limitations and next step
-
-- The 10 real-Mongo tests (`tests/member-1/persistence.test.ts`: round trip, bcrypt cost, partner
-  rollback, concurrent registration, address isolation, address limit) were **not run**: the local
-  disk was too full to pull the Mongo image. Run with
-  `TEST_MONGODB_URI=mongodb://127.0.0.1:27017/solcacao_test npx vitest run tests/member-1`
-  after `npm run services`, or in CI after proposal 2.
-- Registration rollback is compensation, not a transaction. Rate limits need `trust proxy` behind a
-  proxy (Phase 4).
-- Next (Phase 3, not started): switch to HTTP mode, bind against real Mongo, then do the security
-  sweep and the ES/EN audit.
+- Registration rollback is compensation, not a transaction (no replica set on the demo host).
+- The address limit (20) is a count followed by an insert. Two concurrent creates at 19 could reach 21. No contract requires atomicity there.
+- Rate limits live in each process's memory, so they reset on every redeploy or restart.
+- The token lives in memory only (D09): every reload asks for sign-in again, by design.

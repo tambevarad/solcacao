@@ -76,6 +76,19 @@ function bodyParserError(error: unknown): AppError | null {
   }
 }
 
+/**
+ * A log line for an unexpected error. MongoDB messages can quote stored values (a duplicate-key
+ * error names the email), so database errors are logged by name and code only.
+ */
+export function describeForLog(error: unknown): string {
+  if (!(error instanceof Error)) return 'non-Error value thrown';
+  if (/^Mongo|^Mongoose/.test(error.name)) {
+    const code = 'code' in error && error.code !== undefined ? ` (code ${String(error.code)})` : '';
+    return `${error.name}${code}`;
+  }
+  return `${error.name}: ${error.message}`;
+}
+
 /** Last router in app.ts: unknown /api paths. */
 export const notFoundHandler: RequestHandler = (_req, res) =>
   sendError(res, notFound('Route not found'));
@@ -90,9 +103,6 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
   const parser = bodyParserError(error);
   if (parser) return sendError(res, parser);
   if (isDatabaseOutage(error)) return sendError(res, serviceUnavailable());
-  console.error(
-    '[server] Unexpected error:',
-    error instanceof Error ? `${error.name}: ${error.message}` : 'non-Error value thrown',
-  );
+  console.error('[server] Unexpected error:', describeForLog(error));
   sendError(res, new AppError(500, 'INTERNAL_ERROR', 'Unexpected server error'));
 };

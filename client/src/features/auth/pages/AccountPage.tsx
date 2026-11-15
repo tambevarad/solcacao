@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 
 import { Link } from 'react-router-dom';
 import { BriefcaseBusiness, ShoppingBag } from 'lucide-react';
 import type { Address, ProfileUpdate, User } from '../../../../../contracts/index.js';
+import { sessionToken } from '../../../api/index.js';
 import { Button, ErrorState, Field, LoadingState, buttonStyles } from '../../../shared/index.js';
 import { localizePath, useLocale } from '../../shell/public.js';
 import { useAuth, useAuthInternals } from '../AuthProvider.js';
@@ -15,10 +16,16 @@ import { fieldErrorsOf, profileSchema } from '../rules.js';
  * /:locale/account (wrapped in RequireAuth by routes.tsx). Shows the account type, edits the
  * profile (name, plus company for business accounts; email and role are not editable) and the
  * signed-in user's own addresses. A 401 from any action signs out, so the guard offers sign-in.
+ * RequireAuth unmounts the page on sign-out, so the token present at mount is the session every
+ * request here was sent with: a late 401 for it never signs out an account that signed in since.
  */
 export default function AccountPage() {
   const { t } = useLocale();
   const { user, logout } = useAuth();
+  const [pageSession] = useState(() => sessionToken.get());
+  const expire = useCallback(() => {
+    if (sessionToken.get() === pageSession) logout();
+  }, [pageSession, logout]);
   if (!user) return null; // RequireAuth renders the sign-in prompt instead.
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
@@ -27,8 +34,8 @@ export default function AccountPage() {
         <MockNotice />
       </div>
       <AccountType user={user} />
-      <ProfileSection user={user} onUnauthorized={logout} />
-      <AddressSection onUnauthorized={logout} />
+      <ProfileSection user={user} onUnauthorized={expire} />
+      <AddressSection onUnauthorized={expire} />
       <div className="mt-10 border-t border-line pt-6">
         <Button variant="secondary" onClick={logout}>
           {t('auth.account.signOut')}
