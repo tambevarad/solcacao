@@ -2,9 +2,13 @@
   "member": 2,
   "phases": {
     "1": {
-      "state": "not_started",
-      "commit": null,
-      "checks": [],
+      "state": "integrated",
+      "commit": "304d76d",
+      "checks": [
+        "PR #1 (template aligned with the requirements) merged as fa61129 (2026-09-13)",
+        "PR #2 (Phase 1 database schema and ERD) merged as 304d76d (2026-09-24)",
+        "Phase 1 deliverables (ERD and schema, three-page overview, hosted prototype, MS Teams demo) submitted to the course separately, outside this repository (confirmed by Varad on 2026-11-14)"
+      ],
       "blockers": []
     },
     "2": {
@@ -33,8 +37,8 @@
       ]
     },
     "3": {
-      "state": "ready_for_review",
-      "commit": null,
+      "state": "integrated",
+      "commit": "e45e244",
       "checks": [
         "D22 turn 1 on varad-shell (2026-11-12); PR #26 merged as 2bdc09c first (approved by Krishr21)",
         "npm run check: pass (499 passed, 46 persistence tests skipped locally: Docker not running)",
@@ -47,12 +51,11 @@
         "CI on PR #33 (0fc6b00): verify 595/595 against MongoDB, none skipped; e2e-live 6/6 (tests/e2e/live) and 11/11 (tests/member-3); e2e-mock 15/15; production image built",
         "Locally (no Docker): npm run check 540 passed, 55 persistence tests skipped; npm run build (HTTP mode) passed; check:structure, check:workflow and prettier passed",
         "Deployed site: catalog and guest-order live journeys passed (LIVE_BASE_URL, installed Chrome)",
-        "Reviewed and merged peer turns #29 (Krishr21), #30 (ReethikaGajulapati), #31 (danielyglesias) and #32 (amang26, also approved by Krishr21)"
+        "Reviewed and merged peer turns #29 (Krishr21), #30 (ReethikaGajulapati), #31 (danielyglesias) and #32 (amang26, also approved by Krishr21)",
+        "CI on PR #33 final commit e78a5ec (run 43666736454): verify 595/595, e2e-live 6/6 and 11/11, e2e-mock 15/15, image built",
+        "PR #33 approved by Krishr21 at e78a5ec (595/595 against local mongo:8.0, live journeys 6/6, 11/11 and his 5 quote journeys, layout and focus checks at 375 and 1440 px) and merged as e45e244 (2026-11-14); Railway deployed it (SUCCESS, health connected)"
       ],
-      "blockers": [
-        "Peer review of PR #33 by Krishr21",
-        "Live journeys that sign in or read the inbox on the deployed site: run by Varad with MAILPIT_AUTH (docs/deployment.md)"
-      ]
+      "blockers": ["Release to main and the phase-3-submission tag on Varad's go-ahead"]
     },
     "4": {
       "state": "ready_for_review",
@@ -68,10 +71,12 @@
         "Focus ring moved into the Tailwind base layer: <main> no longer outlined after keyboard navigation (checked in the browser)",
         "npm audit: 31 findings (4 critical, 16 high) to 2 moderate (react-router 6, not reachable); patched releases from before 2026-10-31 only",
         "Secrets scan of all 124 commits: no .env, keys or tokens; matches are test fixtures, placeholders and checksums",
-        "docs/presentation.md: 25-minute plan from each member segment draft; docs/weekly/week-6.md recorded"
+        "docs/presentation.md: 25-minute plan from each member segment draft; docs/weekly/week-6.md recorded",
+        "Lighthouse on the deployed e45e244 (six pages): mobile performance 94-100 (was 69-94), CLS 0-0.001 on five pages and 0.132 on the sampler (was up to 0.708); accessibility 100, SEO 100",
+        "Follow-up PR #34 (Krish's note 1): the footer starts exactly at the fold on short pages (not-found: 812 of 812 at 375 px, 900 of 900 at 1440 px); local Lighthouse CLS stays 0-0.001 on five pages"
       ],
       "blockers": [
-        "Peer review of PR #33 by Krishr21, then the release PR and the phase-4-final tag on Varad's go-ahead",
+        "Peer review of follow-up PR #34 by Krishr21, then the release PR and the phase-4-final tag on Varad's go-ahead",
         "Rollback rehearsal on Railway (runbook step 8): needs Varad in the dashboard",
         "Presentation rehearsal not held yet (human)"
       ]

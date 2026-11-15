@@ -51,7 +51,7 @@ Run `npm ci`, `npm run check` (typecheck, unit and integration tests, structure 
 
 ## Status
 
-Phases 3 (backend and real-API binding) and 4 (integration and deployment) ran together, one member at a time (decision D22 in `docs/decisions.md`). Each member's work is one reviewed pull request: #27 and #28 (Varad), #29 (Krish), #30 (Reethika), #31 (Daniel), #32 (Aman), and the closing #33 (Varad). The records are in `docs/weekly/week-5.md` and `week-6.md`, each member's evidence in `team/member-N/phase-3-evidence.md` and `phase-4-evidence.md`, and the presentation plan in `docs/presentation.md`.
+Phases 3 (backend and real-API binding) and 4 (integration and deployment) ran together, one member at a time (decision D22 in `docs/decisions.md`). Each member's work is one reviewed pull request: #27 and #28 (Varad), #29 (Krish), #30 (Reethika), #31 (Daniel), #32 (Aman), and the closing #33 (Varad) with its follow-up #34. The records are in `docs/weekly/week-5.md` and `week-6.md`, each member's evidence in `team/member-N/phase-3-evidence.md` and `phase-4-evidence.md`, and the presentation plan in `docs/presentation.md`.
 
 Phase 2 (front-end development) is complete and released to `main`. All five members' Phase 2 pull requests (#3, #5, #9, #10, #11), the integration PR (#12) and the follow-ups were reviewed and merged. The submitted version is tagged `phase-2-submission`. The full record is in `docs/weekly/week-4.md`, with screenshots in `docs/phase2/screenshots/`.
 

@@ -10,6 +10,8 @@ The course names MarvelApp or MockFlow. No service connection is available in th
 6. Save actual prototype share URL in this file, test access from the presenter’s account and record screenshots in phase evidence. Do not expose private access more broadly than the team/instructor need.
 7. Present ERD/schema/three-page overview and this interactive prototype via MS Teams for Phase1. Record actual demo completion; do not fabricate it.
 
+Phase 1, including this prototype and the MS Teams demo, was submitted to the course separately, outside this repository (confirmed by Varad on 2026-11-14). The fields below were never filled in here.
+
 Service: not selected
 Project URL: not created
 Sharing/access verified: pending
