@@ -55,7 +55,10 @@
         "CI on PR #33 final commit e78a5ec (run 43666736454): verify 595/595, e2e-live 6/6 and 11/11, e2e-mock 15/15, image built",
         "PR #33 approved by Krishr21 at e78a5ec (595/595 against local mongo:8.0, live journeys 6/6, 11/11 and his 5 quote journeys, layout and focus checks at 375 and 1440 px) and merged as e45e244 (2026-11-14); Railway deployed it (SUCCESS, health connected)"
       ],
-      "blockers": ["Release to main and the phase-3-submission tag on Varad's go-ahead"]
+      "blockers": [
+        "Release to main and the phase-3-submission tag on Varad's go-ahead",
+        "Live journeys that sign in or read the inbox on the deployed site: run by Varad with MAILPIT_AUTH (docs/deployment.md)"
+      ]
     },
     "4": {
       "state": "ready_for_review",
@@ -73,10 +76,12 @@
         "Secrets scan of all 124 commits: no .env, keys or tokens; matches are test fixtures, placeholders and checksums",
         "docs/presentation.md: 25-minute plan from each member segment draft; docs/weekly/week-6.md recorded",
         "Lighthouse on the deployed e45e244 (six pages): mobile performance 94-100 (was 69-94), CLS 0-0.001 on five pages and 0.132 on the sampler (was up to 0.708); accessibility 100, SEO 100",
-        "Follow-up PR #34 (Krish's note 1): the footer starts exactly at the fold on short pages (not-found: 812 of 812 at 375 px, 900 of 900 at 1440 px); local Lighthouse CLS stays 0-0.001 on five pages"
+        "Follow-up PR #34 (Krish's note 1): the footer starts exactly at the fold on short pages (not-found: 812 of 812 at 375 px, 900 of 900 at 1440 px); local Lighthouse CLS stays 0-0.001 on five pages",
+        "Follow-up PR #34 approved by Krishr21 at 88e0559 (595/595, header heights 65 and 114 px at 320-1440 px, footer at the fold, CLS 0) and merged as 006b081; Railway deployed it (health, pages, JSON 404, 14 products)",
+        "PR #35: the footer calculation in rem (follows the browser font size; same position at the default size: 812 of 812 and 900 of 900), Krish's notes on #34"
       ],
       "blockers": [
-        "Peer review of follow-up PR #34 by Krishr21, then the release PR and the phase-4-final tag on Varad's go-ahead",
+        "Peer review of PR #35 and the release PR by Krishr21; then the phase-3-submission and phase-4-final tags, Railway on main and the submission zip (authorized by Varad on 2026-11-14)",
         "Rollback rehearsal on Railway (runbook step 8): needs Varad in the dashboard",
         "Presentation rehearsal not held yet (human)"
       ]

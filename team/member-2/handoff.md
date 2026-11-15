@@ -1,6 +1,6 @@
 # Student 2 handoff
 
-Current turn: the closing D22 turn for Phases 3 and 4. PR #33 merged as e45e244 (approved by Krishr21); follow-up PR #34 handles his review notes and the post-merge records. Earlier D22 work: PR #27 (merged as 62e52e4) and its follow-up #28 (13a60a2). Records: `docs/weekly/week-5.md` and `week-6.md`; evidence in `phase-3-evidence.md` and `phase-4-evidence.md`. After #34 merges: the release PR from `development` to `main`, then, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
+Current turn: the closing D22 turn for Phases 3 and 4. PR #33 merged as e45e244 (approved by Krishr21); follow-up #34 (merged as 006b081) handled his review notes and the post-merge records, and #35 his two notes on #34. Earlier D22 work: PR #27 (merged as 62e52e4) and its follow-up #28 (13a60a2). Records: `docs/weekly/week-5.md` and `week-6.md`; evidence in `phase-3-evidence.md` and `phase-4-evidence.md`. After #35 merges: the release PR from `development` to `main`, then, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
 
 ## Public exports delivered
 
