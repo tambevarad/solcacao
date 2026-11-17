@@ -51,7 +51,9 @@ export function SearchForm({
         event.preventDefault();
         onEscape();
       }}
-      className="flex gap-2"
+      // Wraps when the field would be narrower than 7rem (the menu drawer at a large browser
+      // font), so the field keeps the full width and the button moves below it.
+      className="flex flex-wrap gap-2"
     >
       <label htmlFor={inputId} className="sr-only">
         {t('shell.search.label')}
@@ -65,7 +67,7 @@ export function SearchForm({
         maxLength={SEARCH_MAX_LENGTH}
         autoFocus={autoFocus}
         placeholder={t('shell.search.placeholder')}
-        className="min-h-11 min-w-0 flex-1 rounded border border-line bg-white px-3 focus:border-copper"
+        className="min-h-11 min-w-0 flex-[1_1_7rem] rounded border border-line bg-white px-3 focus:border-copper"
       />
       <Button type="submit">{t('shell.search.submit')}</Button>
     </form>
