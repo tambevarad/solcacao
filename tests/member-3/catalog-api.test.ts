@@ -231,3 +231,17 @@ describe('mounted catalogRouter until Student 1 auth lands', () => {
     expect(response.body.error.code).toBe('SERVICE_UNAVAILABLE');
   });
 });
+
+describe('POST /api/orders throttle (security finding 6)', () => {
+  it('gives one client 30 attempts per 15 minutes, then 429 RATE_LIMITED', async () => {
+    const app = createCatalogTestApp({ isDatabaseReady: () => false });
+    for (let i = 0; i < 30; i++) {
+      const res = await request(app).post('/api/orders').send({});
+      expect(res.status).toBe(400);
+    }
+    const limited = await request(app).post('/api/orders').send({});
+    expect(limited.status).toBe(429);
+    expect(limited.body.error.code).toBe('RATE_LIMITED');
+    expect(limited.headers).toHaveProperty('ratelimit-policy');
+  });
+});

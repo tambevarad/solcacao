@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type BrowserContext, type Page } from '@playwright/test';
 
 // Phase 2 shell checks against the mock-mode dev server, across every member's routed pages.
 // Cross-feature journeys live in journeys.spec.ts.
@@ -33,6 +33,65 @@ for (const width of [320, 375, 768, 1440]) {
     }
   });
 }
+
+// A larger browser default font (Chrome's "Large" is 20px, "Very large" 24px) scales every rem,
+// breakpoints included, so a 375px phone at 20px has the room of 300px at 16px.
+async function setBrowserFont(page: Page, context: BrowserContext, size: number) {
+  const cdp = await context.newCDPSession(page);
+  await cdp.send('Page.setFontSizes', { fontSizes: { standard: size, fixed: 13 } });
+}
+
+for (const [fontSize, width] of [
+  [18, 320],
+  [18, 375],
+  [20, 320],
+  [20, 375],
+  [24, 320],
+  [24, 375],
+]) {
+  test(`no horizontal overflow at ${width}px with a ${fontSize}px browser font`, async ({
+    page,
+    context,
+  }) => {
+    await setBrowserFont(page, context, fontSize);
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of pages) {
+      await page.goto(path);
+      await expect(page.getByRole('contentinfo')).toBeVisible();
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - window.innerWidth,
+      );
+      expect(overflow, `${path} at ${width}px, ${fontSize}px font`).toBeLessThanOrEqual(0);
+    }
+  });
+}
+
+test('below 20rem the header keeps menu, wordmark and cart, and the drawer has the rest', async ({
+  page,
+  context,
+}) => {
+  await setBrowserFont(page, context, 24);
+  await page.setViewportSize({ width: 320, height: 812 });
+  await page.goto('/es/catalog');
+  const header = page.getByRole('banner');
+  for (const control of [
+    header.getByRole('button', { name: 'Abrir menú' }),
+    header.getByRole('link', { name: 'Inicio de SolCacao' }),
+    header.getByRole('button', { name: /^Abrir carrito/ }),
+  ]) {
+    await expect(control).toBeInViewport({ ratio: 1 });
+  }
+  await expect(header.getByRole('button', { name: 'Abrir búsqueda' })).toBeHidden();
+  await expect(header.getByRole('link', { name: 'Iniciar sesión' })).toBeHidden();
+
+  await header.getByRole('button', { name: 'Abrir menú' }).click();
+  const drawer = page.getByRole('dialog', { name: 'Menú' });
+  const search = drawer.getByRole('searchbox', { name: 'Buscar chocolates' });
+  await expect(search).toBeVisible();
+  // The search button wraps below rather than squeezing the field (it was 40px wide).
+  expect((await search.boundingBox())?.width).toBeGreaterThan(160);
+  await expect(drawer.getByRole('link', { name: 'Iniciar sesión' })).toBeVisible();
+});
 
 test('mobile drawer is keyboard operable and traps focus', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });

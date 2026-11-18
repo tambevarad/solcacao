@@ -149,7 +149,7 @@
       "request": "CheckoutInput",
       "response": "OrderReceipt",
       "successStatus": 201,
-      "rules": "Simulated only; derive prices from database; requestId idempotency"
+      "rules": "Simulated only; derive prices from database; requestId idempotency; 30 requests per 15 minutes per client, then 429 RATE_LIMITED"
     },
     {
       "method": "POST",
@@ -159,7 +159,7 @@
       "request": "multipart fields metadata=JSON.stringify(QuoteInput), designFile=PDF",
       "response": "QuoteReceipt",
       "successStatus": 201,
-      "rules": "Private required PDF <=5MiB; same requestId returns original receipt"
+      "rules": "Private required PDF <=5MiB; same requestId returns original receipt; 20 requests per 15 minutes per client, then 429 RATE_LIMITED"
     },
     {
       "method": "GET",

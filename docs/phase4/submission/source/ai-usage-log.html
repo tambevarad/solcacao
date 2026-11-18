@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SolCacao: AI Usage Log (Phase 4)</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <header class="doc">
+      <div class="kicker">CSE 5335 · Phase 4 submission · Team SolCacao</div>
+      <h1>AI Usage Log</h1>
+      <div class="meta">
+        Phase 4 (integration, documentation and presentation) · 12–17 November 2026 · Aman Gulati,
+        Varad Tambe, Reethika Gajulapati, Krish Ruparel, Daniel Yglesias
+      </div>
+    </header>
+
+    <h2>1. Summary</h2>
+    <p>
+      Phases 3 and 4 ran together (decision D22), so each member's turn in #27–#32 covers both; the
+      Phase 3 log describes those turns. This log covers the Phase 4 integration work after them:
+      the closing turn and its follow-ups, the release, the large-font fix, the teammates' open
+      proposals, and the presentation. As before, the team made every decision and review, and the
+      assistants drafted code, tests, records and the slides from those instructions and ran the
+      checks.
+    </p>
+
+    <h2>2. Tools</h2>
+    <table>
+      <tr>
+        <th>Tool</th>
+        <th>Used by</th>
+        <th>Commits in Phases 3 and 4 (since tag <code>phase-2-submission</code>)</th>
+      </tr>
+      <tr>
+        <td>Claude Code (Anthropic)</td>
+        <td>Varad, Krish, Reethika, Aman</td>
+        <td>
+          Commits with the assistant's co-author line: Varad 23 (with #39), Krish 6, Reethika 5,
+          Aman 2
+        </td>
+      </tr>
+      <tr>
+        <td>Codex (OpenAI)</td>
+        <td>Daniel</td>
+        <td>2 commits (Codex adds no co-author line)</td>
+      </tr>
+    </table>
+
+    <h2>3. Log by pull request</h2>
+    <table>
+      <tr>
+        <th>PR</th>
+        <th>What the assistant did</th>
+        <th>What people decided and verified</th>
+      </tr>
+      <tr>
+        <td>#33–#35</td>
+        <td>
+          Measured the deployed site (proxy hops, Lighthouse, an EN/ES sweep), found and fixed the
+          footer layout shift, triaged <code>npm audit</code>, drafted the records and the Phase 3
+          documents
+        </td>
+        <td>
+          Varad kept the measured proxy setting; Krish reviewed each PR against a local MongoDB and
+          the deployed site, and his notes were fixed in the next PR.
+        </td>
+      </tr>
+      <tr>
+        <td>#36, #37</td>
+        <td>Prepared the release, the tag, the Railway switch to <code>main</code> and the zip</td>
+        <td>Krish approved the release; Varad authorized the tag and submitted Phase 3.</td>
+      </tr>
+      <tr>
+        <td>#38</td>
+        <td>
+          Reproduced Krish's note (the header overflowed at large browser fonts), fixed it with
+          rem-based rules and added browser tests that fail on the old header
+        </td>
+        <td>Krish re-measured 96 combinations of width and font size and approved.</td>
+      </tr>
+      <tr>
+        <td>#39</td>
+        <td>
+          Implemented the teammates' open proposals (order and quote rate limits, safe error
+          logging, Spanish origins, long-word wrapping, the sampler's loading height), wrote the
+          presentation plan and these documents
+        </td>
+        <td>
+          Varad asked for the proposals to be finished before the release; each change is recorded
+          as a coordinator exception for its owner. Krish reviews.
+        </td>
+      </tr>
+      <tr>
+        <td>Slides</td>
+        <td>
+          Built the 14-slide deck and its speaker-note script from each member's own segment draft,
+          and made the six recordings with a scripted browser
+        </td>
+        <td>
+          The team chose the format (4 minutes each) and presents in person. Signed-in flows were
+          recorded on a local copy with test accounts, never on the live site.
+        </td>
+      </tr>
+    </table>
+
+    <h2>4. What stayed with people</h2>
+    <ul>
+      <li>
+        Every approval and merge decision, the release and tag go-ahead, the hosting account and
+        every secret. No password, token or variable value was shown to an assistant or appears in
+        the recordings.
+      </li>
+      <li>
+        Signing in or creating accounts on the live site, the production rollback and direct
+        database access: the assistants' own safety checks refused them, and they remain with Varad.
+      </li>
+      <li>Delivering the presentation and rehearsing it.</li>
+    </ul>
+
+    <h2>5. How we checked AI output</h2>
+    <ul>
+      <li>
+        CI on every pull request (598 tests against MongoDB, live-API and mock browser tests, a
+        production build), plus a teammate's review on a local MongoDB and the deployed site.
+      </li>
+      <li>
+        New tests were shown to fail on the old code before the fix (#38), and every number in the
+        records comes from a command that was actually run.
+      </li>
+      <li>
+        Recordings were checked frame by frame before use; one take was redone because a hover card
+        showed a member's public profile details.
+      </li>
+    </ul>
+  </body>
+</html>

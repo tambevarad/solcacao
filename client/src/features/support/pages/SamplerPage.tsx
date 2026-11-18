@@ -60,7 +60,13 @@ export default function SamplerPage() {
           <p role="status" className="font-medium">
             {t('support.sampler.count', { count: total })}
           </p>
-          {status === 'loading' && <LoadingState />}
+          {/* A screen of reserved height keeps the form below the fold until the products arrive,
+              so it does not move into view (layout shift). */}
+          {status === 'loading' && (
+            <div className="min-h-svh">
+              <LoadingState />
+            </div>
+          )}
           {status === 'error' && (
             <ErrorState
               description={t('support.sampler.loadError')}
@@ -98,7 +104,7 @@ export default function SamplerPage() {
                         >
                           −
                         </Button>
-                        <span className="order-first w-full text-center text-sm sm:order-none sm:w-auto">
+                        <span className="order-first w-full text-center text-sm break-words hyphens-auto sm:order-none sm:w-auto">
                           {t(
                             quantity === 1
                               ? 'support.sampler.quantityOne'

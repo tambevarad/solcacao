@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SolCacao: Phase 4 Submission</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body>
+    <header class="doc">
+      <div class="kicker">CSE 5335 · Phase 4 submission · Team SolCacao (Group 2)</div>
+      <h1>Integration, Documentation and Final Presentation</h1>
+      <div class="meta">
+        Phase 4 (15%) · Prepared 17 November 2026 · Aman Gulati, Varad Tambe, Reethika Gajulapati,
+        Krish Ruparel, Daniel Yglesias
+      </div>
+    </header>
+
+    <h2>1. Where to find it</h2>
+    <table>
+      <tr>
+        <th>Item</th>
+        <th>Location</th>
+      </tr>
+      <tr>
+        <td>Code</td>
+        <td>
+          https://github.com/tambevarad/solcacao, tag <code>phase-4-final</code> on
+          <code>main</code> (the attached zip is a <code>git archive</code> of that tag)
+        </td>
+      </tr>
+      <tr>
+        <td>Live application</td>
+        <td>
+          https://solcacao-production.up.railway.app: the Express API serving the React build, with
+          MongoDB, a private volume for quote PDFs and a Mailpit test inbox, on Railway
+        </td>
+      </tr>
+      <tr>
+        <td>Presentation</td>
+        <td>
+          <code>SolCacao-final-presentation.pptx</code> (attached; 14 slides, six embedded
+          recordings, the script in the speaker notes) and <code>docs/presentation.md</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Documentation</td>
+        <td>
+          <code>README.md</code> (run it, checks), <code>docs/deployment.md</code> (runbook and
+          verified results), <code>docs/api.json</code> (18 endpoints),
+          <code>docs/data-model.md</code>, <code>docs/assets.md</code> (image licenses),
+          <code>docs/decisions.md</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Records</td>
+        <td>
+          <code>docs/weekly/week-1.md</code> to <code>week-7.md</code>;
+          <code>team/member-N/phase-4-evidence.md</code> for each member
+        </td>
+      </tr>
+    </table>
+
+    <h2>2. Deliverables</h2>
+    <table>
+      <tr>
+        <th>Deliverable</th>
+        <th>What we delivered</th>
+      </tr>
+      <tr>
+        <td>Fully integrated application</td>
+        <td>
+          One deployment on Railway: the real API, real MongoDB, private durable file storage and
+          the configured notification bridge (Mailpit). Every page in English and Spanish, with
+          accounts, the catalog, cart and simulated checkout (no payment, by design), business
+          quotes with a PDF upload, the six-piece sampler, contact and feedback. No mock fallback.
+        </td>
+      </tr>
+      <tr>
+        <td>Comprehensive documentation</td>
+        <td>
+          Setup and checks in the README; the deployment runbook with variable names, the measured
+          proxy setting, Lighthouse results and the rollback procedure; the API map and data model;
+          the license register; decisions; weekly integration records; each member's evidence of the
+          commands actually run.
+        </td>
+      </tr>
+      <tr>
+        <td>20–30 minute team presentation</td>
+        <td>
+          20 minutes in our slot, 4 per member: each member presents the feature they built, with a
+          recording of it working (details in section 4).
+        </td>
+      </tr>
+    </table>
+
+    <h2>3. Quality and testing</h2>
+    <ul>
+      <li>
+        <strong>CI on every pull request:</strong> type checks and 598 unit, API and database tests
+        against a real MongoDB with none skipped; 17 browser journeys against the live API with
+        MongoDB and Mailpit; 22 mock-mode browser checks, including no sideways scrolling on 14
+        pages at 320–1440 px and at browser font sizes of 18, 20 and 24 px; a production image
+        build.
+      </li>
+      <li>
+        <strong>Deployed site:</strong> Lighthouse accessibility 100 and SEO 100 on the six pages
+        measured, mobile performance 94–100; a footer layout shift of up to 0.7 found and fixed
+        (0–0.001 on five pages).
+      </li>
+      <li>
+        <strong>Security:</strong> bcrypt passwords; one-hour signed tokens with the role re-read
+        from the database; rate limits on sign-in, registration, enquiries, orders and quotes; CORS
+        allowlist and security headers; strict input validation and body limits; logs without
+        passwords, tokens, bodies or database messages; the proxy setting measured on the host;
+        <code>npm audit</code> reduced from 31 findings to 2 unreachable moderate ones; a secrets
+        scan of every commit.
+      </li>
+    </ul>
+
+    <h2>4. Presentation (Group 2, 7:23–7:43 PM)</h2>
+    <table>
+      <tr>
+        <th>Time</th>
+        <th>Speaker and role</th>
+        <th>Part</th>
+      </tr>
+      <tr>
+        <td>0:00–2:40</td>
+        <td>Varad Tambe, Integration Programmer</td>
+        <td>The site in two languages, architecture, team process</td>
+      </tr>
+      <tr>
+        <td>2:40–6:40</td>
+        <td>Aman Gulati, API Lead</td>
+        <td>Accounts, sign-in, access control and the security layer</td>
+      </tr>
+      <tr>
+        <td>6:40–10:40</td>
+        <td>Reethika Gajulapati, Database Developer</td>
+        <td>Catalog, cart merge, checkout and measured indexes</td>
+      </tr>
+      <tr>
+        <td>10:40–14:40</td>
+        <td>Krish Ruparel, Reviewer</td>
+        <td>Homepage, wholesale and the business quote with private files</td>
+      </tr>
+      <tr>
+        <td>14:40–18:40</td>
+        <td>Daniel Yglesias, Tester/Logger</td>
+        <td>The sampler, contact and email: saved versus sent</td>
+      </tr>
+      <tr>
+        <td>18:40–20:00</td>
+        <td>Varad Tambe</td>
+        <td>Deployment, measured results, close</td>
+      </tr>
+    </table>
+    <p>
+      Recordings 1 and 6 show the live site and the public GitHub record. Recordings 2–5 need a
+      signed-in account or the test inbox, so they were recorded on a local copy of the same build
+      with fictional test accounts; the slides say so.
+    </p>
+
+    <h2>5. Known limitations</h2>
+    <ul>
+      <li>
+        Checkout is simulated by design; the WhatsApp link stays hidden until the business gives a
+        real number.
+      </li>
+      <li>
+        The rollback procedure is written but not yet rehearsed on Railway; the live journeys that
+        sign in or read the deployed inbox are run by people, not in CI.
+      </li>
+      <li>
+        At browser fonts of 28 px and more on a 320 px screen, some long words still scroll
+        sideways; 18–24 px (Chrome's larger settings) fit on every page.
+      </li>
+      <li>
+        HTTP builds still ship the mock adapters (never used in HTTP mode); Lighthouse best
+        practices is 96 because the security policy blocks a library's one-time check.
+      </li>
+    </ul>
+  </body>
+</html>

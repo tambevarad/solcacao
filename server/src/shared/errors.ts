@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler, RequestHandler, Response } from 'express';
+import mongoose from 'mongoose';
 
 /** Every error code in docs/contracts.md. */
 export type ErrorCode =
@@ -82,7 +83,8 @@ function bodyParserError(error: unknown): AppError | null {
  */
 export function describeForLog(error: unknown): string {
   if (!(error instanceof Error)) return 'non-Error value thrown';
-  if (/^Mongo|^Mongoose/.test(error.name)) {
+  // Mongoose errors (CastError, ValidationError…) quote the offending value in their message.
+  if (/^Mongo|^Mongoose/.test(error.name) || error instanceof mongoose.Error) {
     const code = 'code' in error && error.code !== undefined ? ` (code ${String(error.code)})` : '';
     return `${error.name}${code}`;
   }

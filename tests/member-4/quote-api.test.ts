@@ -149,3 +149,16 @@ describe('stored display names', () => {
     expect(safeDisplayName('.pdf')).toBe('design.pdf');
   });
 });
+
+describe('POST /api/b2b/quote throttle (security finding 6)', () => {
+  it('gives one client 20 attempts per 15 minutes, counted before sign-in, then 429', async () => {
+    const { app } = await createQuoteTestApp();
+    for (let i = 0; i < 20; i++) {
+      const res = await request(app).post('/api/b2b/quote');
+      expect(res.status).toBe(401);
+    }
+    const limited = await request(app).post('/api/b2b/quote');
+    expect(limited.status).toBe(429);
+    expect(limited.body.error.code).toBe('RATE_LIMITED');
+  });
+});

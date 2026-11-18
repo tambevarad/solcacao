@@ -1,6 +1,6 @@
 # Student 2 handoff
 
-Current turn: the closing D22 turn for Phases 3 and 4. PR #33 merged as e45e244 (approved by Krishr21); follow-up #34 (merged as 006b081) handled his review notes and the post-merge records, and #35 his two notes on #34. Earlier D22 work: PR #27 (merged as 62e52e4) and its follow-up #28 (13a60a2). Records: `docs/weekly/week-5.md` and `week-6.md`; evidence in `phase-3-evidence.md` and `phase-4-evidence.md`. After #35 merges: the release PR from `development` to `main`, then, on Varad's go-ahead, the `phase-3-submission` and `phase-4-final` tags, Railway switched to `main` and the submission zip.
+Current turn: the last change before the Phase 4 release. PR #39 finishes every open proposal below (Varad's request), adds the 20-minute presentation plan and the Phase 4 documents. Before it: #38 (merged as 2246f14, the large-font header), the Phase 3 release #36 (f16432c, tag `phase-3-submission`, submitted) and #37 (7bcbcd4). Earlier D22 work: #27, #28, #33–#35. Records: `docs/weekly/week-5.md` to `week-7.md`. Next: the release PR, `phase-4-final` and the Phase 4 upload.
 
 ## Public exports delivered
 
@@ -8,6 +8,7 @@ Signatures are in docs/contracts.md under "Shell public surface". Primitive usag
 
 - **`features/shell/public.tsx`:** `useLocale()` (`{ locale, setLocale, t(key, values?) }`), `LocaleProvider`, `localizePath(locale, path)`, `SUPPORTED_LOCALES`, `isLocale`, `usePageMeta({ title, description? })`.
 - **`client/src/shared/index.ts`:** Button, buttonStyles, Field, TextArea, Select, Dialog, Drawer, LoadingState, EmptyState, ErrorState, Placeholder, `photos`, `productPhotos` and `<Photo>` (sources in `docs/assets.md`).
+- **Header:** every size is in rem, breakpoints included, so it follows the browser's default font size. Below 22.5rem the wordmark tightens; below 20rem (375 px at 19 px and up) the header keeps the menu, wordmark and cart, and search and account are reached through the menu drawer. `tests/e2e/shell.spec.ts` checks every shell page at 18, 20 and 24 px.
 - **Routing:** `client/src/routes.tsx` loads every page except the homepage and not-found on demand, each inside `PageFrame` (title and description from `shell.meta.<id>.*`, an error boundary that resets on page change). `<main>` fills the screen below the header, so the footer starts at the fold and never moves while a page loads (Lighthouse CLS 0 on the deployed site).
 - **Production serving:** `createClientRouter({ root, privateDirs })` and `APP_ROUTES` in `server/src/features/shell/client.ts`, mounted in `server/src/app.ts` when `CLIENT_DIST_DIR` is set. `APP_ROUTES` must match `client/src/routes.tsx`; `tests/member-2/client-serving.test.ts` fails if either side gains a route the other lacks.
 - **Backend:** `GET /api/i18n/:locale` (200 for `en`/`es`, 400 otherwise).
@@ -24,6 +25,12 @@ Earlier proposals: 1 (the `server/src/app.ts` client mount) landed in #27 as a c
    - `server/src/app.ts:17`: `parseTrustProxy(process.env.TRUST_PROXY) || false` keeps express-rate-limit's warning when `TRUST_PROXY` is missing (it only warns when the setting is exactly `false`).
    - `server/src/shared/errors.ts:85`: `describeForLog` should also treat `error instanceof mongoose.Error` as a database error: Mongoose's `CastError` message quotes the value.
 6. **Students 3 and 4, from Student 1's security sweep (team/member-1/handoff.md findings 3–6).** Full-error logging in `catalog/router.ts:165`, `b2b/router.ts:151` and `b2b/service.ts:116` should use `describeForLog`; `POST /api/orders` and `POST /api/b2b/quote` have no rate limit. Krish said on #32 that he takes findings 5 and 6.
+
+7. **Student 3, the catalog's quantity buttons at a large browser font.** At 320 px with a 24 px default font, the product cards' "Increase quantity" button ends 10 px past the screen edge on `/en/catalog` and `/es/catalog`, so the page scrolls sideways. Let the quantity row wrap or shrink (for example `flex-wrap`, or `min-w-0` on the count). Test with Chrome's `Page.setFontSizes` as in `tests/e2e/shell.spec.ts`.
+8. **Student 4, the Spanish homepage heading at a large browser font.** At 320 px and 24 px, "personalizado" in "Chocolate personalizado para tu marca" (`text-3xl`) is wider than the screen (7 px of sideways scroll). `hyphens-auto` on that heading (the page sets `lang="es"`) or a smaller size below `sm` fixes it.
+9. **Student 5, the sampler at a large browser font.** At 320 px and 24 px, `/es/sampler` scrolls sideways by 1 px; worth a look together with proposal 3.
+
+**Status in #39:** proposals 3–9 are done by the coordinator as recorded ownership exceptions: Student 1 `server/src/shared/errors.ts` (5, the trust-proxy half was already fixed); Student 3 `catalog/router.ts`, `catalog/errors.ts`, `ProductCard.tsx` (6, 7); Student 4 `b2b/router.ts`, `b2b/errors.ts`, `b2b/service.ts`, `FeaturedProducts.tsx`, `HeroCarousel.tsx`, `WholesalePage.tsx` (4, 6, 8); Student 5 `SamplerPage.tsx` (3, 9); and one test each in `tests/member-1`, `tests/member-3` and `tests/member-4`. Owners may revise them after the release.
 
 Coordinator ownership exception in #33: `server/src/shared/README.md` and `server/src/features/auth/README.md` (Student 1) say `TRUST_PROXY` is 1 on Railway; #33 corrects both to the measured 2. Docs only.
 

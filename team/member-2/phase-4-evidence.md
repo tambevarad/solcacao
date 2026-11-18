@@ -81,9 +81,66 @@ Run on the deployed `3e0c1f1` (all five member turns merged). Details and tables
 - The live journeys that sign in or read the inbox are Varad's to run on the deployed site.
 - Presentation rehearsal not held yet.
 
+## Header at large browser fonts (PR #38, 2026-11-16)
+
+Krish's note 4 on #35 (and note 3 on #36): at 375 px with a browser default font of 18 px or more, the cart button ended 11–54 px past the right edge and the page scrolled sideways. The header's one narrow-screen rule was in px (`max-[359px]`), while the buttons, the wordmark and the breakpoints are in rem and grow with the font.
+
+### Implemented and changed paths
+
+- `client/src/features/shell/components/Header.tsx`: the wordmark tightens below 22.5rem (360 px at the default 16 px), as before but in rem. Below 20rem (under 320 px at 16 px, or 375 px at 19 px and up) the header keeps the menu, the wordmark and the cart; search and account are hidden there because they are the first and last sections of the menu drawer. If even that is too wide (320 px at 32 px, 200%), the wordmark shrinks with the screen, `min(1rem, (100vw − 7.5rem) / 6.4)`. At the default font nothing changes from 320 px up.
+- `client/src/features/shell/components/SearchForm.tsx`: the form wraps when the field would be narrower than 7rem. In the drawer at 320 px and 24 px the field is now 188 px wide (it was 40 px) with the button below it; at the default font it stays on one line (134 px at 320 px, as before).
+- `tests/e2e/shell.spec.ts`: no horizontal overflow on all 14 shell pages at 18 and 20 px (320 and 375 px) and at 24 px (375 px), with the browser font set through Chrome's `Page.setFontSizes`; and at 320 px and 24 px, the compact header (menu, wordmark and cart in view, search and account hidden) with search and sign-in in the drawer.
+
+### Commands actually run
+
+| Command                                                                                                                                             | Result                      | Relevant output                                                                                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.agent/header-fit.mjs` before the change (mock dev server, installed Chrome, `Page.setFontSizes`): 9 widths × 16–24 px × EN/ES × signed out and in | 44 of 144 fail              | at 375 px the cart ends 11 px past the edge at 18 px, 54 at 20 and 140 at 24; 320–414 px fail from 18 px; 767–1920 px fit at every size                                 |
+| the same after, 280–1920 px × 12–32 px × EN/ES × signed out and in (336)                                                                            | pass for the header         | every header control inside the screen and the wordmark centered (offset 0); what still scrolls at 24 px and up below 375 px is page content (next row)                 |
+| every shell page after its content loads (17 paths): 18 and 20 px at 320 and 375 px, 24 px at 320 and 375 px                                        | pass except 24 px at 320 px | at 24 px and 320 px: the catalog's quantity buttons 10 px (Student 3), the `/es` homepage heading 7 px (Student 4), the sampler 1 px (Student 5); handoff proposals 7–9 |
+| `npx playwright test` (mock, installed Chrome)                                                                                                      | 21 passed                   | 15 existing and 6 new; the 6 new all fail on the old header and search form (11, 20, 54, 58 and 140 px, and the cart out of view)                                       |
+| `npm run check`                                                                                                                                     | 540 passed, 55 skipped      | persistence tests skipped locally (no MongoDB); typecheck, structure and workflow pass                                                                                  |
+| `VITE_API_MODE=http npm run build`                                                                                                                  | pass                        | the compiled CSS puts the `width<20rem` rules after the `width<22.5rem` ones                                                                                            |
+| Screenshots at 375 px (16, 18, 20, 24 px), 320 px (32 px), 1024 px (24 px), 1440 px (20 px, ES) and the drawer at 320 px (24 px)                    | checked                     | default-font header unchanged; desktop unchanged                                                                                                                        |
+
+### Known limitations or blocked checks
+
+- At 24 px and 320 px three pages still scroll sideways by 1–10 px, from content owned by Students 3–5 (handoff proposals 7–9).
+- Not checked on the deployed site: Railway deploys `main`, and this reaches `main` with the Phase 4 release.
+
+## Final turn before the release (PR #39, 2026-11-17)
+
+Varad asked for every open proposal to be finished before the Phase 4 release, including the ones addressed to teammates. Each change in another member's files is a recorded coordinator ownership exception (handoff.md).
+
+### Implemented and changed paths
+
+- **Security finding 6 (Students 3 and 4):** `POST /api/orders` allows 30 requests per 15 minutes per client and `POST /api/b2b/quote` 20 (counted before sign-in, so no upload is read), then 429 `RATE_LIMITED` with standard `RateLimit` headers. Both limiters are injectable (`orderLimit`, `quoteLimit`) like Student 5's. `docs/api.json` rules mention the 429.
+- **Logging (Students 1, 3 and 4):** `describeForLog` treats `mongoose.Error` like MongoDB errors (name only: a `CastError` quotes the value). The catalog and B2B error handlers and the notification-status log use it instead of logging the error object.
+- **Student 4:** the featured cards translate the origin on `/es` (`catalog.origin.*`, Student 3's proposal 7); the hero and wholesale headings wrap long Spanish words.
+- **Student 3:** the product card's quantity row wraps on a narrow card.
+- **Student 5:** the sampler reserves a screen of height while the products load, so the form below does not move into view (proposal 3), and the piece counter wraps.
+- **Mine (Krish's notes on #38):** the not-found heading and the footer columns wrap long words.
+- **Tests:** the two throttles (`tests/member-3/catalog-api.test.ts`, `tests/member-4/quote-api.test.ts`), the Mongoose log (`tests/member-1/security-config.test.ts`), and the shell's large-font check now covers 320 px at 24 px on all 14 pages.
+- **Presentation and documents:** `docs/presentation.md` (20 minutes, recordings), `docs/phase4/submission/` (overview, AI usage log, slides as a PDF of stills), `docs/weekly/week-7.md`, README.
+
+### Commands actually run
+
+| Command                                                         | Result | Relevant output                                                                                                                 |
+| --------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `TEST_MONGODB_URI=… npx vitest run` (local MongoDB in Docker)   | pass   | 598/598, none skipped                                                                                                           |
+| `npm run check`                                                 | pass   | typecheck, 543 passed and 55 skipped without the database URI, structure and workflow                                           |
+| `npx playwright test` (mock, installed Chrome)                  | pass   | 22 passed, including 320 px at 24 px on all 14 pages                                                                            |
+| Overflow sweep, 17 pages after content loads, 24 px at 320 px   | pass   | 0 px everywhere (was 10 px catalog, 7 px `/es`, 1 px sampler); at 28–32 px some long words still overflow (known limitation)    |
+| Recordings for the deck (`.agent/presentation/rec`, local only) | done   | 1 and 6 on the live site and GitHub; 2–5 on a local copy of the same build with fictional test accounts; checked frame by frame |
+
+### Known limitations or blocked checks
+
+- Not deployed yet: Railway deploys `main`, which gets these changes with the release.
+- At browser fonts of 28 px and more on a 320 px screen, some long words still scroll sideways.
+
 ## Review
 
 Proposed commit: `varad-shell` (PR #33; turn 1 was PR #27 and #28)
 Reviewer: Krishr21 (D22)
 PR: https://github.com/tambevarad/solcacao/pull/33
-Integrated commit: turn 1 `62e52e4` and `13a60a2`; closing turn `e45e244` (PR #33, approved by Krishr21 at `e78a5ec`); follow-up #34 `006b081`; #35 before the release
+Integrated commit: turn 1 `62e52e4` and `13a60a2`; closing turn `e45e244` (PR #33, approved by Krishr21 at `e78a5ec`); follow-up #34 `006b081`; #35 `0a7d08c`, released to `main` in #36 as `f16432c`; #37 `7bcbcd4`; the header fix #38 `2246f14`; #39 in review

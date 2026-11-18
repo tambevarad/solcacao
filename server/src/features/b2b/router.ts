@@ -1,9 +1,11 @@
 import { Router, type ErrorRequestHandler, type Request, type RequestHandler } from 'express';
+import { rateLimit } from 'express-rate-limit';
 import mongoose from 'mongoose';
 import multer from 'multer';
 import type { User } from '../../../../contracts/index.js';
 import { idSchema } from '../../../../contracts/validation.js';
 import { requireAuth, requireRole } from '../../shared/auth.js';
+import { describeForLog } from '../../shared/errors.js';
 import { notifyQuote } from '../support/notifications.js';
 import { B2bError, sendError } from './errors.js';
 import { findOwnRequest, submitQuote, toReceipt } from './service.js';
@@ -26,6 +28,20 @@ export interface B2bRouterDependencies {
   storage: QuoteFileStorage;
   /** Defaults to the shared mongoose connection, which Student 1's connectDb opens. */
   isDatabaseReady?: () => boolean;
+  /** Per-client throttle for POST /api/b2b/quote (security finding 6); tests can inject their own. */
+  quoteLimit?: RequestHandler;
+}
+
+/** 20 quote attempts per 15 minutes per client, checked before any upload is read. */
+export function quoteRateLimit(limit = 20): RequestHandler {
+  return rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    handler: (_req, res) =>
+      sendError(res, new B2bError(429, 'RATE_LIMITED', 'Too many quote requests, try again later')),
+  });
 }
 
 function signedInUser(req: Request): User {
@@ -65,6 +81,7 @@ export function createB2bRouter({
   notifyQuote,
   storage,
   isDatabaseReady = () => mongoose.connection.readyState === 1,
+  quoteLimit = quoteRateLimit(),
 }: B2bRouterDependencies): Router {
   const router = Router();
   // Memory storage: nothing reaches the disk until every check has passed. One text field
@@ -104,7 +121,7 @@ export function createB2bRouter({
     return record;
   }
 
-  router.post('/b2b/quote', requireAuth, requireB2b, parseUpload, async (req, res) => {
+  router.post('/b2b/quote', quoteLimit, requireAuth, requireB2b, parseUpload, async (req, res) => {
     const user = signedInUser(req);
     const body: Record<string, unknown> = req.body ?? {};
     const unexpected = Object.keys(body).filter((key) => key !== 'metadata');
@@ -148,7 +165,7 @@ export function createB2bRouter({
       return sendError(res, new B2bError(503, 'SERVICE_UNAVAILABLE', 'Service unavailable'));
     if (isClientError(error))
       return sendError(res, new B2bError(400, 'VALIDATION_ERROR', 'Invalid request'));
-    console.error('[b2b] Unexpected error', error);
+    console.error('[b2b] Unexpected error:', describeForLog(error));
     sendError(res, new B2bError(500, 'INTERNAL_ERROR', 'Unexpected server error'));
   };
   router.use(handleErrors);
