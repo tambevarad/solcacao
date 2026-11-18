@@ -53,10 +53,13 @@
         "Deployed site: catalog and guest-order live journeys passed (LIVE_BASE_URL, installed Chrome)",
         "Reviewed and merged peer turns #29 (Krishr21), #30 (ReethikaGajulapati), #31 (danielyglesias) and #32 (amang26, also approved by Krishr21)",
         "CI on PR #33 final commit e78a5ec (run 43666736454): verify 595/595, e2e-live 6/6 and 11/11, e2e-mock 15/15, image built",
-        "PR #33 approved by Krishr21 at e78a5ec (595/595 against local mongo:8.0, live journeys 6/6, 11/11 and his 5 quote journeys, layout and focus checks at 375 and 1440 px) and merged as e45e244 (2026-11-14); Railway deployed it (SUCCESS, health connected)"
+        "PR #33 approved by Krishr21 at e78a5ec (595/595 against local mongo:8.0, live journeys 6/6, 11/11 and his 5 quote journeys, layout and focus checks at 375 and 1440 px) and merged as e45e244 (2026-11-14); Railway deployed it (SUCCESS, health connected)",
+        "Follow-up #34 merged as 006b081 and #35 as 0a7d08c, both approved by Krishr21",
+        "Release PR #36 approved by Krishr21 at 0a7d08c and merged to main as f16432c (2026-11-14); annotated tag phase-3-submission on f16432c; Railway switched to main and deployed f16432c (health connected, 14 products); submission zip = git archive of the tag",
+        "#37 (Krish's role row in the overview) approved by Krishr21 and merged into development as 7bcbcd4 after the release; it reaches main with Phase 4",
+        "Phase 3 submitted to the course (confirmed by Varad on 2026-11-16)"
       ],
       "blockers": [
-        "Release to main and the phase-3-submission tag on Varad's go-ahead",
         "Live journeys that sign in or read the inbox on the deployed site: run by Varad with MAILPIT_AUTH (docs/deployment.md)"
       ]
     },
@@ -78,10 +81,11 @@
         "Lighthouse on the deployed e45e244 (six pages): mobile performance 94-100 (was 69-94), CLS 0-0.001 on five pages and 0.132 on the sampler (was up to 0.708); accessibility 100, SEO 100",
         "Follow-up PR #34 (Krish's note 1): the footer starts exactly at the fold on short pages (not-found: 812 of 812 at 375 px, 900 of 900 at 1440 px); local Lighthouse CLS stays 0-0.001 on five pages",
         "Follow-up PR #34 approved by Krishr21 at 88e0559 (595/595, header heights 65 and 114 px at 320-1440 px, footer at the fold, CLS 0) and merged as 006b081; Railway deployed it (health, pages, JSON 404, 14 products)",
-        "PR #35: the footer calculation in rem (follows the browser font size; same position at the default size: 812 of 812 and 900 of 900), Krish's notes on #34"
+        "PR #35: the footer calculation in rem (follows the browser font size; same position at the default size: 812 of 812 and 900 of 900), Krish's notes on #34",
+        "PR #38 (Krish's note 4 on #35): the header fits at large browser fonts. Before: at 375 px the cart ended 11/54/140 px past the edge at 18/20/24 px. After: every header control inside the screen at 280-1920 px with 12-32 px default fonts, EN/ES, signed out and in; 6 new e2e tests (fail on the old header), 21/21 mock e2e, npm run check 540 passed (55 persistence tests skipped locally), HTTP build passes"
       ],
       "blockers": [
-        "Peer review of PR #35 and the release PR by Krishr21; then the phase-3-submission and phase-4-final tags, Railway on main and the submission zip (authorized by Varad on 2026-11-14)",
+        "Peer review of PR #38 by Krishr21; then the Phase 4 release PR, the phase-4-final tag and the Phase 4 zip",
         "Rollback rehearsal on Railway (runbook step 8): needs Varad in the dashboard",
         "Presentation rehearsal not held yet (human)"
       ]

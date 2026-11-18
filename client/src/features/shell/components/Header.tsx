@@ -13,6 +13,9 @@ import { MobileNav } from './MobileNav.js';
 import { SearchForm } from './SearchForm.js';
 import { ShellLink, iconButton } from './ShellLink.js';
 
+// Below 20rem the header keeps only the menu, wordmark and cart (see the wordmark below).
+const compactHidden = 'max-[20rem]:hidden';
+
 const navLink =
   'inline-flex min-h-11 items-center px-1 font-medium underline-offset-8 hover:underline aria-[current=page]:underline';
 
@@ -77,7 +80,7 @@ export function Header() {
             aria-label={t(searchOpen ? 'shell.search.close' : 'shell.search.open')}
             aria-expanded={searchOpen}
             aria-controls="site-search"
-            className={iconButton}
+            className={`${iconButton} ${compactHidden}`}
           >
             <Search aria-hidden="true" className="size-5" />
           </button>
@@ -85,9 +88,12 @@ export function Header() {
         <Link
           to={localizePath(locale)}
           aria-label={t('shell.header.homeLink')}
-          // Below 360px the full letter-spaced wordmark plus four 44px icon buttons is wider than
-          // the screen (WCAG 1.4.10 Reflow at 320px), so the wordmark tightens there only.
-          className="px-2 text-lg font-semibold tracking-[0.25em] uppercase max-[359px]:px-0 max-[359px]:text-base max-[359px]:tracking-[0.18em] sm:text-xl"
+          // Sized in rem, so it follows the browser's default font size (WCAG 1.4.4), and so do the
+          // breakpoints. Below 22.5rem (360px at 16px) the wordmark tightens. Below 20rem (320px at
+          // 16px, or 375px at 19px and up) only the menu, wordmark and cart stay; search and account
+          // are the first and last sections of the menu drawer, and the wordmark shrinks if even
+          // that is too wide (320px at 200% text).
+          className="px-2 text-lg font-semibold tracking-[0.25em] uppercase max-[22.5rem]:px-0 max-[22.5rem]:text-base max-[22.5rem]:tracking-[0.18em] max-[20rem]:text-[length:min(1rem,calc((100vw_-_7.5rem)_/_6.4))] sm:text-xl"
         >
           {BRAND_NAME}
         </Link>
@@ -95,7 +101,7 @@ export function Header() {
           <LanguageSwitcher className="mr-1 hidden md:flex" />
           <Link
             to={localizePath(locale, account.to)}
-            className={`${iconButton} gap-2 lg:w-auto lg:px-3`}
+            className={`${iconButton} ${compactHidden} gap-2 lg:w-auto lg:px-3`}
           >
             <UserRound aria-hidden="true" className="size-5" />
             <span className="sr-only lg:not-sr-only">{t(account.labelKey)}</span>
