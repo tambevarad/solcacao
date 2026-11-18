@@ -9,7 +9,7 @@ export function Footer() {
   const { t } = useLocale();
   return (
     <footer className="mt-16 border-t border-line bg-white/50">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-12 sm:grid-cols-2 md:px-6 lg:grid-cols-4 lg:px-8">
+      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-12 break-words hyphens-auto *:min-w-0 sm:grid-cols-2 md:px-6 lg:grid-cols-4 lg:px-8">
         <div>
           <p className="text-lg font-semibold tracking-[0.25em] uppercase">{BRAND_NAME}</p>
           <p className="mt-3 max-w-xs text-cacao/80">{t('shell.footer.tagline')}</p>

@@ -1,6 +1,6 @@
 # Student 2 handoff
 
-Current turn: Phase 4 follow-up after the Phase 3 release. PR #38 fixes the header at large browser fonts (Krish's note 4 on #35). Before it: the closing D22 turn, PR #33 (merged as e45e244, approved by Krishr21), its follow-ups #34 (006b081) and #35 (0a7d08c), the release #36 to `main` (f16432c, tagged `phase-3-submission`, deployed by Railway from `main`) and #37 (7bcbcd4, Krish's role row, which reaches `main` with Phase 4). Earlier D22 work: PR #27 (62e52e4) and its follow-up #28 (13a60a2). Records: `docs/weekly/week-5.md` and `week-6.md`; evidence in `phase-3-evidence.md` and `phase-4-evidence.md`. Next: the Phase 4 release PR and the `phase-4-final` tag.
+Current turn: the last change before the Phase 4 release. PR #39 finishes every open proposal below (Varad's request), adds the 20-minute presentation plan and the Phase 4 documents. Before it: #38 (merged as 2246f14, the large-font header), the Phase 3 release #36 (f16432c, tag `phase-3-submission`, submitted) and #37 (7bcbcd4). Earlier D22 work: #27, #28, #33–#35. Records: `docs/weekly/week-5.md` to `week-7.md`. Next: the release PR, `phase-4-final` and the Phase 4 upload.
 
 ## Public exports delivered
 
@@ -29,6 +29,8 @@ Earlier proposals: 1 (the `server/src/app.ts` client mount) landed in #27 as a c
 7. **Student 3, the catalog's quantity buttons at a large browser font.** At 320 px with a 24 px default font, the product cards' "Increase quantity" button ends 10 px past the screen edge on `/en/catalog` and `/es/catalog`, so the page scrolls sideways. Let the quantity row wrap or shrink (for example `flex-wrap`, or `min-w-0` on the count). Test with Chrome's `Page.setFontSizes` as in `tests/e2e/shell.spec.ts`.
 8. **Student 4, the Spanish homepage heading at a large browser font.** At 320 px and 24 px, "personalizado" in "Chocolate personalizado para tu marca" (`text-3xl`) is wider than the screen (7 px of sideways scroll). `hyphens-auto` on that heading (the page sets `lang="es"`) or a smaller size below `sm` fixes it.
 9. **Student 5, the sampler at a large browser font.** At 320 px and 24 px, `/es/sampler` scrolls sideways by 1 px; worth a look together with proposal 3.
+
+**Status in #39:** proposals 3–9 are done by the coordinator as recorded ownership exceptions: Student 1 `server/src/shared/errors.ts` (5, the trust-proxy half was already fixed); Student 3 `catalog/router.ts`, `catalog/errors.ts`, `ProductCard.tsx` (6, 7); Student 4 `b2b/router.ts`, `b2b/errors.ts`, `b2b/service.ts`, `FeaturedProducts.tsx`, `HeroCarousel.tsx`, `WholesalePage.tsx` (4, 6, 8); Student 5 `SamplerPage.tsx` (3, 9); and one test each in `tests/member-1`, `tests/member-3` and `tests/member-4`. Owners may revise them after the release.
 
 Coordinator ownership exception in #33: `server/src/shared/README.md` and `server/src/features/auth/README.md` (Student 1) say `TRUST_PROXY` is 1 on Railway; #33 corrects both to the measured 2. Docs only.
 

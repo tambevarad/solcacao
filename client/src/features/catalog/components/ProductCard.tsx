@@ -119,7 +119,7 @@ export function ProductCard({
       {!soldOut && (
         <fieldset disabled={disabled} className="mt-3 min-w-0">
           <legend className="mb-1 text-sm font-medium">{t('catalog.product.quantity')}</legend>
-          <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1">
             <button
               type="button"
               className={stepStyles}

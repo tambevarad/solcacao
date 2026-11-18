@@ -139,7 +139,10 @@ export function FeaturedProducts({ listProducts }: { listProducts: ListProducts 
               </Link>
             </h3>
             <p className="text-sm text-cacao/80">
-              {t('b2b.featured.details', { origin: product.origin, cacao: product.cacaoPct })}
+              {t('b2b.featured.details', {
+                origin: t(`catalog.origin.${product.origin.replace(/\s+/g, '')}`),
+                cacao: product.cacaoPct,
+              })}
             </p>
             <p className="mt-1 font-medium">{price.format(product.priceCents / 100)}</p>
           </li>
