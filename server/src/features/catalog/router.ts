@@ -5,10 +5,12 @@ import {
   type RequestHandler,
   type Response,
 } from 'express';
+import { rateLimit } from 'express-rate-limit';
 import mongoose from 'mongoose';
 import type { User } from '../../../../contracts/index.js';
 import { idSchema } from '../../../../contracts/validation.js';
 import { optionalAuth, requireAuth } from '../../shared/auth.js';
+import { describeForLog } from '../../shared/errors.js';
 import {
   cartLinesSchema,
   fieldErrorsOf,
@@ -37,6 +39,20 @@ export interface CatalogRouterDependencies {
   optionalAuth: RequestHandler;
   /** Defaults to the shared mongoose connection, which Student 1's connectDb opens. */
   isDatabaseReady?: () => boolean;
+  /** Per-client throttle for POST /api/orders (security finding 6); tests can inject their own. */
+  orderLimit?: RequestHandler;
+}
+
+/** 30 order attempts per 15 minutes per client: far above a shopper, a brake on scripted abuse. */
+export function orderRateLimit(limit = 30): RequestHandler {
+  return rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    handler: (_req, res) =>
+      sendError(res, new CatalogError(429, 'RATE_LIMITED', 'Too many orders, try again later')),
+  });
 }
 
 const unauthorized = () => new CatalogError(401, 'UNAUTHORIZED', 'Authentication required');
@@ -87,6 +103,7 @@ export function createCatalogRouter({
   requireAuth,
   optionalAuth,
   isDatabaseReady = () => mongoose.connection.readyState === 1,
+  orderLimit = orderRateLimit(),
 }: CatalogRouterDependencies): Router {
   const router = Router();
 
@@ -145,7 +162,7 @@ export function createCatalogRouter({
     noStore(res).json({ data: await mergeCart(user.id, input.data) });
   });
 
-  router.post('/orders', optionalAuth, async (req, res) => {
+  router.post('/orders', orderLimit, optionalAuth, async (req, res) => {
     // Owner comes from the verified token only; the body cannot name a user.
     const userId = req.user ? signedInUser(req).id : null;
     const input = parseCheckout(req.body);
@@ -162,7 +179,7 @@ export function createCatalogRouter({
     if (isDatabaseOutage(error))
       return sendError(res, new CatalogError(503, 'SERVICE_UNAVAILABLE', 'Service unavailable'));
     if (isClientError(error)) return sendError(res, invalid({ request: 'Malformed request' }));
-    console.error('[catalog] Unexpected error', error);
+    console.error('[catalog] Unexpected error:', describeForLog(error));
     sendError(res, new CatalogError(500, 'INTERNAL_ERROR', 'Unexpected server error'));
   };
   router.use(handleErrors);

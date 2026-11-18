@@ -46,6 +46,7 @@ for (const [fontSize, width] of [
   [18, 375],
   [20, 320],
   [20, 375],
+  [24, 320],
   [24, 375],
 ]) {
   test(`no horizontal overflow at ${width}px with a ${fontSize}px browser font`, async ({

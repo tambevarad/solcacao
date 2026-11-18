@@ -8,6 +8,7 @@ export type CatalogErrorCode =
   | 'CART_CONFLICT'
   | 'IDEMPOTENCY_CONFLICT'
   | 'OUT_OF_STOCK'
+  | 'RATE_LIMITED'
   | 'INTERNAL_ERROR'
   | 'SERVICE_UNAVAILABLE';
 

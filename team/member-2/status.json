@@ -82,10 +82,12 @@
         "Follow-up PR #34 (Krish's note 1): the footer starts exactly at the fold on short pages (not-found: 812 of 812 at 375 px, 900 of 900 at 1440 px); local Lighthouse CLS stays 0-0.001 on five pages",
         "Follow-up PR #34 approved by Krishr21 at 88e0559 (595/595, header heights 65 and 114 px at 320-1440 px, footer at the fold, CLS 0) and merged as 006b081; Railway deployed it (health, pages, JSON 404, 14 products)",
         "PR #35: the footer calculation in rem (follows the browser font size; same position at the default size: 812 of 812 and 900 of 900), Krish's notes on #34",
-        "PR #38 (Krish's note 4 on #35): the header fits at large browser fonts. Before: at 375 px the cart ended 11/54/140 px past the edge at 18/20/24 px. After: every header control inside the screen at 280-1920 px with 12-32 px default fonts, EN/ES, signed out and in; 6 new e2e tests (fail on the old header), 21/21 mock e2e, npm run check 540 passed (55 persistence tests skipped locally), HTTP build passes"
+        "PR #38 (Krish's note 4 on #35): the header fits at large browser fonts. Before: at 375 px the cart ended 11/54/140 px past the edge at 18/20/24 px. After: every header control inside the screen at 280-1920 px with 12-32 px default fonts, EN/ES, signed out and in; 6 new e2e tests (fail on the old header), 21/21 mock e2e, npm run check 540 passed (55 persistence tests skipped locally), HTTP build passes; approved by Krishr21 at 8b5ebcc (595/595 on local MongoDB, 96 width/font combinations) and merged as 2246f14",
+        "PR #39 (coordinator, for the team's open proposals): order and quote rate limits (Students 3 and 4, finding 6), describeForLog for Mongoose errors and in the catalog/B2B logs (Students 1, 3, 4), Spanish origins and long-word wrapping (Student 4), quantity row wrap (Student 3), sampler loading height and counter wrap (Student 5), not-found and footer wrap (mine); npm run check with local MongoDB 598/598, mock e2e 22/22",
+        "Presentation: 20-minute plan (4 per member, Group 2 slot), 14-slide deck with six recordings and the script in the speaker notes (docs/presentation.md); Phase 4 documents in docs/phase4/submission"
       ],
       "blockers": [
-        "Peer review of PR #38 by Krishr21; then the Phase 4 release PR, the phase-4-final tag and the Phase 4 zip",
+        "Peer review of PR #39 by Krishr21; then the Phase 4 release PR, the phase-4-final tag, Railway on the release and the Phase 4 zip",
         "Rollback rehearsal on Railway (runbook step 8): needs Varad in the dashboard",
         "Presentation rehearsal not held yet (human)"
       ]

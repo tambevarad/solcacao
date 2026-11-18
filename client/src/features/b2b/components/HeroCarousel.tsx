@@ -163,7 +163,7 @@ export function HeroCarousel() {
                 <p className="text-sm font-semibold tracking-widest text-copper uppercase">
                   {t(`b2b.hero.${slide.id}.eyebrow`)}
                 </p>
-                <h2 className="mt-3 text-3xl font-semibold text-balance md:text-4xl">
+                <h2 className="mt-3 text-3xl font-semibold break-words text-balance hyphens-auto md:text-4xl">
                   {t(`b2b.hero.${slide.id}.title`)}
                 </h2>
                 <p className="mt-4 max-w-prose text-lg text-cacao/80">

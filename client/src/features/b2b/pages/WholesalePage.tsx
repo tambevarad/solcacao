@@ -31,7 +31,7 @@ export default function WholesalePage() {
           <p className="text-sm font-semibold tracking-widest text-copper uppercase">
             {t('b2b.wholesale.eyebrow')}
           </p>
-          <h1 className="mt-3 text-3xl font-semibold text-balance md:text-4xl">
+          <h1 className="mt-3 text-3xl font-semibold break-words text-balance hyphens-auto md:text-4xl">
             {t('b2b.wholesale.title')}
           </h1>
           <p className="mt-4 max-w-prose text-lg text-cacao/80">{t('b2b.wholesale.intro')}</p>

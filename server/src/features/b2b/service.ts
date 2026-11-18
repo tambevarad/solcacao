@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import mongoose from 'mongoose';
 import type { QuoteInput, QuoteReceipt, User } from '../../../../contracts/index.js';
+import { describeForLog } from '../../shared/errors.js';
 import { B2bError } from './errors.js';
 import { B2bRequest } from './model.js';
 import type { QuoteFileStorage } from './storage.js';
@@ -113,7 +114,7 @@ export async function submitQuote({
   try {
     await B2bRequest.updateOne({ _id: created._id }, { notificationStatus });
   } catch (error) {
-    console.error('[b2b] Could not record the notification status', error);
+    console.error('[b2b] Could not record the notification status:', describeForLog(error));
   }
   return { ...toReceipt(created), notificationStatus };
 }

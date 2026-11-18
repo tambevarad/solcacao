@@ -51,7 +51,7 @@ Run `npm ci`, `npm run check` (typecheck, unit and integration tests, structure 
 
 ## Status
 
-Phases 3 (backend and real-API binding) and 4 (integration and deployment) ran together, one member at a time (decision D22 in `docs/decisions.md`). Each member's work is one reviewed pull request: #27 and #28 (Varad), #29 (Krish), #30 (Reethika), #31 (Daniel), #32 (Aman), and the closing #33 (Varad) with its follow-up #34. The records are in `docs/weekly/week-5.md` and `week-6.md`, each member's evidence in `team/member-N/phase-3-evidence.md` and `phase-4-evidence.md`, and the presentation plan in `docs/presentation.md`.
+Phases 3 (backend and real-API binding) and 4 (integration and deployment) ran together, one member at a time (decision D22 in `docs/decisions.md`). Each member's work is one reviewed pull request: #27 and #28 (Varad), #29 (Krish), #30 (Reethika), #31 (Daniel), #32 (Aman), and the closing #33 (Varad) with its follow-ups #34 and #35. Phase 3 was released in #36 and submitted (tag `phase-3-submission`). Phase 4 then added the large-font header fix (#38) and the teammates' open proposals, the presentation and the Phase 4 documents (#39). The records are in `docs/weekly/week-5.md` to `week-7.md`, each member's evidence in `team/member-N/phase-3-evidence.md` and `phase-4-evidence.md`, and the 20-minute presentation plan in `docs/presentation.md`.
 
 Phase 2 (front-end development) is complete and released to `main`. All five members' Phase 2 pull requests (#3, #5, #9, #10, #11), the integration PR (#12) and the follow-ups were reviewed and merged. The submitted version is tagged `phase-2-submission`. The full record is in `docs/weekly/week-4.md`, with screenshots in `docs/phase2/screenshots/`.
 
@@ -63,8 +63,9 @@ Phase 2 (front-end development) is complete and released to `main`. All five mem
 | Live site             | https://solcacao-production.up.railway.app                                                                          |
 | Deployment and checks | [`docs/deployment.md`](docs/deployment.md): runbook, variables (names only), verified results, Lighthouse, rollback |
 | API and data model    | [`docs/api.json`](docs/api.json) (contractVersion 2) and [`docs/data-model.md`](docs/data-model.md)                 |
-| Presentation plan     | [`docs/presentation.md`](docs/presentation.md)                                                                      |
-| Integration records   | [`docs/weekly/week-5.md`](docs/weekly/week-5.md) and [`docs/weekly/week-6.md`](docs/weekly/week-6.md)               |
+| Presentation          | [`docs/presentation.md`](docs/presentation.md): 20 minutes, 4 per member, script and recordings                     |
+| Phase 4 documents     | [`docs/phase4/submission/`](docs/phase4/submission): overview, AI usage log, slides (PDF, without the videos)       |
+| Integration records   | [`docs/weekly/week-5.md`](docs/weekly/week-5.md) to [`week-7.md`](docs/weekly/week-7.md)                            |
 | Member evidence       | `team/member-N/phase-3-evidence.md` and `phase-4-evidence.md`                                                       |
 | Image licenses        | [`docs/assets.md`](docs/assets.md) (CC0 photos, each linked to its Openverse record)                                |
 

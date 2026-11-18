@@ -13,7 +13,9 @@ export default function NotFoundPage() {
       <p className="text-sm font-semibold tracking-widest text-copper uppercase">
         {t('shell.notFound.eyebrow')}
       </p>
-      <h1 className="mt-3 text-3xl font-semibold">{t('shell.notFound.title')}</h1>
+      <h1 className="mt-3 text-3xl font-semibold break-words hyphens-auto">
+        {t('shell.notFound.title')}
+      </h1>
       <p className="mt-4 text-cacao/80">{t('shell.notFound.body')}</p>
       {unsupportedPrefix ? (
         <>

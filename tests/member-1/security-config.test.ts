@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import request from 'supertest';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -110,5 +111,11 @@ describe('error logging', () => {
     expect(describeForLog(duplicate)).toBe('MongoServerError (code 11000)');
     expect(describeForLog(new TypeError('x is undefined'))).toBe('TypeError: x is undefined');
     expect(describeForLog('text')).toBe('non-Error value thrown');
+  });
+
+  it('logs Mongoose errors by name only: a CastError message quotes the value', () => {
+    const cast = new mongoose.Error.CastError('ObjectId', 'someone@member1.test', '_id');
+    expect(describeForLog(cast)).toBe('CastError');
+    expect(describeForLog(cast)).not.toContain('someone@member1.test');
   });
 });
